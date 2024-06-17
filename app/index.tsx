@@ -1,0 +1,238 @@
+import { StatusBar } from "expo-status-bar";
+import {
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	TextInput,
+	Pressable,
+	TouchableWithoutFeedback,
+	TouchableOpacity,
+	Dimensions,
+	TouchableHighlight,
+	TouchableNativeFeedback,
+} from "react-native";
+import Checkbox from "expo-checkbox";
+import { Link } from "expo-router";
+
+import HeaderImage from "../assets/images/loginPageHeader.svg";
+import FacebookLogo from "../assets/images/facebook.svg";
+import GoogleLogo from "../assets/images/google.svg";
+import AppleLogo from "../assets/images/apple-logo.svg";
+import { useState } from "react";
+import React from "react";
+
+const { width, height } = Dimensions.get("window");
+
+function Login() {
+	const [isChecked, setChecked] = useState(false);
+
+	return (
+		<View style={styles.container}>
+			<View style={styles.imageContainer}>
+				<HeaderImage width={86} height={86} />
+			</View>
+			<View style={styles.loginContainer}>
+				<View style={styles.lch}>
+					<Text style={styles.lchHeader}>Login to your account</Text>
+					<Text style={styles.lchText}>
+						Welcome back! Please enter your details
+					</Text>
+				</View>
+				<View style={styles.loginFormContainer}>
+					<View style={styles.loginDetailContainer}>
+						<Text style={styles.formText}>Email</Text>
+						<TextInput
+							style={styles.loginInput}
+							placeholder="example@gmail.com"
+							placeholderTextColor={"#8F8F8F"}
+						/>
+					</View>
+					<View style={styles.loginDetailContainer}>
+						<Text style={styles.formText}>Password</Text>
+						<TextInput
+							style={styles.loginInput}
+							placeholder="Enter Your Password"
+							placeholderTextColor={"#8F8F8F"}
+						/>
+					</View>
+					<View style={styles.loginActions}>
+						<View style={styles.check}>
+							<Checkbox
+								style={styles.checkbox}
+								value={isChecked}
+								onValueChange={setChecked}
+							/>
+							<Text>Remember Me</Text>
+						</View>
+						<Text style={styles.formText}>Forgot Password ?</Text>
+					</View>
+				</View>
+				<View style={styles.loginButtonContainer}>
+					<Pressable
+						style={({ pressed }) => [
+							pressed ? { opacity: 0.5 } : {},
+							{ backgroundColor: "#52A2F2", borderRadius: 12 },
+						]}
+					>
+						<Link
+							style={[
+								{
+									color: "white",
+									textAlign: "center",
+									fontSize: 18,
+									fontWeight: "800",
+									letterSpacing: 1,
+									width: width,
+									alignSelf: "center",
+									// height: height * 0.03,
+									padding: "5%",
+								},
+								styles.lchText,
+							]}
+							suppressHighlighting={true}
+							href={"(home)/Home"}
+						>
+							Login
+						</Link>
+					</Pressable>
+					<Text style={[{ textAlign: "center" }, styles.formText]}>
+						Or Login With
+					</Text>
+					<View style={styles.loginOptionsContainer}>
+						<View style={styles.logoBorder}>
+							<FacebookLogo />
+						</View>
+						<View style={styles.logoBorder}>
+							<GoogleLogo />
+						</View>
+						<View style={styles.logoBorder}>
+							<AppleLogo />
+						</View>
+					</View>
+					<View style={styles.signUpOption}>
+						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
+						<Link href={"(registration)/SignUp"} style={styles.links}>
+							Sign up
+						</Link>
+					</View>
+				</View>
+			</View>
+		</View>
+	);
+}
+
+export default Login;
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		gap: 10,
+	},
+
+	imageContainer: {
+		paddingTop: "20%",
+		marginBottom: "8%",
+	},
+
+	image: {},
+
+	loginContainer: {
+		width: "100%",
+		justifyContent: "flex-start",
+		paddingLeft: 30,
+		paddingRight: 30,
+		gap: 10,
+	},
+
+	lch: {
+		alignItems: "flex-start",
+		width: "100%",
+		gap: 7,
+		marginBottom: "5%",
+	},
+
+	lchHeader: {
+		fontSize: 25,
+		fontWeight: "700",
+		textAlign: "left",
+	},
+
+	lchText: {
+		fontWeight: "300",
+	},
+
+	loginFormContainer: {
+		gap: 20,
+		marginBottom: "6%",
+	},
+
+	loginDetailContainer: {},
+
+	loginInput: {
+		backgroundColor: "#FFFFFF",
+		padding: "5%",
+		borderColor: "#EBEBEB",
+		borderWidth: 1.05,
+		borderRadius: 10,
+		textAlign: "left",
+	},
+
+	formText: {
+		fontSize: 16,
+		marginBottom: 5,
+	},
+
+	loginActions: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+	},
+
+	check: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 5,
+	},
+
+	checkbox: {
+		borderRadius: 5,
+		backgroundColor: "#F8F9FB",
+	},
+
+	loginButtonContainer: {
+		gap: 20,
+	},
+
+	loginButton: {
+		backgroundColor: "#52A2F2",
+		borderRadius: 12,
+	},
+
+	loginOptionsContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginBottom: "10%",
+	},
+
+	logoBorder: {
+		borderColor: "#97A3B1",
+		borderWidth: 1,
+		borderRadius: 40,
+		padding: "5%",
+		alignItems: "center",
+	},
+
+	signUpOption: {
+		flexDirection: "row",
+		justifyContent: "center",
+	},
+
+	links: {
+		textDecorationColor: "#52A2F2",
+		textDecorationLine: "underline",
+		color: "#52A2F2",
+	},
+});
