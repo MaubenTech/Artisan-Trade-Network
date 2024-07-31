@@ -27,7 +27,13 @@
 		"scheme": "your-app-scheme",
 		"plugins": [
 			"expo-router",
-			["expo-document-picker", { "icloudContainerEnvironment": "Production" }]
+			["expo-document-picker", { "icloudContainerEnvironment": "Production" }],
+			[
+				"expo-image-picker",
+				{
+					"photosPermission": "The app access your photos to let you share them with your friends"
+				}
+			]
 		]
 	}
 }

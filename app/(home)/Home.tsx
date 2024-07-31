@@ -10,23 +10,17 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import colors from "../helpers/colors";
-import { SvgProps } from "react-native-svg";
-import PagerView from "react-native-pager-view";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { ReactElement, useState } from "react";
-import { ExpoRouter } from "expo-router/types/expo-router";
+import React, { ReactElement, useEffect, useState } from "react";
 
+import { useNavigation } from "expo-router";
+import MenuHeader from "../components/MenuHeader";
 import HomeCarousel from "../components/HomeCarousel";
-import Card1 from "../../assets/images/homeCard1.svg";
-import MenuIcon from "../../assets/images/menuIcon.svg";
 import RewardIcon from "../../assets/images/reward.svg";
-import { Link, LinkComponent, LinkProps } from "expo-router/build/link/Link";
-import NotificationPresent from "../../assets/images/notificationPresent.svg";
-import { CarouselProps } from "react-native-snap-carousel/lib/typescript/carousel/types";
+import { LinkProps } from "expo-router/build/link/Link";
 
 const HomeCard1 = require("../../assets/images/homeCard1.png");
 const HomeCard2 = require("../../assets/images/homeCard2.png");
-const ProfilePic = require("../../assets/images/profilePic.png");
 
 const { width, height } = Dimensions.get("window");
 
@@ -43,6 +37,16 @@ export interface SwipeData extends LinkProps {
 
 export default function Home() {
 	const [notificationPresent, setNotificationPresent] = useState(false);
+
+	const navigation = useNavigation();
+
+	useEffect(() => {
+		navigation.addListener("beforeRemove", (event) => {
+			event.preventDefault();
+			console.log("tried to go back");
+			navigation.dispatch(event.data.action);
+		});
+	});
 
 	const swipeData: SwipeData[] = [
 		{
@@ -74,37 +78,18 @@ export default function Home() {
 			icon: (
 				<Ionicons
 					name="arrow-forward-outline"
-					style={{ color: "white", textAlign: "center", marginTop: 20 }}
+					style={{ color: "white", textAlign: "center" }}
 					size={20}
 				/>
 			),
-			href: "/(userPages)/AvailableJobs",
+			href: "/(userPages)/NewJob",
 		},
 	];
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.menuContainer}>
-				<View>
-					<MenuIcon />
-				</View>
-				<View style={styles.menuOptions}>
-					<View style={styles.notificationIconContainer}>
-						<Ionicons
-							name="notifications-outline"
-							size={25}
-							style={styles.notificationBell}
-						/>
-						<NotificationPresent style={styles.notificationPresent} />
-					</View>
-					<View style={styles.profilePicContainer}>
-						<Image
-							source={ProfilePic}
-							style={styles.profilePic}
-							contentFit="contain"
-						/>
-					</View>
-				</View>
+			<View style={styles.menuHeaderContainer}>
+				<MenuHeader />
 			</View>
 			<View style={styles.contentSection}>
 				<View style={styles.salutationContainer}>
@@ -157,64 +142,22 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+	menuHeaderContainer: {
+		backgroundColor: "#fff",
+		alignItems: "center",
+		paddingHorizontal: 30,
+	},
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
 		alignItems: "center",
-		paddingLeft: "10%",
 		gap: 50,
-	},
-
-	menuContainer: {
-		paddingTop: "20%",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		width: "100%",
-		paddingRight: "10%",
-	},
-
-	menuOptions: {
-		flexDirection: "row",
-		width: "80%",
-		justifyContent: "flex-end",
-		alignItems: "center",
-	},
-
-	notificationIconContainer: {
-		borderColor: colors.whiteShade,
-		borderWidth: 1,
-		borderRadius: 50,
-		paddingTop: "2%",
-		paddingBottom: "2%",
-		paddingLeft: "2%",
-		paddingRight: "2%",
-		alignItems: "center",
-		height: "50%",
-		position: "relative",
-	},
-
-	notificationBell: {},
-
-	notificationPresent: {
-		position: "absolute",
-		left: 18,
-		top: 5,
-	},
-
-	profilePicContainer: {
-		height: 40,
-	},
-
-	profilePic: {
-		width: 50,
-		height: "100%",
-		objectFit: "contain",
 	},
 
 	contentSection: {
 		width: "100%",
 		gap: 5,
+		paddingLeft: "10%",
 	},
 
 	salutationContainer: {
@@ -231,7 +174,7 @@ const styles = StyleSheet.create({
 	},
 
 	cardSection: {
-		alignItems: "center",
+		alignItems: "flex-end",
 	},
 
 	rewardContainer: {

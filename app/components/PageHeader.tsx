@@ -1,10 +1,23 @@
+import {
+	View,
+	Text,
+	StyleSheet,
+	ViewStyle,
+	TextStyle,
+	ColorValue,
+} from "react-native";
 import React from "react";
 import { router } from "expo-router";
 import colors from "../helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, StyleSheet } from "react-native";
 
-export default function PageHeader({ pageName }: { pageName: string }) {
+export default function PageHeader({
+	pageName,
+	style,
+}: {
+	pageName: string;
+	style?: ViewStyle | TextStyle | ColorValue;
+}) {
 	return (
 		<View style={styles.pageHeaderContainer}>
 			<View style={styles.pageHeaderElement}>

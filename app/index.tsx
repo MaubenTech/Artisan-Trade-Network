@@ -21,6 +21,7 @@ import GoogleLogo from "../assets/images/google.svg";
 import AppleLogo from "../assets/images/apple-logo.svg";
 import { useState } from "react";
 import React from "react";
+import colors from "./helpers/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -69,33 +70,40 @@ function Login() {
 					</View>
 				</View>
 				<View style={styles.loginButtonContainer}>
-					<Pressable
-						style={({ pressed }) => [
-							pressed ? { opacity: 0.5 } : {},
-							{ backgroundColor: "#52A2F2", borderRadius: 12 },
-						]}
+					<Link
+						style={{
+							alignItems: "center",
+							backgroundColor: colors.mainColor,
+							borderRadius: 15,
+							justifyContent: "center",
+							padding: 15,
+						}}
+						asChild
+						href={"(home)/Home"}
 					>
-						<Link
+						<TouchableOpacity
 							style={[
 								{
-									color: "white",
-									textAlign: "center",
-									fontSize: 18,
-									fontWeight: "800",
-									letterSpacing: 1,
-									width: width,
-									alignSelf: "center",
-									// height: height * 0.03,
-									padding: "5%",
+									alignItems: "center",
+									justifyContent: "center",
+									padding: 20,
 								},
-								styles.lchText,
 							]}
-							suppressHighlighting={true}
-							href={"(home)/Home"}
 						>
-							Login
-						</Link>
-					</Pressable>
+							<Text
+								style={[
+									{
+										textAlign: "center",
+										fontWeight: "600",
+										fontSize: 16,
+										color: "white",
+									},
+								]}
+							>
+								Login
+							</Text>
+						</TouchableOpacity>
+					</Link>
 					<Text style={[{ textAlign: "center" }, styles.formText]}>
 						Or Login With
 					</Text>

@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 		alignItems: "flex-start",
 		// flexWrap: "wrap",
 		justifyContent: "space-between",
-		gap: 10,
+		gap: 5,
 	},
 
 	radioOption: {

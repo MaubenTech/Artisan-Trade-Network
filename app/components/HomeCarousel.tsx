@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
 	View,
 	Text,
@@ -9,18 +8,20 @@ import {
 	TouchableOpacity,
 	Pressable,
 } from "react-native";
-import Carousel from "react-native-snap-carousel";
-import colors from "../helpers/colors";
+import React, { useState } from "react";
 import { Link } from "expo-router";
+import colors from "../helpers/colors";
 import { SwipeData } from "../(home)/Home";
+import Carousel from "react-native-snap-carousel";
 
 var { width, height } = Dimensions.get("window");
 
 export default function HomeCarousel({ data }: { data: SwipeData[] }) {
 	const [currentIndex, setCurrentIndex] = useState<string | number>(0);
 
+	console.log(currentIndex);
 	return (
-		<View style={{ width: width * 1.2, gap: 5 }}>
+		<View style={{ width: width, gap: 10 }}>
 			<Carousel
 				layout={"default"}
 				data={data}
@@ -29,7 +30,7 @@ export default function HomeCarousel({ data }: { data: SwipeData[] }) {
 				inactiveSlideOpacity={1}
 				sliderWidth={width}
 				itemWidth={width * 0.72}
-				// slideStyle={{ display: "flex", alignItems: "center" }}
+				// slideStyle={{ display: "flex", alignItems: "" }}
 				vertical={false}
 				onScroll={(event) => {
 					const x = event.nativeEvent.contentOffset.x;
@@ -59,7 +60,7 @@ export default function HomeCarousel({ data }: { data: SwipeData[] }) {
 
 const Card = ({ cardItem }: { cardItem: SwipeData }) => {
 	return (
-		<View>
+		<View style={{ width: width }}>
 			<TouchableWithoutFeedback>
 				<Image
 					// source=
@@ -93,32 +94,29 @@ const Card = ({ cardItem }: { cardItem: SwipeData }) => {
 						justifyContent: "center",
 					}}
 				>
-					<TouchableOpacity
+					<Link
+						href={cardItem.href}
+						asChild
 						style={{
-							backgroundColor: cardItem.buttonColor,
+							alignItems: "center",
 							...styles.cardButton,
+							textAlign: "center",
+							backgroundColor: cardItem.buttonColor,
 						}}
 					>
-						<Link
+						<TouchableOpacity
 							style={{
-								alignItems: "center",
-								flexDirection: "row",
-								justifyContent: "center",
-								height: "100%",
-								...styles.cardButtonTitle,
+								padding: 15,
 								gap: 10,
-								textAlign: "center",
-								width: "100%",
-								padding: 20,
+								alignItems: "center",
+								justifyContent: "center",
 							}}
-							href={cardItem.href}
-							suppressHighlighting
 						>
 							{cardItem.secondIcon}
-							{cardItem.buttonTitle}
+							<Text style={styles.cardButtonTitle}>{cardItem.buttonTitle}</Text>
 							{cardItem.icon}
-						</Link>
-					</TouchableOpacity>
+						</TouchableOpacity>
+					</Link>
 				</View>
 			</View>
 		</View>

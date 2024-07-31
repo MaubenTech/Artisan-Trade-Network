@@ -64,7 +64,7 @@ export default function Layout() {
 				tabBarInactiveTintColor: colors.greySecondaryShade,
 			}}
 			backBehavior="history"
-			// tabBar={(props) => <TabBar {...props} />}
+			// tabBar={(props) => <Tab Bar {...props} />}
 		>
 			<Tabs.Screen
 				name="Home"
@@ -72,6 +72,7 @@ export default function Layout() {
 					tabBarButton: (props) => (
 						<CustomTabBar {...props} iconName="home" text="Home" />
 					),
+					headerLeft: () => <></>,
 				}}
 			/>
 			<Tabs.Screen
