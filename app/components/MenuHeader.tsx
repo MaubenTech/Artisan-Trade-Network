@@ -6,6 +6,7 @@ import { View, Text, StyleSheet, Platform } from "react-native";
 import MenuIcon from "../../assets/images/menuIcon.svg";
 import NotificationPresent from "../../assets/images/notificationPresent.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Link } from "expo-router";
 
 const ProfilePic = require("../../assets/images/profilePic.png");
 
@@ -31,13 +32,16 @@ const MenuHeader = () => {
 						/>
 						<NotificationPresent style={styles.notificationPresent} />
 					</View>
-					<View style={styles.profilePicContainer}>
+					<Link
+						style={styles.profilePicContainer}
+						href={"/(userPages)/Profile"}
+					>
 						<Image
 							source={ProfilePic}
 							style={styles.profilePic}
 							contentFit="contain"
 						/>
-					</View>
+					</Link>
 				</View>
 			</View>
 		</View>
