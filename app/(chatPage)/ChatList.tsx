@@ -11,7 +11,7 @@ const ChatList = ({ item }: { item: number }) => {
 
 	return (
 		<View>
-			<TouchableOpacity style={styles.chat} onPress={() => openChatRoom()}>
+			<TouchableOpacity style={styles.chat} onPress={openChatRoom}>
 				<View style={styles.profilePictureContainer}>
 					<ProfilePicture />
 				</View>

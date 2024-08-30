@@ -103,6 +103,7 @@ export default function PageHeader({
 const styles = StyleSheet.create({
 	pageHeaderContainer: {
 		width: "100%",
+		backgroundColor: colors.white,
 	},
 
 	profileHeaderStyle: {
@@ -134,8 +135,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 5,
-		paddingLeft: "10%",
-		paddingRight: "10%",
+		paddingLeft: "5%",
 		paddingBottom: "5%",
 	},
 

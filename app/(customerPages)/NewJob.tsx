@@ -175,7 +175,7 @@ export default function NewJob() {
 					<ButtonGroup
 						positiveOption="Proceed"
 						negativeOption="Cancel"
-						href={"/(userPages)/JobLocation"}
+						href={"/(customerPages)/JobLocation"}
 						paddingHorizontal={30}
 						isNop
 					/>

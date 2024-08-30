@@ -11,6 +11,7 @@ import {
 	Dimensions,
 	TouchableHighlight,
 	TouchableNativeFeedback,
+	ScrollView,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import { Link } from "expo-router";
@@ -27,9 +28,12 @@ const { width, height } = Dimensions.get("window");
 
 function Login() {
 	const [isChecked, setChecked] = useState(false);
-
 	return (
-		<View style={styles.container}>
+		<ScrollView
+			contentContainerStyle={styles.container}
+			keyboardShouldPersistTaps="handled"
+			scrollEnabled={false}
+		>
 			<View style={styles.imageContainer}>
 				<HeaderImage width={86} height={86} />
 			</View>
@@ -126,7 +130,7 @@ function Login() {
 					</View>
 				</View>
 			</View>
-		</View>
+		</ScrollView>
 	);
 }
 
@@ -182,7 +186,7 @@ const styles = StyleSheet.create({
 	loginInput: {
 		backgroundColor: "#FFFFFF",
 		padding: "5%",
-		borderColor: "#EBEBEB",
+		borderColor: colors.inputBorderColor,
 		borderWidth: 1.05,
 		borderRadius: 10,
 		textAlign: "left",
@@ -215,7 +219,7 @@ const styles = StyleSheet.create({
 	},
 
 	loginButton: {
-		backgroundColor: "#52A2F2",
+		backgroundColor: colors.mainColor,
 		borderRadius: 12,
 	},
 

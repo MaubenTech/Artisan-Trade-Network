@@ -106,13 +106,14 @@ const styles = StyleSheet.create({
 		marginRight: 30,
 		marginLeft: 30,
 		paddingBottom: 0,
+		height: 80,
 	},
-	tabBarItemStyle: {
-		flex: 1,
-		borderRadius: 50,
-		paddingLeft: 30,
-		paddingRight: 30,
-	},
+	// tabBarItemStyle: {
+	// 	flex: 1,
+	// 	borderRadius: 50,
+	// 	paddingLeft: 30,
+	// 	paddingRight: 30,
+	// },
 	iconContainer: {
 		justifyContent: "center",
 		alignItems: "center",

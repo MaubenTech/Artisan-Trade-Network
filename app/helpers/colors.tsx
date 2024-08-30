@@ -16,7 +16,6 @@ const colors = {
 	buttonBorderColor: "#2B2B2B",
 	white: "#FFFFFF",
 	chatBubbleSecondary: "#C6E9FF",
-	grey1: "#F7F7F7",
 	buttonsBg: "#F8F9FB",
 };
 

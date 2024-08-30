@@ -1,9 +1,12 @@
 import React from "react";
-import colors from "../helpers/colors";
-import PageHeader from "../components/PageHeader";
+import colors from "../../helpers/colors";
+import PageHeader from "../../components/PageHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, StyleSheet } from "react-native";
-import ButtonGroup from "../components/ButtonGroup";
+import ButtonGroup from "../../components/ButtonGroup";
+import JobRating from "../../../assets/images/JobRating.svg";
+import WorkRating from "../../../assets/images/WorkRating.svg";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import ProfilePicture from "../../../assets/components/chatList/images/profilePicture.svg";
 
 const JobDetails = [
 	{
@@ -17,7 +20,9 @@ const JobDetails = [
 	},
 ];
 
-const JobSummary = () => {
+const { width, height } = Dimensions.get("window");
+
+const JobHistoryDetails = () => {
 	return (
 		<View style={styles.container}>
 			<PageHeader pageName="Summary" />
@@ -27,19 +32,18 @@ const JobSummary = () => {
 						<Text style={styles.summaryTitle}>Job Title</Text>
 						<Text style={styles.summarySubTitle}>Need to Repair my toilet</Text>
 					</View>
-					<View style={styles.summaryEditContainer}>
-						<Text style={styles.editText}>Edit</Text>
-						<Ionicons name="pencil" />
-					</View>
 				</View>
 				<View style={styles.summaryTitleContainer}>
-					<View style={styles.summaryTitleSubContainer}>
+					<View style={{ width: width * 0.4 }}>
 						<Text style={styles.summaryTitle}>Job Type</Text>
 						<Text style={styles.summarySubTitle}>Maintenance</Text>
 					</View>
-					<View style={styles.summaryEditContainer}>
-						<Text style={styles.editText}>Edit</Text>
-						<Ionicons name="pencil" />
+					<View style={{ width: width * 0.5 }}>
+						<Text style={styles.summaryTitle}>Distance</Text>
+						<Text style={styles.summarySubTitle}>
+							<Ionicons name="pin" color={"blue"} />
+							20km
+						</Text>
 					</View>
 				</View>
 				<View style={styles.summaryTitleContainer}>
@@ -52,20 +56,6 @@ const JobSummary = () => {
 							possimus harum molestiae perspiciatis ipsam accusantium.
 						</Text>
 					</View>
-					<View style={styles.summaryEditContainer}>
-						<Text style={styles.editText}>Edit</Text>
-						<Ionicons name="pencil" />
-					</View>
-				</View>
-				<View style={styles.summaryTitleContainer}>
-					<View style={styles.summaryTitleSubContainer}>
-						<Text style={styles.summaryTitle}>Budget</Text>
-						<Text style={styles.summarySubTitle}>50-000 - 70,000</Text>
-					</View>
-					<View style={styles.summaryEditContainer}>
-						<Text style={styles.editText}>Edit</Text>
-						<Ionicons name="pencil" />
-					</View>
 				</View>
 				<View style={styles.uploadedMediaContainer}>
 					{/* <Image
@@ -74,25 +64,44 @@ const JobSummary = () => {
 						style={styles.uploadedImage}
 					/> */}
 				</View>
-				<View style={styles.summaryTitleContainer}>
+				<View
+					style={{
+						borderBottomWidth: 1,
+						borderBottomColor: colors.greyBorder,
+						...styles.summaryTitleContainer,
+					}}
+				>
 					<View style={styles.summaryTitleSubContainer}>
-						<Text style={styles.summaryTitle}>Job Description</Text>
-						<Text style={styles.summarySubTitle}>
-							No 1 Ovunwo Street, Rumuagholu, Port Harcourt, Rivers State
-						</Text>
-					</View>
-					<View style={styles.summaryEditContainer}>
-						<Text style={styles.editText}>Edit</Text>
-						<Ionicons name="pencil" />
+						<Text style={styles.summaryTitle}>Bid</Text>
+						<Text style={styles.summarySubTitle}>₦50,000</Text>
 					</View>
 				</View>
-				<ButtonGroup
-					paddingHorizontal={30}
-					positiveOption="Post Job"
-					positiveOptionBg={colors.greenShade}
-					isNop={false}
-					href={"/(userPages)/JobPosted"}
-				/>
+				<View style={styles.summaryTitleContainer}>
+					<View style={styles.summaryTitleSubContainer}>
+						<Text style={styles.summaryTitle}>Job Rating</Text>
+						<JobRating />
+					</View>
+				</View>
+				<View style={styles.summaryTitleContainer}>
+					<View style={styles.summaryTitleSubContainer}>
+						<Text style={styles.summaryTitle}>Job Review</Text>
+						<Text style={styles.summarySubTitle}>
+							Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis
+							deserunt a nihil sapiente est quas voluptatum aliquam culpa
+							voluptas assumenda vero architecto corrupti sequi aut ipsam, quam
+							labore quasi repudiandae?
+						</Text>
+					</View>
+				</View>
+				<View style={styles.summaryTitleContainer}>
+					<View style={styles.ratingContainer}>
+						<ProfilePicture width={40} />
+						<View>
+							<Text>Drew Berry</Text>
+							<WorkRating />
+						</View>
+					</View>
+				</View>
 			</View>
 		</View>
 	);
@@ -103,7 +112,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#fff",
 		gap: 10,
-		paddingTop: 70,
 	},
 
 	contentContainer: {
@@ -112,8 +120,6 @@ const styles = StyleSheet.create({
 
 	summaryTitleContainer: {
 		flexDirection: "row",
-		borderBottomWidth: 1,
-		borderBottomColor: colors.greyBorder,
 		paddingBottom: 10,
 		paddingHorizontal: 30,
 		justifyContent: "space-between",
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
 	},
 
 	summaryTitleSubContainer: {
-		width: "80%",
+		width: width * 0.8,
 	},
 
 	summaryTitle: {
@@ -136,11 +142,6 @@ const styles = StyleSheet.create({
 
 	editText: {
 		textDecorationLine: "underline",
-	},
-
-	summaryEditContainer: {
-		flexDirection: "row",
-		gap: 5,
 	},
 
 	uploadedMediaContainer: {
@@ -157,6 +158,12 @@ const styles = StyleSheet.create({
 		height: 100,
 		borderRadius: 10,
 	},
+
+	ratingContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 10,
+	},
 });
 
-export default JobSummary;
+export default JobHistoryDetails;

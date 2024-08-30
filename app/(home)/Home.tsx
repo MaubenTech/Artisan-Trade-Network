@@ -63,7 +63,7 @@ export default function Home() {
 					size={20}
 				/>
 			),
-			href: "/(userPages)/Services",
+			href: "/(customerPages)/Services",
 		},
 		{
 			index: 1,
@@ -82,7 +82,7 @@ export default function Home() {
 					size={20}
 				/>
 			),
-			href: "/(userPages)/NewJob",
+			href: "/(customerPages)/NewJob",
 		},
 	];
 

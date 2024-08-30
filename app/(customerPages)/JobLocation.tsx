@@ -107,7 +107,7 @@ export default function JobLocation() {
 					<ButtonGroup
 						negativeOption="Cancel"
 						positiveOption="Proceed"
-						href={"/(userPages)/JobSummary"}
+						href={"/(customerPages)/JobSummary"}
 						isNop
 					/>
 				</View>

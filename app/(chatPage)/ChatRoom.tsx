@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 		borderTopWidth: 1,
-		borderTopColor: colors.grey1,
+		borderTopColor: colors.grey2,
 		borderTopRightRadius: 20,
 		borderTopLeftRadius: 20,
 		height: "15%",
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 20,
 		borderColor: colors.greyBorder,
-		backgroundColor: colors.grey1,
+		backgroundColor: colors.grey2,
 		width: "65%",
 	},
 

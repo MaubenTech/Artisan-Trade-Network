@@ -7,50 +7,69 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Pressable,
+	InteractionManager,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "expo-router";
 import colors from "../helpers/colors";
 import { SwipeData } from "../(home)/Home";
 import Carousel from "react-native-snap-carousel";
+import Animated, {
+	interpolateColor,
+	useAnimatedStyle,
+	useSharedValue,
+	withTiming,
+} from "react-native-reanimated";
 
 var { width, height } = Dimensions.get("window");
 
 export default function HomeCarousel({ data }: { data: SwipeData[] }) {
-	const [currentIndex, setCurrentIndex] = useState<string | number>(0);
+	const currentIndex = useSharedValue(0);
+	const currentX = useSharedValue(0);
 
-	console.log(currentIndex);
+	// console.log(currentIndex);
+
 	return (
 		<View style={{ width: width, gap: 10 }}>
 			<Carousel
 				layout={"default"}
 				data={data}
 				renderItem={({ item }: { item: SwipeData }) => <Card cardItem={item} />}
-				firstItem={0}
+				// firstItem={0}
 				inactiveSlideOpacity={1}
 				sliderWidth={width}
 				itemWidth={width * 0.72}
+				contentContainerCustomStyle={{ paddingLeft: "10%" }}
 				// slideStyle={{ display: "flex", alignItems: "" }}
 				vertical={false}
 				onScroll={(event) => {
 					const x = event.nativeEvent.contentOffset.x;
-					setCurrentIndex((x / width).toFixed(0));
+					currentX.value = (x / width) * 100 > 25 ? 1 : 0;
+					// console.log((x / width) * 100);
+					// setCurrentIndex((x / width).toFixed(0));
+				}}
+				onSnapToItem={(index) => {
+					currentIndex.value = index;
 				}}
 			/>
 			<View style={styles.carouselIndicatorContainer}>
-				{data.map((item: any, index: string | number) => {
+				{[null, null].map((_, index: number) => {
 					return (
-						<View
-							style={{
-								backgroundColor:
-									currentIndex == index
-										? colors.mainColor
-										: colors.shadedMainColor,
-								width: currentIndex == index ? 40 : 8,
-								...styles.carouselIndicator,
-							}}
+						<Animated.View
+							style={[
+								styles.carouselIndicator,
+								useAnimatedStyle(() => {
+									return {
+										width: currentX.value == index ? 38 : 10,
+										backgroundColor:
+											currentX.value == index
+												? colors.mainColor
+												: colors.shadedMainColor,
+									};
+								}),
+							]}
 							key={index}
-						></View>
+						></Animated.View>
 					);
 				})}
 			</View>

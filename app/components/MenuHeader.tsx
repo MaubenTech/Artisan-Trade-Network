@@ -2,13 +2,21 @@ import React from "react";
 import { Image } from "expo-image";
 import colors from "../helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Platform,
+	Button,
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+} from "react-native";
 import MenuIcon from "../../assets/images/menuIcon.svg";
 import NotificationPresent from "../../assets/images/notificationPresent.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 
-const ProfilePic = require("../../assets/images/profilePic.png");
+import ProfilePic from "../../assets/images/profilePic.png";
 
 const ios = Platform.OS == "ios";
 const MenuHeader = () => {
@@ -34,13 +42,16 @@ const MenuHeader = () => {
 					</View>
 					<Link
 						style={styles.profilePicContainer}
-						href={"/(userPages)/Profile"}
+						href={"/(customerPages)/(profile)/Profile"}
+						asChild
 					>
-						<Image
-							source={ProfilePic}
-							style={styles.profilePic}
-							contentFit="contain"
-						/>
+						<TouchableWithoutFeedback>
+							<Image
+								source={ProfilePic}
+								style={styles.profilePic}
+								contentFit="contain"
+							/>
+						</TouchableWithoutFeedback>
 					</Link>
 				</View>
 			</View>
