@@ -9,13 +9,13 @@ import {
 	ImagePropsBase,
 } from "react-native";
 import { Image } from "expo-image";
-import colors from "../helpers/colors";
+import colors from "../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { ReactElement, useEffect, useState } from "react";
 
 import { useNavigation } from "expo-router";
-import MenuHeader from "../components/MenuHeader";
-import HomeCarousel from "../components/HomeCarousel";
+import MenuHeader from "../../src/components/MenuHeader";
+import HomeCarousel from "../../src/components/HomeCarousel";
 import RewardIcon from "../../assets/images/reward.svg";
 import { LinkProps } from "expo-router/build/link/Link";
 

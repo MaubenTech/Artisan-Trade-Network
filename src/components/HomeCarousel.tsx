@@ -12,7 +12,7 @@ import {
 import React, { useRef, useState } from "react";
 import { Link } from "expo-router";
 import colors from "../helpers/colors";
-import { SwipeData } from "../(home)/Home";
+import { SwipeData } from "../../app/(home)/Home";
 import Carousel from "react-native-snap-carousel";
 import Animated, {
 	interpolateColor,

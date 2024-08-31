@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import colors from "../helpers/colors";
-import ChatHeader from "../components/ChatHeader";
+import colors from "../../src/helpers/colors";
+import ChatHeader from "../../src/components/ChatHeader";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import CustomKeyboardView from "../components/CustomKeyboardView";
+import CustomKeyboardView from "../../src/components/CustomKeyboardView";
 
 export default function ChatRoom() {
 	const router = useRouter();

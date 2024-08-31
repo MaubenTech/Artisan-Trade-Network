@@ -1,5 +1,6 @@
 const colors = {
 	mainColor: "#1DA1F2",
+	mainColorbg: "#F6F6F6",
 	shadedMainColor: "#C3E8FF",
 	yellow: "#F9BC15",
 	greenShade: "#33A852",

@@ -9,12 +9,12 @@ import {
 	TouchableOpacity,
 	FlatList,
 } from "react-native";
-import colors from "../helpers/colors";
+import colors from "../../src/helpers/colors";
 import React, { useState } from "react";
-import MenuHeader from "../components/MenuHeader";
+import MenuHeader from "../../src/components/MenuHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import ButtonOptions from "../components/ButtonOptions";
-import FilterComponent from "../components/FilterComponent";
+import ButtonOptions from "../../src/components/ButtonOptions";
+import FilterComponent from "../../src/components/FilterComponent";
 import { useNavigation, useRouter } from "expo-router";
 import ChatItem from "../(chatPage)/ChatRoom";
 import ChatList from "../(chatPage)/ChatList";

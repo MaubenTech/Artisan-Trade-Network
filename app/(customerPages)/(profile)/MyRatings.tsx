@@ -1,5 +1,5 @@
 import React from "react";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../../src/components/PageHeader";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import JobRating from "../../../assets/images/JobRating.svg";
 import ProfilePicture from "../../../assets/components/chatList/images/profilePicture.svg";

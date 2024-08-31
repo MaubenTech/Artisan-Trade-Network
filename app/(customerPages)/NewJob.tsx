@@ -9,15 +9,15 @@ import {
 	SafeAreaView,
 } from "react-native";
 import { Image } from "expo-image";
-import colors from "../helpers/colors";
+import colors from "../../src/helpers/colors";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import RadioGroup from "../components/RadioGroup";
-import PageHeader from "../components/PageHeader";
+import RadioGroup from "../../src/components/RadioGroup";
+import PageHeader from "../../src/components/PageHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import ButtonGroup from "../components/ButtonGroup";
+import ButtonGroup from "../../src/components/ButtonGroup";
 import * as DocumentPicker from "expo-document-picker";
-import ButtonOptions from "../components/ButtonOptions";
+import ButtonOptions from "../../src/components/ButtonOptions";
 import { launchImageLibraryAsync } from "expo-image-picker";
 import UploadImages from "../../assets/images/uploadImages.svg";
 

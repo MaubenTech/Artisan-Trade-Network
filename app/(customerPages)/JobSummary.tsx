@@ -1,9 +1,9 @@
 import React from "react";
-import colors from "../helpers/colors";
-import PageHeader from "../components/PageHeader";
+import colors from "../../src/helpers/colors";
+import PageHeader from "../../src/components/PageHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View, Text, StyleSheet } from "react-native";
-import ButtonGroup from "../components/ButtonGroup";
+import ButtonGroup from "../../src/components/ButtonGroup";
 
 const JobDetails = [
 	{

@@ -1,7 +1,7 @@
 import Layout, { CustomTabBar } from "../(home)/_layout";
-import colors from "../helpers/colors";
+import colors from "../../src/helpers/colors";
 import { SvgProps } from "react-native-svg";
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../../src/components/PageHeader";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React, { FunctionComponent, ReactElement, ReactSVGElement } from "react";
 
@@ -11,7 +11,7 @@ import CleaningIcon from "../../assets/icons/services/cleaningIcon.svg";
 import CarpenterIcon from "../../assets/icons/services/carpenterIcon.svg";
 import ElectricianIcon from "../../assets/icons/services/electricianIcon.svg";
 import InteriorDecorIcon from "../../assets/icons/services/interiorDecorIcon.svg";
-import TabBar from "../components/TabBar";
+import TabBar from "../../src/components/TabBar";
 
 type Services = {
 	name: string;

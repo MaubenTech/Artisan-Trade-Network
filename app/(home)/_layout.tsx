@@ -6,8 +6,8 @@ import {
 	View,
 } from "react-native";
 import { Tabs } from "expo-router";
-import colors from "../helpers/colors";
-import TabBar from "../components/TabBar";
+import colors from "../../src/helpers/colors";
+import TabBar from "../../src/components/TabBar";
 import React, { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";

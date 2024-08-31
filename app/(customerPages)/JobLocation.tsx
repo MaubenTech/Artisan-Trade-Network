@@ -1,8 +1,8 @@
-import colors from "../helpers/colors";
+import colors from "../../src/helpers/colors";
 import * as Location from "expo-location";
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../../src/components/PageHeader";
 import React, { useEffect, useState } from "react";
-import ButtonGroup from "../components/ButtonGroup";
+import ButtonGroup from "../../src/components/ButtonGroup";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import MapView, { LatLng, Marker, Region } from "react-native-maps";
 

@@ -9,7 +9,7 @@ import React, { ReactElement } from "react";
 import colors from "../helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
-import Jobs from "../(home)/Jobs";
+import Jobs from "../../app/(home)/Jobs";
 import { Icon } from "@expo/vector-icons/build/createIconSet";
 
 const { width, height } = Dimensions.get("window");

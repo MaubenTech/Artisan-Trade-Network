@@ -1,8 +1,8 @@
 import React from "react";
-import colors from "../../helpers/colors";
+import colors from "../../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MenuHeader from "../../components/MenuHeader";
-import PageHeader from "../../components/PageHeader";
+import MenuHeader from "../../../src/components/MenuHeader";
+import PageHeader from "../../../src/components/PageHeader";
 import {
 	View,
 	Text,

@@ -22,7 +22,7 @@ import GoogleLogo from "../assets/images/google.svg";
 import AppleLogo from "../assets/images/apple-logo.svg";
 import { useState } from "react";
 import React from "react";
-import colors from "./helpers/colors";
+import colors from "../src/helpers/colors";
 
 const { width, height } = Dimensions.get("window");
 

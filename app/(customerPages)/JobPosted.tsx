@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import JobPostedSuccessfully from "../../assets/images/JobPostedSuccessfully.svg";
-import ButtonGroup from "../components/ButtonGroup";
-import colors from "../helpers/colors";
+import ButtonGroup from "../../src/components/ButtonGroup";
+import colors from "../../src/helpers/colors";
 
 const JobPosted = () => {
 	return (

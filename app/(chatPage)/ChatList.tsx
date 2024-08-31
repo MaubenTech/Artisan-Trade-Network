@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import ProfilePicture from "../../assets/components/chatList/images/profilePicture.svg";
 import { router, useRouter } from "expo-router";
-import colors from "../helpers/colors";
+import colors from "../../src/helpers/colors";
 
 const ChatList = ({ item }: { item: number }) => {
 	const openChatRoom = () => {

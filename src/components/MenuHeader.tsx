@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 	menuOptions: {
 		flexDirection: "row",
 		// width: "50%",
-		justifyContent: "flex-end",
+		justifyContent: "space-between",
 		alignItems: "center",
 	},
 
@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
 	},
 
 	profilePic: {
-		width: 50,
-		height: "100%",
+		width: 35,
+		height: "180%",
 		objectFit: "contain",
 	},
 });

@@ -1,8 +1,8 @@
 import React from "react";
-import colors from "../../helpers/colors";
-import PageHeader from "../../components/PageHeader";
+import colors from "../../../src/helpers/colors";
+import PageHeader from "../../../src/components/PageHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import ButtonGroup from "../../components/ButtonGroup";
+import ButtonGroup from "../../../src/components/ButtonGroup";
 import JobRating from "../../../assets/images/JobRating.svg";
 import WorkRating from "../../../assets/images/WorkRating.svg";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
