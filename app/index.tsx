@@ -70,7 +70,11 @@ function Login() {
 							/>
 							<Text>Remember Me</Text>
 						</View>
-						<Text style={styles.formText}>Forgot Password ?</Text>
+						<Link href={"/ForgotPassword"} asChild>
+							<TouchableWithoutFeedback>
+								<Text style={styles.formText}>Forgot Password ?</Text>
+							</TouchableWithoutFeedback>
+						</Link>
 					</View>
 				</View>
 				<View style={styles.loginButtonContainer}>
