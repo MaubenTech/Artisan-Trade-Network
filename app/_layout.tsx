@@ -1,15 +1,9 @@
-// import {
-// 	DarkTheme,
-// 	DefaultTheme,
-// 	ThemeProvider,
-// } from "@react-navigation/native";
-import { Slot, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import "react-native-reanimated";
-import FontsProvider from "../src/components/FontsProvider";
+import { Tabs } from "expo-router";
+import { Stack } from "expo-router/stack";
 
-// import { useColorScheme } from "@/hooks/useColorScheme";
+// export const unstable_settings = {
+// 	initialRouteName: "/(home)/Services",
+// };
 
 export default function RootLayout() {
 	// const colorScheme = useColorScheme();
