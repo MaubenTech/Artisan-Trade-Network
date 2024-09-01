@@ -1,21 +1,27 @@
-import { Tabs } from "expo-router";
-import { Stack } from "expo-router/stack";
+// import {
+// 	DarkTheme,
+// 	DefaultTheme,
+// 	ThemeProvider,
+// } from "@react-navigation/native";
+import { Slot, Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import FontsProvider from "../src/components/FontsProvider";
 
-// export const unstable_settings = {
-// 	initialRouteName: "/(home)/Services",
-// };
+// import { useColorScheme } from "@/hooks/useColorScheme";
 
-export default function RootLayoutNav() {
+export default function RootLayout() {
+	// const colorScheme = useColorScheme();
+	// const [fontsLoaded] = useFonts({
+	// 	SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+	// });
+
 	return (
-		<Stack
-			screenOptions={{
-				headerShown: false,
-			}}
-		>
-			<Stack.Screen name="index" />
-			<Stack.Screen name="(registration)" />
-			<Stack.Screen name="(home)" />
-		</Stack>
+		// <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+		<FontsProvider>
+			<Slot />
+		</FontsProvider>
+		// </ThemeProvider>
 	);
 }
-// export default Stack;
