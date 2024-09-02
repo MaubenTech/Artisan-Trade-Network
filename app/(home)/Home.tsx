@@ -63,7 +63,7 @@ export default function Home() {
 					size={20}
 				/>
 			),
-			href: "/(customerPages)/Services",
+			href: "/Services",
 		},
 		{
 			index: 1,

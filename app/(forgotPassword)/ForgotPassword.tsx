@@ -1,33 +1,24 @@
-import { StatusBar } from "expo-status-bar";
 import {
 	StyleSheet,
 	Text,
 	View,
-	Image,
 	TextInput,
-	Pressable,
-	TouchableWithoutFeedback,
 	TouchableOpacity,
 	Dimensions,
-	TouchableHighlight,
-	TouchableNativeFeedback,
 	ScrollView,
 } from "react-native";
-import Checkbox from "expo-checkbox";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 
-import HeaderImage from "../assets/images/loginPageHeader.svg";
-import FacebookLogo from "../assets/images/facebook.svg";
-import GoogleLogo from "../assets/images/google.svg";
-import AppleLogo from "../assets/images/apple-logo.svg";
+import HeaderImage from "../../assets/images/forgotPasswordHeader.svg";
 import { useState } from "react";
 import React from "react";
-import colors from "../src/helpers/colors";
+import colors from "../../src/helpers/colors";
 
 const { width, height } = Dimensions.get("window");
 
-function Login() {
+const ForgotPassword = (): JSX.Element => {
 	const [isChecked, setChecked] = useState(false);
+	const navigation = useNavigation();
 	return (
 		<ScrollView
 			contentContainerStyle={styles.container}
@@ -35,49 +26,26 @@ function Login() {
 			scrollEnabled={false}
 		>
 			<View style={styles.imageContainer}>
-				<HeaderImage width={86} height={86} />
+				<HeaderImage width={250} height={250} />
 			</View>
-			<View style={styles.loginContainer}>
+			<View style={styles.forgotPasswordContainer}>
 				<View style={styles.lch}>
-					<Text style={styles.lchHeader}>Login to your account</Text>
+					<Text style={styles.lchHeader}>Forgot Password?</Text>
 					<Text style={styles.lchText}>
-						Welcome back! Please enter your details
+						No worries, we'll send you reset instruction
 					</Text>
 				</View>
-				<View style={styles.loginFormContainer}>
-					<View style={styles.loginDetailContainer}>
-						<Text style={styles.formText}>Email</Text>
+				<View style={styles.forgotPasswordFormContainer}>
+					<View style={styles.forgotPasswordDetailContainer}>
+						<Text style={styles.formText}>Email or Username</Text>
 						<TextInput
-							style={styles.loginInput}
+							style={styles.forgotPasswordInput}
 							placeholder="example@gmail.com"
 							placeholderTextColor={"#8F8F8F"}
 						/>
 					</View>
-					<View style={styles.loginDetailContainer}>
-						<Text style={styles.formText}>Password</Text>
-						<TextInput
-							style={styles.loginInput}
-							placeholder="Enter Your Password"
-							placeholderTextColor={"#8F8F8F"}
-						/>
-					</View>
-					<View style={styles.loginActions}>
-						<View style={styles.check}>
-							<Checkbox
-								style={styles.checkbox}
-								value={isChecked}
-								onValueChange={setChecked}
-							/>
-							<Text>Remember Me</Text>
-						</View>
-						<Link href={"/ForgotPassword"} asChild>
-							<TouchableWithoutFeedback>
-								<Text style={styles.formText}>Forgot Password ?</Text>
-							</TouchableWithoutFeedback>
-						</Link>
-					</View>
 				</View>
-				<View style={styles.loginButtonContainer}>
+				<View style={styles.forgotPasswordButtonContainer}>
 					<Link
 						style={{
 							alignItems: "center",
@@ -87,7 +55,7 @@ function Login() {
 							padding: 15,
 						}}
 						asChild
-						href={"(home)/Home"}
+						href={"/ResetPassword"}
 					>
 						<TouchableOpacity
 							style={[
@@ -108,27 +76,39 @@ function Login() {
 									},
 								]}
 							>
-								Login
+								Reset Password
 							</Text>
 						</TouchableOpacity>
 					</Link>
-					<Text style={[{ textAlign: "center" }, styles.formText]}>
-						Or Login With
-					</Text>
-					<View style={styles.loginOptionsContainer}>
-						<View style={styles.logoBorder}>
-							<FacebookLogo />
-						</View>
-						<View style={styles.logoBorder}>
-							<GoogleLogo />
-						</View>
-						<View style={styles.logoBorder}>
-							<AppleLogo />
-						</View>
-					</View>
+					<TouchableOpacity
+						style={[
+							{
+								alignItems: "center",
+								borderRadius: 15,
+								justifyContent: "center",
+								padding: 15,
+								borderWidth: 1,
+							},
+						]}
+						onPress={() => {
+							navigation.goBack();
+						}}
+					>
+						<Text
+							style={[
+								{
+									textAlign: "center",
+									fontWeight: "600",
+									fontSize: 16,
+								},
+							]}
+						>
+							Back to Login
+						</Text>
+					</TouchableOpacity>
 					<View style={styles.signUpOption}>
 						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
-						<Link href={"(registration)/SignUp"} style={styles.links}>
+						<Link href="/SignUp" style={{ textDecorationLine: "underline" }}>
 							Sign up
 						</Link>
 					</View>
@@ -136,9 +116,9 @@ function Login() {
 			</View>
 		</ScrollView>
 	);
-}
+};
 
-export default Login;
+export default ForgotPassword;
 
 const styles = StyleSheet.create({
 	container: {
@@ -155,7 +135,7 @@ const styles = StyleSheet.create({
 
 	image: {},
 
-	loginContainer: {
+	forgotPasswordContainer: {
 		width: "100%",
 		justifyContent: "flex-start",
 		paddingLeft: 30,
@@ -180,14 +160,14 @@ const styles = StyleSheet.create({
 		fontWeight: "300",
 	},
 
-	loginFormContainer: {
+	forgotPasswordFormContainer: {
 		gap: 20,
 		marginBottom: "6%",
 	},
 
-	loginDetailContainer: {},
+	forgotPasswordDetailContainer: {},
 
-	loginInput: {
+	forgotPasswordInput: {
 		backgroundColor: "#FFFFFF",
 		padding: "5%",
 		borderColor: colors.inputBorderColor,
@@ -201,7 +181,7 @@ const styles = StyleSheet.create({
 		marginBottom: 5,
 	},
 
-	loginActions: {
+	forgotPasswordActions: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -218,16 +198,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "#F8F9FB",
 	},
 
-	loginButtonContainer: {
+	forgotPasswordButtonContainer: {
 		gap: 20,
 	},
 
-	loginButton: {
+	forgotPasswordButton: {
 		backgroundColor: colors.mainColor,
 		borderRadius: 12,
 	},
 
-	loginOptionsContainer: {
+	forgotPasswordOptionsContainer: {
 		flexDirection: "row",
 		justifyContent: "space-around",
 		marginBottom: "10%",

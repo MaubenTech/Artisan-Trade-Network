@@ -1,10 +1,10 @@
 import { View, Text, Button, Pressable } from "react-native";
 import React from "react";
-import { Stack, useRootNavigation } from "expo-router";
+import { Stack, useNavigation, useRootNavigation } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Layout() {
-	const rootNavigation = useRootNavigation();
+	const rootNavigation = useNavigation();
 	return (
 		<Stack>
 			<Stack.Screen

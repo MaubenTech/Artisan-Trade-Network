@@ -48,7 +48,8 @@ const MenuHeader = () => {
 					</View>
 					<Link
 						style={styles.profilePicContainer}
-						href={"/(customerPages)/(profile)/Profile"}
+						// href={"/(customerPages)/(profile)/Profile"}
+						href={"/Profile"}
 						asChild
 					>
 						<TouchableWithoutFeedback>
