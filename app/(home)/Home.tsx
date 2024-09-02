@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
 	menuHeaderContainer: {
 		backgroundColor: "#fff",
 		alignItems: "center",
-		paddingHorizontal: 30,
+		paddingHorizontal: 20,
 	},
 	container: {
 		flex: 1,

@@ -18,6 +18,7 @@ import FilterComponent from "../../src/components/FilterComponent";
 import { useNavigation, useRouter } from "expo-router";
 import ChatItem from "../(chatPage)/ChatRoom";
 import ChatList from "../(chatPage)/ChatList";
+import SearchBar from "../../src/components/SearchBar";
 
 const filterOptions = [
 	{
@@ -31,35 +32,23 @@ const filterOptions = [
 	},
 ];
 
-const [users, setUsers] = useState([1, 2]);
-
 export default function Chat() {
 	const router = useRouter();
 
 	const navigation = useNavigation();
 	const [filterOption, setFilterOption] = useState<string | number>("All");
+	const [users, setUsers] = useState([1, 2]);
 	return (
 		<View style={styles.container}>
 			<MenuHeader />
 			<SafeAreaView style={styles.contentContainer}>
-				<View style={styles.searchBarContainer}>
-					<Ionicons name="search" style={styles.searchIcon} />
-					<TextInput
-						placeholder="Search"
-						clearButtonMode="always"
-						style={styles.searchBar}
-						autoCapitalize="none"
-						autoCorrect={false}
-					/>
-				</View>
+				<SearchBar />
 				<View style={styles.searchFilterContainer}>
-					<View style={styles.searchFilters}>
-						<FilterComponent
-							filterOptions={filterOptions}
-							selectedOption={filterOption}
-							onOptionChanged={setFilterOption}
-						/>
-					</View>
+					<FilterComponent
+						filterOptions={filterOptions}
+						selectedOption={filterOption}
+						onOptionChanged={setFilterOption}
+					/>
 				</View>
 				<View>
 					<FlatList
@@ -87,29 +76,6 @@ const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
 		gap: 20,
-	},
-
-	searchBarContainer: {
-		// width: "100%",
-		position: "relative",
-		paddingHorizontal: 20,
-		paddingVertical: 10,
-		borderColor: colors.greySecondaryShade,
-		borderWidth: 1,
-		borderRadius: 8,
-		width: "100%",
-	},
-
-	searchIcon: {
-		position: "absolute",
-		top: 12,
-		justifyContent: "center",
-		marginHorizontal: 10,
-	},
-
-	searchBar: {
-		width: "50%",
-		marginLeft: 10,
 	},
 
 	searchFilterContainer: {},

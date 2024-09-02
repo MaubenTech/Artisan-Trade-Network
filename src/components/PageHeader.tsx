@@ -69,9 +69,13 @@ export default function PageHeader({
 					</View>
 					<Text style={styles.pageHeaderTitle}>{pageName}</Text>
 					{profile ? (
-						<View style={styles.settingsContainer}>
+						<Link
+							style={styles.settingsContainer}
+							asChild
+							href={"/(customerPages)/(profile)/Settings"}
+						>
 							<Ionicons name="settings-outline" size={20} />
-						</View>
+						</Link>
 					) : (
 						<></>
 					)}
@@ -135,7 +139,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 5,
-		paddingLeft: "5%",
+		paddingHorizontal: 20,
 		paddingBottom: "5%",
 	},
 

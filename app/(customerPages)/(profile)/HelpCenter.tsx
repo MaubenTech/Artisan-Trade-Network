@@ -1,6 +1,8 @@
 import React from "react";
+import { Link } from "expo-router";
 import colors from "../../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import DropDown from "../../../src/components/DropDown";
 import PageHeader from "../../../src/components/PageHeader";
 import {
 	View,
@@ -12,7 +14,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import CustomKeyboardView from "../../../src/components/CustomKeyboardView";
-import { Link } from "expo-router";
+import SearchBar from "../../../src/components/SearchBar";
 
 const helpCenterOptions = [
 	{
@@ -58,20 +60,14 @@ const HelpCenter = () => {
 		<>
 			<PageHeader pageName="Help Center" />
 			<CustomKeyboardView style={styles.container}>
-				<ScrollView style={styles.subContainer}>
+				<ScrollView contentContainerStyle={styles.subContainer}>
 					<View style={styles.searchSection}>
 						<Text style={styles.helpCenterIntro}>
 							Explore our Help Center for answers to your questions and
 							assistance with your experience.
 						</Text>
 
-						<View style={styles.searchBarContainer}>
-							<Ionicons name="search" />
-							<TextInput
-								style={styles.searchBar}
-								placeholder="Search your keyword"
-							></TextInput>
-						</View>
+						<SearchBar />
 
 						<View style={styles.helpCenterOptions}>
 							{helpCenterOptions.map((helpCenterOption) => {
@@ -88,9 +84,16 @@ const HelpCenter = () => {
 												<Text style={styles.optionPreview}>
 													{helpCenterOption.optionPreview}
 												</Text>
-												<Text style={styles.learnMore}>
-													Learn More {helpCenterOption.learnMoreIcon}
-												</Text>
+												<View
+													style={{
+														flexDirection: "row",
+														gap: 5,
+														alignItems: "center",
+													}}
+												>
+													<Text style={styles.learnMore}>Learn More</Text>
+													{helpCenterOption.learnMoreIcon}
+												</View>
 											</TouchableOpacity>
 										</Link>
 									</>
@@ -98,14 +101,72 @@ const HelpCenter = () => {
 							})}
 						</View>
 					</View>
-					<View style={styles.faqSection}>
-						<View style={styles.faqHeader}>
-							<Text style={styles.faqHeaderTitle}>
-								Frequently Asked Questions
-							</Text>
-							<Text style={styles.faqHeaderSubTitle}>
+					<View style={styles.section}>
+						<View style={styles.Header}>
+							<Text style={styles.HeaderTitle}>Frequently Asked Questions</Text>
+							<Text style={styles.HeaderSubTitle} numberOfLines={2}>
 								Lorem ipsum dolor sit amet, consectetur a attis. Sed vitae est{" "}
 							</Text>
+						</View>
+						<DropDown />
+					</View>
+					<View style={styles.section}>
+						<View style={styles.Header}>
+							<Text style={styles.HeaderTitle}>Didn't Find any Solution ?</Text>
+							<Text style={styles.HeaderSubTitle} numberOfLines={2}>
+								Lorem ipsum dolor sit amet, consectetur a attis. Sed vitae est{" "}
+							</Text>
+						</View>
+						<View style={styles.solutions}>
+							<View style={styles.solutionContainer}>
+								<View style={styles.solutionIconContainer}>
+									<View style={styles.solutionIcon}>
+										<Ionicons
+											name="chatbox-ellipses-outline"
+											style={styles.solutionMainIcon}
+										/>
+									</View>
+								</View>
+								<View style={styles.solutionContent}>
+									<Text style={{ fontSize: 18, fontWeight: "500" }}>
+										Chat with us
+									</Text>
+									<Text
+										style={{ fontSize: 12, fontWeight: "300", width: "40%" }}
+									>
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+										Etiam sed metus at est iaculis mattis. Sed vitae
+									</Text>
+									<Link href={"#"} style={{ textDecorationLine: "underline" }}>
+										Chat Now
+									</Link>
+								</View>
+							</View>
+							<View style={styles.solutionContainer}>
+								<View style={styles.solutionIconContainer}>
+									<View style={styles.solutionIcon}>
+										<Ionicons
+											name="call-outline"
+											s
+											style={styles.solutionMainIcon}
+										/>
+									</View>
+								</View>
+								<View style={styles.solutionContent}>
+									<Text style={{ fontSize: 18, fontWeight: "500" }}>
+										Contact Us
+									</Text>
+									<Text
+										style={{ fontSize: 12, fontWeight: "300", width: "40%" }}
+									>
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+										Etiam sed metus at est iaculis mattis. Sed vitae
+									</Text>
+									<Link href={"#"} style={{ textDecorationLine: "underline" }}>
+										Call Now
+									</Link>
+								</View>
+							</View>
 						</View>
 					</View>
 				</ScrollView>
@@ -123,6 +184,7 @@ const styles = StyleSheet.create({
 
 	subContainer: {
 		gap: 20,
+		paddingBottom: 50,
 	},
 
 	searchSection: {
@@ -134,19 +196,6 @@ const styles = StyleSheet.create({
 	helpCenterIntro: {
 		fontWeight: "300",
 	},
-
-	searchBarContainer: {
-		flexDirection: "row",
-		borderColor: colors.inputBorderColor,
-		borderWidth: 1,
-		padding: 15,
-		gap: 20,
-		alignItems: "center",
-		paddingHorizontal: 20,
-		borderRadius: 10,
-	},
-
-	searchBar: {},
 
 	helpCenterOptions: {
 		flexDirection: "row",
@@ -181,17 +230,66 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 
-	learnMore: {},
-
-	faqSection: {
-		paddingHorizontal: 26,
+	learnMore: {
+		textAlign: "center",
 	},
 
-	faqHeader: {},
+	section: {
+		paddingHorizontal: 26,
+		gap: 40,
+	},
 
-	faqHeaderTitle: {},
+	Header: {
+		gap: 7,
+	},
 
-	faqHeaderSubTitle: {},
+	HeaderTitle: {
+		textAlign: "center",
+		fontWeight: "500",
+		fontSize: 20,
+	},
+
+	HeaderSubTitle: {
+		paddingHorizontal: 50,
+		alignItems: "center",
+		justifyContent: "center",
+		textAlign: "center",
+		fontWeight: "300",
+		fontSize: 10,
+	},
+
+	componentContainer: {
+		gap: 10,
+	},
+
+	solutions: {
+		gap: 15,
+	},
+
+	solutionContainer: {
+		flexDirection: "row",
+		gap: 10,
+		backgroundColor: colors.inputBorderColor,
+		padding: 10,
+		borderRadius: 5,
+	},
+
+	solutionIconContainer: {},
+
+	solutionIcon: {
+		backgroundColor: colors.mainColor,
+		padding: 10,
+		borderRadius: 50,
+	},
+
+	solutionMainIcon: {
+		color: "white",
+	},
+
+	solutionContent: {
+		gap: 10,
+		paddingTop: 10,
+	},
 });
 
 export default HelpCenter;

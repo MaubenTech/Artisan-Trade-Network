@@ -1,8 +1,3 @@
-import React from "react";
-import colors from "../../../src/helpers/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MenuHeader from "../../../src/components/MenuHeader";
-import PageHeader from "../../../src/components/PageHeader";
 import {
 	View,
 	Text,
@@ -10,8 +5,14 @@ import {
 	Dimensions,
 	TouchableOpacity,
 } from "react-native";
-import JobPicture from "../../../assets/images/JobPicture.svg";
+import React from "react";
 import { Link } from "expo-router";
+import colors from "../../../src/helpers/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MenuHeader from "../../../src/components/MenuHeader";
+import PageHeader from "../../../src/components/PageHeader";
+import JobPicture from "../../../assets/images/JobPicture.svg";
+import MoreIcon from "../../../assets/icons/services/moreIcon.svg";
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,7 +35,7 @@ const JobHistory = () => {
 								<Text style={styles.jobDetailText}>
 									Need to repair my toilet
 								</Text>
-								<Ionicons name="menu" color={"black"} />
+								<MoreIcon />
 							</View>
 							<Text style={styles.jobServiceCategory}>Maintenance</Text>
 							<Text

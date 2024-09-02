@@ -6,11 +6,13 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	ScrollView,
+	Dimensions,
 } from "react-native";
 
 type FilterOptions = {
 	optionTitle: string;
 };
+const { width, height } = Dimensions.get("window");
 
 export default function FilterComponent({
 	filterOptions,
@@ -26,8 +28,8 @@ export default function FilterComponent({
 			horizontal
 			showsHorizontalScrollIndicator={false}
 			contentContainerStyle={{
-				justifyContent: "space-evenly",
-				width: "100%",
+				// justifyContent: "space-evenly",
+				width: width,
 				gap: 10,
 			}}
 		>
@@ -67,11 +69,10 @@ const styles = StyleSheet.create({
 	// },
 
 	filterOption: {
-		// width: "31%",
 		flex: 0.4,
 		flexDirection: "row",
-		padding: "3%",
-		borderRadius: 10,
+		padding: "2%",
+		borderRadius: 5,
 		justifyContent: "center",
 		borderWidth: 1,
 		borderColor: colors.greyBorder,

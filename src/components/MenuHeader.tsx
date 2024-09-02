@@ -22,12 +22,18 @@ const ios = Platform.OS == "ios";
 const MenuHeader = () => {
 	const { top } = useSafeAreaInsets();
 	return (
-		<View style={(styles.menuContainer, { paddingTop: ios ? top : top + 10 })}>
+		<View
+			style={
+				(styles.menuContainer,
+				{ paddingTop: ios ? top : top + 10, backgroundColor: "white" })
+			}
+		>
 			<View
 				style={{
 					flexDirection: "row",
 					justifyContent: "space-between",
 					width: "100%",
+					backgroundColor: "white",
 				}}
 			>
 				<MenuIcon />
@@ -61,11 +67,10 @@ const MenuHeader = () => {
 
 const styles = StyleSheet.create({
 	menuContainer: {
-		// paddingTop: "20%",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-		// width: "100%",
+		backgroundColor: "white",
 	},
 
 	menuOptions: {
