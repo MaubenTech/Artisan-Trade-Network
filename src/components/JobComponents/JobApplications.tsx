@@ -33,12 +33,13 @@ const applications = [
 const JobApplications = () => {
 	return (
 		<View style={{ gap: 20 }}>
-			{applications.map((application) => {
+			{applications.map((application, index) => {
 				return (
 					<Link
+						key={index}
 						style={styles.application}
 						asChild
-						href={"/(jobs)/PostedJobDetails"}
+						href={"/PostedJobDetails"}
 					>
 						<TouchableOpacity
 							style={styles.applicationDetails}

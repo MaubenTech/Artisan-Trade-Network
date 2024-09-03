@@ -73,38 +73,9 @@ function Login() {
 					</View>
 				</View>
 				<View style={styles.loginButtonContainer}>
-					<Link
-						style={{
-							alignItems: "center",
-							backgroundColor: colors.mainColor,
-							borderRadius: 15,
-							justifyContent: "center",
-							padding: 15,
-						}}
-						asChild
-						href={"(home)/Home"}
-					>
-						<TouchableOpacity
-							style={[
-								{
-									alignItems: "center",
-									justifyContent: "center",
-									padding: 20,
-								},
-							]}
-						>
-							<Text
-								style={[
-									{
-										textAlign: "center",
-										fontWeight: "600",
-										fontSize: 16,
-										color: "white",
-									},
-								]}
-							>
-								Login
-							</Text>
+					<Link style={styles.loginButton} asChild href={"/Home"}>
+						<TouchableOpacity>
+							<Text style={styles.loginButtonText}>Login</Text>
 						</TouchableOpacity>
 					</Link>
 					<View style={styles.loginOptions}>
@@ -234,8 +205,18 @@ const styles = StyleSheet.create({
 	},
 
 	loginButton: {
+		alignItems: "center",
 		backgroundColor: colors.mainColor,
-		borderRadius: 12,
+		borderRadius: 15,
+		justifyContent: "center",
+		padding: 15,
+	},
+
+	loginButtonText: {
+		textAlign: "center",
+		fontWeight: "600",
+		fontSize: 16,
+		color: "white",
 	},
 
 	loginOptions: {
