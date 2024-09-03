@@ -38,14 +38,22 @@ const MenuHeader = () => {
 			>
 				<MenuIcon />
 				<View style={styles.menuOptions}>
-					<View style={styles.notificationIconContainer}>
-						<Ionicons
-							name="notifications-outline"
-							size={25}
-							style={styles.notificationBell}
-						/>
-						<NotificationPresent style={styles.notificationPresent} />
-					</View>
+					<Link
+						style={styles.notificationIconContainer}
+						asChild
+						href={"/Notifications"}
+					>
+						<TouchableWithoutFeedback>
+							<View>
+								<Ionicons
+									name="notifications-outline"
+									size={25}
+									style={styles.notificationBell}
+								/>
+								<NotificationPresent style={styles.notificationPresent} />
+							</View>
+						</TouchableWithoutFeedback>
+					</Link>
 					<Link
 						style={styles.profilePicContainer}
 						// href={"/(customerPages)/(profile)/Profile"}
