@@ -1,16 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import {
 	StyleSheet,
-	Text,
 	View,
-	Image,
-	TextInput,
-	Pressable,
 	TouchableWithoutFeedback,
 	TouchableOpacity,
 	Dimensions,
-	TouchableHighlight,
-	TouchableNativeFeedback,
 	ScrollView,
 } from "react-native";
 import Checkbox from "expo-checkbox";
@@ -23,6 +17,7 @@ import AppleLogo from "../assets/images/apple-logo.svg";
 import { useState } from "react";
 import React from "react";
 import colors from "../src/helpers/colors";
+import { Text, TextInput } from "../src/components/Text";
 
 const { width, height } = Dimensions.get("window");
 
@@ -112,18 +107,20 @@ function Login() {
 							</Text>
 						</TouchableOpacity>
 					</Link>
-					<Text style={[{ textAlign: "center" }, styles.formText]}>
-						Or Login With
-					</Text>
-					<View style={styles.loginOptionsContainer}>
-						<View style={styles.logoBorder}>
-							<FacebookLogo />
-						</View>
-						<View style={styles.logoBorder}>
-							<GoogleLogo />
-						</View>
-						<View style={styles.logoBorder}>
-							<AppleLogo />
+					<View style={styles.loginOptions}>
+						<Text style={[{ textAlign: "center" }, styles.formText]}>
+							Or Login With
+						</Text>
+						<View style={styles.loginOptionsContainer}>
+							<View style={styles.logoBorder}>
+								<FacebookLogo />
+							</View>
+							<View style={styles.logoBorder}>
+								<GoogleLogo />
+							</View>
+							<View style={styles.logoBorder}>
+								<AppleLogo />
+							</View>
 						</View>
 					</View>
 					<View style={styles.signUpOption}>
@@ -142,7 +139,8 @@ export default Login;
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
+		flexGrow: 1,
 		backgroundColor: "#fff",
 		alignItems: "center",
 		gap: 10,
@@ -156,61 +154,71 @@ const styles = StyleSheet.create({
 	image: {},
 
 	loginContainer: {
+		flex: 1,
 		width: "100%",
 		justifyContent: "flex-start",
 		paddingLeft: 30,
 		paddingRight: 30,
 		gap: 10,
+		paddingBottom: "5%",
+		// backgroundColor: "#f0f",
 	},
 
 	lch: {
+		// backgroundColor: "#f0f",
+		// flex: 0.3,
+		marginBottom: "5%",
 		alignItems: "flex-start",
 		width: "100%",
-		gap: 7,
-		marginBottom: "5%",
+		// gap: 7,
 	},
 
 	lchHeader: {
-		fontSize: 25,
+		fontSize: 23,
 		fontWeight: "700",
-		textAlign: "left",
+		// backgroundColor: "#f0f",
 	},
 
 	lchText: {
 		fontWeight: "300",
+		fontSize: 12,
 	},
 
 	loginFormContainer: {
+		flex: 1,
 		gap: 20,
-		marginBottom: "6%",
+		// marginBottom: "6%",
 	},
 
 	loginDetailContainer: {},
 
 	loginInput: {
-		backgroundColor: "#FFFFFF",
-		padding: "5%",
+		padding: "4%",
+		paddingLeft: 25,
+		paddingRight: 25,
 		borderColor: colors.inputBorderColor,
 		borderWidth: 1.05,
 		borderRadius: 10,
-		textAlign: "left",
+		fontSize: 13,
 	},
 
 	formText: {
-		fontSize: 16,
-		marginBottom: 5,
+		fontSize: 14,
+		// marginBottom: 5,
 	},
 
 	loginActions: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
+		// backgroundColor: "#f0f",
 	},
 
 	check: {
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 5,
+		// backgroundColor: "#f0f",
 	},
 
 	checkbox: {
@@ -219,7 +227,10 @@ const styles = StyleSheet.create({
 	},
 
 	loginButtonContainer: {
-		gap: 20,
+		justifyContent: "center",
+		width: "100%",
+		// backgroundColor: "#f0f",
+		gap: 40,
 	},
 
 	loginButton: {
@@ -227,10 +238,16 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 	},
 
+	loginOptions: {
+		// flex: 1,
+		gap: 10,
+	},
+
 	loginOptionsContainer: {
 		flexDirection: "row",
-		justifyContent: "space-around",
-		marginBottom: "10%",
+		justifyContent: "center",
+		gap: 25,
+		// marginBottom: "10%",
 	},
 
 	logoBorder: {
