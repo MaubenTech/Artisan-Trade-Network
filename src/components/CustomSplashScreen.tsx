@@ -5,18 +5,18 @@ import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 const CustomSplashScreen = (): JSX.Element => {
-	const [fadeAnim] = useState(new Animated.Value(1));
+	const [fadeAnim] = useState(new Animated.Value(0));
 
 	useEffect(() => {
 		Animated.loop(
 			Animated.sequence([
 				Animated.timing(fadeAnim, {
-					toValue: 0,
+					toValue: 1,
 					duration: 1000,
 					useNativeDriver: true,
 				}),
 				Animated.timing(fadeAnim, {
-					toValue: 1,
+					toValue: 0,
 					duration: 1000,
 					useNativeDriver: true,
 				}),
