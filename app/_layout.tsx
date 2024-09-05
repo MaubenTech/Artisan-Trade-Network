@@ -5,9 +5,11 @@
 // } from "@react-navigation/native";
 import { Slot, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import FontsProvider from "../src/components/FontsProvider";
+import UserTypeContext from "../src/context/UserTypeProvider";
+import UserTypeProvider from "../src/context/UserTypeProvider";
 
 // import { useColorScheme } from "@/hooks/useColorScheme";
 
@@ -19,9 +21,12 @@ export default function RootLayout() {
 
 	return (
 		// <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-		<FontsProvider>
-			<Slot />
-		</FontsProvider>
+		<UserTypeProvider>
+			<FontsProvider>
+				<Slot />
+				{/* <Stack></Stack> */}
+			</FontsProvider>
+		</UserTypeProvider>
 		// </ThemeProvider>
 	);
 }
