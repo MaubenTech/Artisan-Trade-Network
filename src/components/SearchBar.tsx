@@ -6,7 +6,7 @@ import colors from "../helpers/colors";
 const SearchBar = () => {
 	return (
 		<View style={styles.searchBarContainer}>
-			<Ionicons name="search" />
+			<Ionicons name="search" size={20} color={colors.brownShade} />
 			<TextInput
 				style={styles.searchBar}
 				placeholder="Search your keyword"

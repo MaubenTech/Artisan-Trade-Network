@@ -2,12 +2,12 @@ import React from "react";
 import colors from "../helpers/colors";
 import {
 	View,
-	Text,
 	StyleSheet,
 	TouchableOpacity,
 	ScrollView,
 	Dimensions,
 } from "react-native";
+import { Text } from "./Text";
 
 type FilterOptions = {
 	optionTitle: string;
@@ -28,8 +28,9 @@ export default function FilterComponent({
 			horizontal
 			showsHorizontalScrollIndicator={false}
 			contentContainerStyle={{
-				// justifyContent: "space-evenly",
-				width: width,
+				justifyContent: "space-between",
+				// width: width,
+				flex: 1,
 				gap: 10,
 			}}
 		>
@@ -44,6 +45,7 @@ export default function FilterComponent({
 						}
 						key={filterOption.optionTitle}
 						onPress={() => onOptionChanged(filterOption.optionTitle)}
+						activeOpacity={0.9}
 					>
 						<Text
 							style={
@@ -69,10 +71,11 @@ const styles = StyleSheet.create({
 	// },
 
 	filterOption: {
-		flex: 0.4,
+		// flex: 0.4,
 		flexDirection: "row",
 		padding: "2%",
-		borderRadius: 5,
+		paddingHorizontal: "8%",
+		borderRadius: 10,
 		justifyContent: "center",
 		borderWidth: 1,
 		borderColor: colors.greyBorder,
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
 	},
 
 	inactiveFilterOption: {
-		backgroundColor: colors.grey2,
+		// backgroundColor: colors.grey2,
 	},
 
 	activeFilterOptionText: {
