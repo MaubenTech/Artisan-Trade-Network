@@ -8,10 +8,12 @@ import {
 import { Tabs } from "expo-router";
 import colors from "../../src/helpers/colors";
 import TabBar from "../../src/components/TabBar";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
+import { UserTypeContext } from "../../src/context/UserTypeProvider";
+import USER_TYPE from "../../src/constants/UserType";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,14 +28,28 @@ export const CustomTabBar = (
 ) => {
 	const { onPress, accessibilityState, iconName, text } = props;
 	const focused = accessibilityState.selected;
+	const userType = useContext(UserTypeContext);
+
+	const conditionalButtonStyles =
+		userType.type === USER_TYPE.NORMAL
+			? {
+					flex: focused ? 1.1 : 0.6,
+			  }
+			: {
+					flex: focused ? 1.1 : 0.5,
+			  };
+
 	return (
 		<TouchableOpacity
 			onPress={onPress}
 			style={[
+				conditionalButtonStyles,
 				{
-					flex: focused ? 1 : 0.6,
+					// width,
 					alignItems: "center",
 					justifyContent: "center",
+					// backgroundColor: "#f0f",
+					borderRadius: 50,
 				},
 			]}
 			activeOpacity={1}
@@ -52,13 +68,31 @@ export const CustomTabBar = (
 };
 
 export default function Layout() {
-	const [activeIndex, setActiveIndex] = useState(0);
+	// const [activeIndex, setActiveIndex] = useState(0);
+	const userType = useContext(UserTypeContext);
+
+	const conditionalTabBarStyles =
+		userType.type === USER_TYPE.NORMAL
+			? {}
+			: {
+					paddingHorizontal: 10,
+			  };
+
+	const normalOptions = {
+		href: null,
+	};
+
+	const serviceProviderOptions = {
+		tabBarButton: (props) => (
+			<CustomTabBar {...props} iconName="calculator" text="Jobs" />
+		),
+	};
 
 	return (
 		<Tabs
 			screenOptions={{
 				headerShown: false,
-				tabBarStyle: styles.tabBarStyle,
+				tabBarStyle: [styles.tabBarStyle, conditionalTabBarStyles],
 				tabBarShowLabel: false,
 				tabBarActiveTintColor: colors.mainColor,
 				tabBarInactiveTintColor: colors.greySecondaryShade,
@@ -84,6 +118,14 @@ export default function Layout() {
 				}}
 			/>
 			<Tabs.Screen
+				name="Bids"
+				options={
+					userType.type === USER_TYPE.NORMAL
+						? normalOptions
+						: serviceProviderOptions
+				}
+			/>
+			<Tabs.Screen
 				name="Chat"
 				options={{
 					tabBarButton: (props) => (
@@ -97,8 +139,6 @@ export default function Layout() {
 
 const styles = StyleSheet.create({
 	tabBarStyle: {
-		flexDirection: "column",
-		// justifyContent: "space-between",
 		borderRadius: 50,
 		backgroundColor: colors.brownShade,
 		position: "absolute",
@@ -109,16 +149,18 @@ const styles = StyleSheet.create({
 		height: 80,
 	},
 	// tabBarItemStyle: {
-	// 	flex: 1,
-	// 	borderRadius: 50,
-	// 	paddingLeft: 30,
-	// 	paddingRight: 30,
+	// 	// flex: 1,
+	// 	// borderRadius: 50,
+	// 	// paddingLeft: 30,
+	// 	// paddingRight: 30,
+	// 	backgroundColor: "#0f0",
 	// },
 	iconContainer: {
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 50,
 		padding: 12.5,
+		paddingVertical: 12.5,
 	},
 	activeContainer: {
 		justifyContent: "center",
@@ -126,8 +168,6 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		gap: 10,
 		padding: 10,
-		paddingBottom: 12.5,
-		paddingTop: 12.5,
 		width: width * 0.3,
 		backgroundColor: colors.mainColor,
 	},
