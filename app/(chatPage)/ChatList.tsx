@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import ProfilePicture from "../../assets/components/chatList/images/profilePicture.svg";
 import { router, useRouter } from "expo-router";
 import colors from "../../src/helpers/colors";
+import { Text } from "../../src/components/Text";
 
 const ChatList = ({ item }: { item: number }) => {
 	const openChatRoom = () => {
-		router.push({ pathname: "/ChatRoom" });
+		router.navigate({ pathname: "/ChatRoom" });
 	};
 
 	return (
@@ -38,31 +39,46 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 10,
+		// backgroundColor: "#0f0",
+		borderBottomWidth: 1,
+		borderBottomColor: colors.inputBorderColor,
+		paddingHorizontal: 10,
+		paddingVertical: 20,
 	},
 
 	profilePictureContainer: {},
 
 	chatPreviewContainer: {
-		gap: 4,
-	},
-
-	sender: {
-		fontWeight: "700",
-		fontSize: 18,
+		flex: 1,
+		// backgroundColor: "#f00",
+		justifyContent: "flex-end",
 	},
 
 	chatPreviewDetail: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		alignItems: "center",
+		// backgroundColor: "#00f",
+	},
+
+	sender: {
+		fontWeight: "500",
+		fontSize: 18,
 	},
 
 	chatTime: {
+		fontSize: 10,
 		color: colors.greySecondaryShade,
 	},
 
 	chatPreview: {
+		// lineHeight: 15,
+		marginTop: -5,
+		// flex: 1,
 		flexWrap: "wrap",
-		width: "90%",
+		fontSize: 13,
+		// backgroundColor: "#0f0",
+		// width: "90%",
 	},
 });
 

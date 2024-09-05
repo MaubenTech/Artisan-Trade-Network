@@ -1,22 +1,8 @@
-import {
-	View,
-	Text,
-	StyleSheet,
-	SafeAreaView,
-	TextInput,
-	ScrollView,
-	Image,
-	TouchableOpacity,
-	FlatList,
-} from "react-native";
-import colors from "../../src/helpers/colors";
+import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import React, { useState } from "react";
 import MenuHeader from "../../src/components/MenuHeader";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import ButtonOptions from "../../src/components/ButtonOptions";
 import FilterComponent from "../../src/components/FilterComponent";
 import { useNavigation, useRouter } from "expo-router";
-import ChatItem from "../(chatPage)/ChatRoom";
 import ChatList from "../(chatPage)/ChatList";
 import SearchBar from "../../src/components/SearchBar";
 
@@ -75,15 +61,18 @@ const styles = StyleSheet.create({
 
 	contentContainer: {
 		flex: 1,
-		gap: 20,
+		// gap: 20,
 	},
 
-	searchFilterContainer: {},
+	searchFilterContainer: {
+		marginTop: 20,
+		// backgroundColor: "#f0f",
+	},
 
 	searchFilters: {},
 
 	chatListContainer: {
-		marginTop: 15,
-		gap: 20,
+		// marginTop: 15,
+		// gap: 20,
 	},
 });
