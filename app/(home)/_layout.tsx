@@ -84,7 +84,7 @@ export default function Layout() {
 
 	const serviceProviderOptions = {
 		tabBarButton: (props) => (
-			<CustomTabBar {...props} iconName="calculator" text="Jobs" />
+			<CustomTabBar {...props} iconName="calculator" text="Bids" />
 		),
 	};
 
