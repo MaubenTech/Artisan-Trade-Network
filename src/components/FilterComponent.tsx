@@ -65,9 +65,6 @@ const styles = StyleSheet.create({
   },
 
   inactiveFilterOption: {
-    backgroundColor: colors.grey2,
-  },
-  inactiveFilterOption: {
     // backgroundColor: colors.grey2,
   },
 

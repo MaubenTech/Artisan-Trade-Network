@@ -1,9 +1,9 @@
 import React from "react";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
-import ProfilePicture from "../../assets/components/chatList/images/profilePicture.svg";
+import ProfilePicture from "../../../assets/components/chatList/images/profilePicture.svg";
 import { router, useRouter } from "expo-router";
-import colors from "../../src/helpers/colors";
-import { Text } from "../../src/components/Text";
+import colors from "../../../src/helpers/colors";
+import { Text } from "../../../src/components/Text";
 
 const { width, height } = Dimensions.get("window");
 

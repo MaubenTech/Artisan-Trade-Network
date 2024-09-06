@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import MenuHeader from "../../src/components/MenuHeader";
 import FilterComponent from "../../src/components/FilterComponent";
 import { useNavigation, useRouter } from "expo-router";
-import ChatList from "../(chatPage)/ChatList";
+import ChatList from "../(customerPages)/(chatPage)/ChatList";
 import SearchBar from "../../src/components/SearchBar";
 
 const filterOptions = [

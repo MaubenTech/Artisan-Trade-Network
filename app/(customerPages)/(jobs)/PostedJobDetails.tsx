@@ -1,18 +1,11 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
-import colors from "../../src/helpers/colors";
+import colors from "../../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import PageHeader from "../../src/components/PageHeader";
+import PageHeader from "../../../src/components/PageHeader";
 import JobRating from "../../assets/images/JobRating.svg";
 import ProfilePicture from "../../assets/components/chatList/images/profilePicture.svg";
-import ProgressBar from "../../src/components/ProgressBar";
+import ProgressBar from "../../../src/components/ProgressBar";
 import { Link } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
@@ -29,9 +22,7 @@ const PostedJobDetails = () => {
           <View style={styles.summaryTitleContainer}>
             <View style={styles.summaryTitleSubContainer}>
               <Text style={styles.summaryTitle}>Job Title</Text>
-              <Text style={styles.summarySubTitle}>
-                Need to Repair my toilet
-              </Text>
+              <Text style={styles.summarySubTitle}>Need to Repair my toilet</Text>
             </View>
           </View>
           <View style={styles.summaryTitleContainer}>
@@ -51,9 +42,7 @@ const PostedJobDetails = () => {
             <View style={styles.summaryTitleSubContainer}>
               <Text style={styles.summaryTitle}>Job Description</Text>
               <Text style={styles.summarySubTitle}>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Voluptate aspernatur facere at minus nobis! Nisi, cumque eveniet
-                facere repellat suscipit, voluptatum modi tempore laboriosam
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate aspernatur facere at minus nobis! Nisi, cumque eveniet facere repellat suscipit, voluptatum modi tempore laboriosam
                 possimus harum molestiae perspiciatis ipsam accusantium.
               </Text>
             </View>
@@ -85,11 +74,7 @@ const PostedJobDetails = () => {
         <View style={styles.applicantContainer}>
           <Text style={styles.headerText}>10 Applicants</Text>
           <Text style={styles.subText}>Click to view all applicants.</Text>
-          <Link
-            style={styles.button}
-            asChild
-            href={"/(jobs)/PostedJobApplicants"}
-          >
+          <Link style={styles.button} asChild href={"/(jobs)/PostedJobApplicants"}>
             <TouchableOpacity>
               <Text style={styles.buttonText}>View all applicants</Text>
             </TouchableOpacity>
