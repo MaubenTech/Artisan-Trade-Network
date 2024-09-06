@@ -3,8 +3,9 @@ import * as Location from "expo-location";
 import PageHeader from "../../src/components/PageHeader";
 import React, { useEffect, useState } from "react";
 import ButtonGroup from "../../src/components/ButtonGroup";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Image } from "react-native";
 import MapView, { LatLng, Marker, Region } from "react-native-maps";
+import { useGlobalSearchParams, useRouter } from "expo-router";
 
 type Location = Region & {
 	longitude: number;
@@ -14,6 +15,9 @@ type Location = Region & {
 };
 
 export default function JobLocation() {
+	const { images } = useGlobalSearchParams<{ images: string }>();
+	const decodedImages = images ? JSON.parse(decodeURIComponent(images)) : [];
+
 	const [location, setLocation] = useState<Location>({
 		longitude: 0,
 		latitude: 0,
@@ -107,7 +111,9 @@ export default function JobLocation() {
 					<ButtonGroup
 						negativeOption="Cancel"
 						positiveOption="Proceed"
-						href={"/(customerPages)/JobSummary"}
+						href={`/(customerPages)/JobSummary?images=${encodeURIComponent(
+							images
+						)}`}
 						isNop
 					/>
 				</View>
@@ -122,7 +128,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		// gap: 10,
-		paddingTop: 70,
 	},
 
 	contentContainer: {

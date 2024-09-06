@@ -2,8 +2,9 @@ import React from "react";
 import colors from "../../src/helpers/colors";
 import PageHeader from "../../src/components/PageHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import ButtonGroup from "../../src/components/ButtonGroup";
+import { useGlobalSearchParams } from "expo-router";
 
 const JobDetails = [
 	{
@@ -18,6 +19,29 @@ const JobDetails = [
 ];
 
 const JobSummary = () => {
+	const { images } = useGlobalSearchParams<{ images: string }>();
+	const decodedImages: string[] = images
+		? JSON.parse(decodeURIComponent(images))
+		: [];
+	// console.log("Received Images: ", decodedImages);
+
+	const DecodedImagesComponent = () => {
+		return (
+			<>
+				{decodedImages.map((imageUri: string, index: number) => {
+					console.log("Images:", imageUri, index);
+					return (
+						<Image
+							source={{ uri: imageUri }}
+							style={styles.uploadedImage}
+							key={index}
+						/>
+					);
+				})}
+			</>
+		);
+	};
+
 	return (
 		<View style={styles.container}>
 			<PageHeader pageName="Summary" />
@@ -68,11 +92,10 @@ const JobSummary = () => {
 					</View>
 				</View>
 				<View style={styles.uploadedMediaContainer}>
-					{/* <Image
-						source={selectedImage.uri}
-						key={selectedImage.assetId}
-						style={styles.uploadedImage}
-					/> */}
+					{decodedImages.map((images) => {
+						console.log(images);
+						return <></>;
+					})}
 				</View>
 				<View style={styles.summaryTitleContainer}>
 					<View style={styles.summaryTitleSubContainer}>
@@ -103,7 +126,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#fff",
 		gap: 10,
-		paddingTop: 70,
 	},
 
 	contentContainer: {
@@ -151,10 +173,10 @@ const styles = StyleSheet.create({
 	},
 
 	uploadedImage: {
-		width: "30%",
+		height: 100,
+		width: 100,
 		padding: "7%",
 		alignItems: "center",
-		height: 100,
 		borderRadius: 10,
 	},
 });

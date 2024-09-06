@@ -30,8 +30,10 @@ export default function NewJob() {
 	>([]);
 	const [selectedBudget, setSelectedBudet] = useState<string | number>(5000);
 
+	const encodedImages = encodeURIComponent(JSON.stringify(selectedImages));
+
 	const uploadMedia = async () => {
-		let options: {} = {
+		let options: ImagePicker.ImagePickerOptions = {
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			// allowsEditing: true,
 			allowsMultipleSelection: true,
@@ -43,9 +45,8 @@ export default function NewJob() {
 		let result = await ImagePicker.launchImageLibraryAsync(options);
 
 		if (!result.canceled) {
-			console.log("Results: \n", result, "\n");
 			setSelectedImages(result.assets);
-			console.log("selected Images: \n", selectedImages);
+			// console.log("selected Images: \n", result.assets);
 		}
 	};
 
@@ -71,7 +72,7 @@ export default function NewJob() {
 		<View style={styles.container}>
 			<PageHeader pageName="New Job" />
 			<SafeAreaView style={styles.newJobContent}>
-				<ScrollView>
+				<ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
 					<View style={styles.jobFormContainer}>
 						<Text>Job Title</Text>
 						<TextInput style={styles.jobFormInput} />
@@ -116,7 +117,7 @@ export default function NewJob() {
 								selectedImages.map((selectedImage) => {
 									return (
 										<Image
-											source={selectedImage.uri}
+											source={{ uri: selectedImage.uri }}
 											key={selectedImage.assetId}
 											style={styles.uploadedImage}
 										/>
@@ -175,7 +176,9 @@ export default function NewJob() {
 					<ButtonGroup
 						positiveOption="Proceed"
 						negativeOption="Cancel"
-						href={"/(customerPages)/JobLocation"}
+						href={`/(customerPages)/JobLocation?images=${encodeURIComponent(
+							encodedImages
+						)}`}
 						paddingHorizontal={30}
 						isNop
 					/>
@@ -191,7 +194,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		gap: 10,
-		paddingTop: 70,
 	},
 
 	newJobContent: {

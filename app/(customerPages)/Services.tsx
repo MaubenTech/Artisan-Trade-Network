@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		gap: 10,
-		paddingTop: 70,
 	},
 
 	pageContentContainer: {
