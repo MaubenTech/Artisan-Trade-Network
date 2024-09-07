@@ -1,76 +1,105 @@
 import { Text } from "./Text";
 import colors from "../helpers/colors";
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import colors from "../helpers/colors";
+import {
+	View,
+	StyleSheet,
+	TouchableOpacity,
+	ScrollView,
+	Dimensions,
+} from "react-native";
+import { Text } from "./Text";
+import { router } from "expo-router";
 
 type FilterOptions = {
-    optionTitle: string;
+	optionTitle: string;
 };
 const { width, height } = Dimensions.get("window");
 
 export default function FilterComponent({
-    filterOptions,
-    selectedOption,
-    onOptionChanged,
+	filterOptions,
+	selectedOption,
+	onOptionChanged,
 }: {
-    filterOptions: FilterOptions[];
-    selectedOption?: string | number;
-    onOptionChanged?: React.Dispatch<React.SetStateAction<number | string>>;
+	filterOptions: FilterOptions[];
+	selectedOption?: string | number;
+	onOptionChanged?: React.Dispatch<React.SetStateAction<number | string>>;
 }) {
-    return (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterOptions}>
-            {filterOptions.map((filterOption) => {
-                let activeOption = selectedOption == filterOption.optionTitle;
-                return (
-                    <TouchableOpacity
-                        style={[styles.filterOption, activeOption ? styles.activeFilterOption : styles.inactiveFilterOption]}
-                        key={filterOption.optionTitle}
-                        onPress={() => onOptionChanged(filterOption.optionTitle)}
-                    >
-                        <Text style={activeOption ? [styles.activeFilterOptionText] : [styles.inactiveFilterOptionText]}>{filterOption.optionTitle}</Text>
-                    </TouchableOpacity>
-                );
-            })}
-        </ScrollView>
-    );
+	return (
+		<ScrollView
+			horizontal
+			showsHorizontalScrollIndicator={false}
+			contentContainerStyle={styles.filterOptions}
+		>
+			{filterOptions.map((filterOption) => {
+				let activeOption = selectedOption == filterOption.optionTitle;
+				return (
+					<TouchableOpacity
+						style={[
+							styles.filterOption,
+							activeOption
+								? styles.activeFilterOption
+								: styles.inactiveFilterOption,
+						]}
+						key={filterOption.optionTitle}
+						onPress={() => {
+							router.navigate("/BidSubmitted");
+							onOptionChanged(filterOption.optionTitle);
+						}}
+					>
+						<Text
+							style={
+								activeOption
+									? [styles.activeFilterOptionText]
+									: [styles.inactiveFilterOptionText]
+							}
+						>
+							{filterOption.optionTitle}
+						</Text>
+					</TouchableOpacity>
+				);
+			})}
+		</ScrollView>
+	);
 }
 
 const styles = StyleSheet.create({
-    filterOptions: {
-        width: width,
-        gap: 5,
-        flexDirection: "row",
-        // justifyContent: "space-between",
-    },
+	filterOptions: {
+		width: width,
+		gap: 5,
+		flexDirection: "row",
+		// justifyContent: "space-between",
+	},
 
-    filterOption: {
-        flexGrow: 1,
-        alignItems: "center",
-        textAlign: "center",
-        flexDirection: "row",
-        padding: "1%",
-        paddingHorizontal: "4%",
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: colors.greyBorder,
-    },
+	filterOption: {
+		flexGrow: 1,
+		alignItems: "center",
+		textAlign: "center",
+		flexDirection: "row",
+		padding: "1%",
+		paddingHorizontal: "4%",
+		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: colors.greyBorder,
+	},
 
-    activeFilterOption: {
-        backgroundColor: colors.mainColor,
-        textAlign: "center",
-    },
+	activeFilterOption: {
+		backgroundColor: colors.mainColor,
+		textAlign: "center",
+	},
 
-    inactiveFilterOption: {
-        // backgroundColor: colors.grey2,
-    },
+	inactiveFilterOption: {
+		// backgroundColor: colors.grey2,
+	},
 
-    activeFilterOptionText: {
-        color: colors.whiteShade,
-        textAlign: "center",
-    },
+	activeFilterOptionText: {
+		color: colors.whiteShade,
+		textAlign: "center",
+	},
 
-    inactiveFilterOptionText: {
-        color: colors.greySecondaryShade,
-        textAlign: "center",
-    },
+	inactiveFilterOptionText: {
+		color: colors.greySecondaryShade,
+		textAlign: "center",
+	},
 });
