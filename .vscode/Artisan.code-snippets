@@ -1,0 +1,37 @@
+{
+	// Place your Artisan-Trade-Network workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Create new react native component": {
+		"scope": "javascript,javascriptreact,typescript,typescriptreact",
+		"prefix": "crnfes",
+		"body": [
+			"import { StyleSheet, View, Text } from \"react-native\";",
+			"import React from \"react\";",
+			"import { compactStyles } from \"@helpers/styles\";",
+			"",
+			"const ${1:$TM_FILENAME_BASE} = () => {",
+			"\tconst styles = compactStyles(generalStyles, androidStyles, iosStyles);",
+			"",
+			"\treturn (",
+			"\t\t<View>",
+			"\t\t\t<Text>${1:$TM_FILENAME_BASE}</Text>",
+			"\t\t</View>",
+			"\t);",
+			"};",
+			"",
+			"export default ${1:$TM_FILENAME_BASE};",
+			"",
+			"const generalStyles = StyleSheet.create({$4});",
+			"",
+			"const androidStyles = StyleSheet.create({$5});",
+			"",
+			"const iosStyles = StyleSheet.create({$6});"
+		],
+		"description": "Create a new component"
+	}
+}
