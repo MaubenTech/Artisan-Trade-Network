@@ -3,9 +3,10 @@ import colors from "../../../src/helpers/colors";
 import { Text } from "../../../src/components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useGlobalSearchParams } from "expo-router";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
 import PageHeader from "../../../src/components/PageHeader";
 import ButtonGroup from "../../../src/components/ButtonGroup";
+import { ImagePickerAsset } from "expo-image-picker";
 
 const JobDetails = [
     {
@@ -21,15 +22,15 @@ const JobDetails = [
 
 const JobSummary = () => {
     const { images } = useGlobalSearchParams<{ images: string }>();
-    const decodedImages: string[] = images ? JSON.parse(decodeURIComponent(images)) : [];
+    const decodedImages: ImagePickerAsset[] = images ? JSON.parse(decodeURIComponent(images)) : [];
     // console.log("Received Images: ", decodedImages);
 
     const DecodedImagesComponent = () => {
         return (
             <>
-                {decodedImages.map((imageUri: string, index: number) => {
+                {decodedImages.map((imageUri: ImagePickerAsset, index: number) => {
                     console.log("Images:", imageUri, index);
-                    return <Image source={{ uri: imageUri }} style={styles.uploadedImage} key={index} />;
+                    return <Image source={{ uri: imageUri.uri }} style={styles.uploadedImage} key={index} />;
                 })}
             </>
         );
@@ -38,7 +39,7 @@ const JobSummary = () => {
     return (
         <View style={styles.container}>
             <PageHeader pageName="Summary" />
-            <View style={styles.contentContainer}>
+            <ScrollView style={styles.contentContainer}>
                 <View style={styles.summaryTitleContainer}>
                     <View style={styles.summaryTitleSubContainer}>
                         <Text style={styles.summaryTitle}>Job Title</Text>
@@ -83,10 +84,7 @@ const JobSummary = () => {
                     </View>
                 </View>
                 <View style={styles.uploadedMediaContainer}>
-                    {decodedImages.map((images) => {
-                        console.log(images);
-                        return <></>;
-                    })}
+                    <DecodedImagesComponent />
                 </View>
                 <View style={styles.summaryTitleContainer}>
                     <View style={styles.summaryTitleSubContainer}>
@@ -98,8 +96,10 @@ const JobSummary = () => {
                         <Ionicons name="pencil" />
                     </View>
                 </View>
-                <ButtonGroup paddingHorizontal={30} positiveOption="Post Job" positiveOptionBg={colors.greenShade} isNop={false} href={"/(customerPages)/JobPosted"} />
-            </View>
+                <View style={{ marginBottom: 60 }}>
+                    <ButtonGroup paddingHorizontal={30} positiveOption="Post Job" positiveOptionBg={colors.greenShade} isNop={false} href={"/(customerPages)/JobPosted"} />
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     },
 
     uploadedMediaContainer: {
+        paddingHorizontal: 20,
         width: "100%",
         gap: 15,
         marginTop: 20,

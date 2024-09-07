@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 
     jobPicture: {
         backgroundColor: "green",
+        borderRadius: 10,
     },
     jobDetailContainer: {
         flex: 1,

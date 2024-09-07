@@ -97,7 +97,7 @@ export default function JobLocation() {
                         <Text style={styles.addedInfoTitle}>Added Information</Text>
                         <TextInput style={styles.addedInformation} multiline numberOfLines={10} />
                     </View>
-                    <ButtonGroup negativeOption="Cancel" positiveOption="Proceed" href={`/(customerPages)/JobSummary?images=${encodeURIComponent(images)}`} isNop />
+                    <ButtonGroup negativeOption="Cancel" positiveOption="Proceed" href={`/(customerPages)/JobSummary?images=${encodeURIComponent(decodedImages)}`} isNop />
                 </View>
             </View>
         </View>
