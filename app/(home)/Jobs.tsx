@@ -3,63 +3,120 @@ import colors from "../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SearchBar from "../../src/components/SearchBar";
 import MenuHeader from "../../src/components/MenuHeader";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, Platform } from "react-native";
 import JobPicture from "../../assets/images/JobPicture.svg";
 import FilterComponent from "../../src/components/FilterComponent";
-import PostedJobs from "../../src/components/JobComponents/PostedJobs";
+import PostedJob from "../../src/components/JobComponents/PostedJob";
+import { compactStyles } from "../../src/helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
+export type JobStatus = "Posted" | "Active" | "Completed";
+
+export type Job = {
+	jobTitle: string;
+	jobServiceCategory: string;
+	jobDetail: string;
+	jobStatus: JobStatus;
+	jobPrice: string;
+	jobDate: string;
+};
+
+const jobs: Job[] = [
+	{
+		jobTitle: "Need to repair my toilet",
+		jobServiceCategory: "Maintenance",
+		jobDetail:
+			"Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
+		jobStatus: "Posted",
+		jobPrice: "500 - 70,000",
+		jobDate: "11/04/2023",
+	},
+	{
+		jobTitle: "Need to repair my toilet again",
+		jobServiceCategory: "Maintenance",
+		jobDetail:
+			"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		jobStatus: "Active",
+		jobPrice: "500 - 70,000",
+		jobDate: "11/04/2023",
+	},
+];
+
 export default function Jobs() {
-    const [filterOption, setFilterOption] = useState<string | number>("All");
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const filterOptions = [
-        {
-            optionTitle: "All",
-        },
-        {
-            optionTitle: "Posted",
-        },
-        {
-            optionTitle: "Active",
-        },
-        {
-            optionTitle: "Completed",
-        },
-    ];
+	const [filterOption, setFilterOption] = useState<string | number>("All");
 
-    const jobs = [{}];
+	const filterOptions = [
+		{
+			optionTitle: "All",
+		},
+		{
+			optionTitle: "Posted",
+		},
+		{
+			optionTitle: "Active",
+		},
+		{
+			optionTitle: "Completed",
+		},
+	];
 
-    return (
-        <>
-            <View style={{ paddingHorizontal: 20, backgroundColor: "white" }}>
-                <MenuHeader />
-            </View>
-            <View style={styles.container}>
-                <View style={styles.componentContainer}>
-                    <SearchBar />
-                </View>
-                <View style={[styles.componentContainer]}>
-                    <FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
-                </View>
-                <View style={{ gap: 20 }}>
-                    <PostedJobs />
-                </View>
-            </View>
-        </>
-    );
+	return (
+		<>
+			<View style={styles.headerContainer}>
+				<MenuHeader />
+			</View>
+			<View style={styles.container}>
+				<View style={styles.componentContainer}>
+					<SearchBar />
+				</View>
+				<View style={[styles.componentContainer, styles.filterContainer]}>
+					<FilterComponent
+						filterOptions={filterOptions}
+						selectedOption={filterOption}
+						onOptionChanged={setFilterOption}
+					/>
+				</View>
+				<View style={styles.jobContainer}>
+					{/* <PostedJobs /> */}
+					{jobs.map((job, index) => (
+						<PostedJob job={job} key={index} />
+					))}
+				</View>
+			</View>
+		</>
+	);
 }
 
-const styles = StyleSheet.create({
-    container: {
-        paddingTop: 40,
-        flex: 1,
-        backgroundColor: "#fff",
-        gap: 20,
-        // paddingHorizontal: 20,
-    },
+const generalStyles = StyleSheet.create({
+	headerContainer: {
+		paddingHorizontal: 20,
+		// backgroundColor: "white",
+	},
+	container: {
+		paddingTop: 40,
+		flex: 1,
+		backgroundColor: "#fff",
+		// paddingHorizontal: 20,
+	},
+	componentContainer: {
+		paddingHorizontal: 20,
+	},
+});
 
-    componentContainer: {
-        paddingHorizontal: 20,
-    },
+const androidStyles = StyleSheet.create({
+	container: {},
+
+	filterContainer: {
+		marginTop: 20,
+	},
+	jobContainer: {},
+});
+
+const iosStyles = StyleSheet.create({
+	container: {
+		gap: 20,
+	},
 });
