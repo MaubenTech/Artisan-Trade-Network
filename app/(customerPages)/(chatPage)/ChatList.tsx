@@ -1,9 +1,9 @@
 import React from "react";
-import colors from "../../src/helpers/colors";
 import { router, useRouter } from "expo-router";
-import { Text } from "../../src/components/Text";
+import colors from "../../../src/helpers/colors";
+import { Text } from "../../../src/components/Text";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
-import ProfilePicture from "../../assets/components/chatList/images/profilePicture.svg";
+import ProfilePicture from "../../../assets/components/chatList/images/profilePicture.svg";
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,14 +13,7 @@ const ChatList = ({ item }: { item: number }) => {
     };
 
     return (
-        <View
-            style={{
-                borderBottomWidth: 1,
-                borderBottomColor: colors.greyBorder,
-                paddingHorizontal: 20,
-                paddingVertical: 5,
-            }}
-        >
+        <View style={{ borderBottomWidth: 1, borderBottomColor: colors.greyBorder, paddingHorizontal: 20, paddingVertical: 5 }}>
             <TouchableOpacity style={styles.chat} onPress={openChatRoom}>
                 <View style={styles.profilePictureContainer}>
                     <ProfilePicture />

@@ -1,13 +1,11 @@
 import React from "react";
 import colors from "../../../src/helpers/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text } from "../../../src/components/Text";
-import { View, StyleSheet, Dimensions } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useGlobalSearchParams } from "expo-router";
+import { View, StyleSheet, Image } from "react-native";
 import PageHeader from "../../../src/components/PageHeader";
 import ButtonGroup from "../../../src/components/ButtonGroup";
-import JobRating from "../../../assets/images/JobRating.svg";
-import WorkRating from "../../../assets/images/WorkRating.svg";
-import ProfilePicture from "../../../assets/components/chatList/images/profilePicture.svg";
 
 const JobDetails = [
     {
@@ -21,9 +19,22 @@ const JobDetails = [
     },
 ];
 
-const { width, height } = Dimensions.get("window");
+const JobSummary = () => {
+    const { images } = useGlobalSearchParams<{ images: string }>();
+    const decodedImages: string[] = images ? JSON.parse(decodeURIComponent(images)) : [];
+    // console.log("Received Images: ", decodedImages);
 
-const JobHistoryDetails = () => {
+    const DecodedImagesComponent = () => {
+        return (
+            <>
+                {decodedImages.map((imageUri: string, index: number) => {
+                    console.log("Images:", imageUri, index);
+                    return <Image source={{ uri: imageUri }} style={styles.uploadedImage} key={index} />;
+                })}
+            </>
+        );
+    };
+
     return (
         <View style={styles.container}>
             <PageHeader pageName="Summary" />
@@ -33,18 +44,19 @@ const JobHistoryDetails = () => {
                         <Text style={styles.summaryTitle}>Job Title</Text>
                         <Text style={styles.summarySubTitle}>Need to Repair my toilet</Text>
                     </View>
+                    <View style={styles.summaryEditContainer}>
+                        <Text style={styles.editText}>Edit</Text>
+                        <Ionicons name="pencil" />
+                    </View>
                 </View>
                 <View style={styles.summaryTitleContainer}>
-                    <View style={{ width: width * 0.4 }}>
+                    <View style={styles.summaryTitleSubContainer}>
                         <Text style={styles.summaryTitle}>Job Type</Text>
                         <Text style={styles.summarySubTitle}>Maintenance</Text>
                     </View>
-                    <View style={{ width: width * 0.5 }}>
-                        <Text style={styles.summaryTitle}>Distance</Text>
-                        <Text style={styles.summarySubTitle}>
-                            <Ionicons name="pin" color={"blue"} />
-                            20km
-                        </Text>
+                    <View style={styles.summaryEditContainer}>
+                        <Text style={styles.editText}>Edit</Text>
+                        <Ionicons name="pencil" />
                     </View>
                 </View>
                 <View style={styles.summaryTitleContainer}>
@@ -55,50 +67,38 @@ const JobHistoryDetails = () => {
                             laboriosam possimus harum molestiae perspiciatis ipsam accusantium.
                         </Text>
                     </View>
+                    <View style={styles.summaryEditContainer}>
+                        <Text style={styles.editText}>Edit</Text>
+                        <Ionicons name="pencil" />
+                    </View>
+                </View>
+                <View style={styles.summaryTitleContainer}>
+                    <View style={styles.summaryTitleSubContainer}>
+                        <Text style={styles.summaryTitle}>Budget</Text>
+                        <Text style={styles.summarySubTitle}>50-000 - 70,000</Text>
+                    </View>
+                    <View style={styles.summaryEditContainer}>
+                        <Text style={styles.editText}>Edit</Text>
+                        <Ionicons name="pencil" />
+                    </View>
                 </View>
                 <View style={styles.uploadedMediaContainer}>
-                    {/* <Image
-						source={selectedImage.uri}
-						key={selectedImage.assetId}
-						style={styles.uploadedImage}
-					/> */}
-                </View>
-                <View
-                    style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: colors.greyBorder,
-                        ...styles.summaryTitleContainer,
-                    }}
-                >
-                    <View style={styles.summaryTitleSubContainer}>
-                        <Text style={styles.summaryTitle}>Bid</Text>
-                        <Text style={styles.summarySubTitle}>₦50,000</Text>
-                    </View>
+                    {decodedImages.map((images) => {
+                        console.log(images);
+                        return <></>;
+                    })}
                 </View>
                 <View style={styles.summaryTitleContainer}>
                     <View style={styles.summaryTitleSubContainer}>
-                        <Text style={styles.summaryTitle}>Job Rating</Text>
-                        <JobRating />
+                        <Text style={styles.summaryTitle}>Job Description</Text>
+                        <Text style={styles.summarySubTitle}>No 1 Ovunwo Street, Rumuagholu, Port Harcourt, Rivers State</Text>
+                    </View>
+                    <View style={styles.summaryEditContainer}>
+                        <Text style={styles.editText}>Edit</Text>
+                        <Ionicons name="pencil" />
                     </View>
                 </View>
-                <View style={styles.summaryTitleContainer}>
-                    <View style={styles.summaryTitleSubContainer}>
-                        <Text style={styles.summaryTitle}>Job Review</Text>
-                        <Text style={styles.summarySubTitle}>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis deserunt a nihil sapiente est quas voluptatum aliquam culpa voluptas assumenda vero architecto corrupti
-                            sequi aut ipsam, quam labore quasi repudiandae?
-                        </Text>
-                    </View>
-                </View>
-                <View style={styles.summaryTitleContainer}>
-                    <View style={styles.ratingContainer}>
-                        <ProfilePicture width={40} />
-                        <View>
-                            <Text>Drew Berry</Text>
-                            <WorkRating />
-                        </View>
-                    </View>
-                </View>
+                <ButtonGroup paddingHorizontal={30} positiveOption="Post Job" positiveOptionBg={colors.greenShade} isNop={false} href={"/(customerPages)/JobPosted"} />
             </View>
         </View>
     );
@@ -117,6 +117,8 @@ const styles = StyleSheet.create({
 
     summaryTitleContainer: {
         flexDirection: "row",
+        borderBottomWidth: 1,
+        borderBottomColor: colors.greyBorder,
         paddingBottom: 10,
         paddingHorizontal: 30,
         justifyContent: "space-between",
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
     },
 
     summaryTitleSubContainer: {
-        width: width * 0.8,
+        width: "80%",
     },
 
     summaryTitle: {
@@ -141,6 +143,11 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
     },
 
+    summaryEditContainer: {
+        flexDirection: "row",
+        gap: 5,
+    },
+
     uploadedMediaContainer: {
         width: "100%",
         gap: 15,
@@ -149,18 +156,12 @@ const styles = StyleSheet.create({
     },
 
     uploadedImage: {
-        width: "30%",
+        height: 100,
+        width: 100,
         padding: "7%",
         alignItems: "center",
-        height: 100,
         borderRadius: 10,
-    },
-
-    ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
     },
 });
 
-export default JobHistoryDetails;
+export default JobSummary;
