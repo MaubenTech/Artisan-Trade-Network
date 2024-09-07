@@ -1,7 +1,5 @@
-import { Text } from "./Text";
 import colors from "../helpers/colors";
 import React, { useEffect, useState } from "react";
-import colors from "../helpers/colors";
 import {
 	View,
 	StyleSheet,

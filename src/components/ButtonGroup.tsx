@@ -15,7 +15,6 @@ import { Text } from "./Text";
 import colors from "../helpers/colors";
 import { Link } from "expo-router";
 import { ExpoRouter } from "expo-router/types/expo-router";
-import { Text } from "./Text";
 
 type ButtonOptionParams = {
 	negative: string;
