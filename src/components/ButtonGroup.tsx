@@ -25,84 +25,99 @@ export default function ButtonGroup({
 	containerStyle,
 	positiveOption,
 	positiveOptionStyle,
+	positiveOptionTextStyle,
 	positiveOptionBg,
 	negativeOption,
 	negativeOptionStyle,
+	negativeOptionTextStyle,
 	negativeOptionBg,
-	isNop,
 	href,
+	negativeHref,
 	paddingHorizontal,
 	paddingVertical,
+	reverse,
 }: {
 	containerStyle?: StyleProp<ViewStyle>;
 	positiveOption: string;
 	positiveOptionStyle?: StyleProp<ViewStyle>;
+	positiveOptionTextStyle?: StyleProp<TextStyle>;
 	positiveOptionBg?: ColorValue;
 	negativeOption?: string;
 	negativeOptionStyle?: StyleProp<ViewStyle>;
+	negativeOptionTextStyle?: StyleProp<TextStyle>;
 	negativeOptionBg?: ColorValue;
-	isNop?: boolean;
 	href?: ExpoRouter.Href;
+	negativeHref?: ExpoRouter.Href;
 	paddingHorizontal?: DimensionValue;
 	paddingVertical?: DimensionValue;
+	reverse?: boolean;
 }) {
-	return (
-		<View
-			style={
-				isNop
-					? [
-							styles.container,
-							{ paddingHorizontal: paddingHorizontal },
-							containerStyle,
-					  ]
-					: [
-							{
-								paddingHorizontal: paddingHorizontal,
-								alignItems: "center",
-							},
-							containerStyle,
-					  ]
-			}
-		>
-			<TouchableOpacity
-				style={
-					isNop
-						? [styles.option, styles.negativeOption, negativeOptionStyle]
-						: { width: 0 }
-				}
-			>
-				<Text>{negativeOption}</Text>
-			</TouchableOpacity>
+	const isNop = negativeOption ? true : false;
+
+	const negativeStyle = isNop
+		? [
+				styles.option,
+				styles.negativeOption,
+				negativeOptionStyle,
+				negativeOptionBg && { backgroundColor: negativeOptionBg },
+		  ]
+		: { width: 0 };
+
+	const NegativeOption = ({ addStyle }: { addStyle?: boolean }) => (
+		<TouchableOpacity style={addStyle && negativeStyle}>
+			<Text style={negativeOptionTextStyle}>{negativeOption}</Text>
+		</TouchableOpacity>
+	);
+
+	const CompleteNegativeOption = () => {
+		return negativeHref ? (
+			<Link href={negativeHref} style={negativeStyle}>
+				<NegativeOption />
+			</Link>
+		) : (
+			<NegativeOption addStyle />
+		);
+	};
+
+	const PositiveOption = () => {
+		return (
 			<Link
-				href={href || "#"}
+				href={href}
 				asChild
 				style={[
-					isNop
-						? {
-								...styles.option,
-								...styles.positiveOption,
-						  }
-						: {
-								...styles.option,
-								...styles.positiveOption,
-								width: "90%",
-								backgroundColor: positiveOptionBg || colors.mainColor,
-						  },
+					styles.option,
+					styles.positiveOption,
+					{
+						backgroundColor: positiveOptionBg ?? colors.mainColor,
+					},
+					!isNop && {
+						width: "90%",
+					},
 					positiveOptionStyle,
 				]}
 			>
-				<TouchableOpacity
-					style={[
-						{
-							justifyContent: "center",
-						},
-					]}
-				>
-					<Text style={{ color: "white", textAlign: "center" }}>
+				<TouchableOpacity>
+					<Text style={[styles.positiveOptionText, positiveOptionTextStyle]}>
 						{positiveOption}
 					</Text>
 				</TouchableOpacity>
 			</Link>
+		);
+	};
+
+	return (
+		<View style={[styles.container, { paddingHorizontal }, containerStyle]}>
+			{reverse ? (
+				<>
+					<CompleteNegativeOption />
+					<PositiveOption />
+				</>
+			) : (
+				<>
+					<PositiveOption />
+					<CompleteNegativeOption />
+				</>
+			)}
 		</View>
 	);
 }
@@ -114,6 +129,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		marginBottom: 30,
 		justifyContent: "space-between",
+		alignItems: "center",
 	},
 
 	childContainer: {},
@@ -124,6 +140,7 @@ const styles = StyleSheet.create({
 		padding: 15,
 		width: "40%",
 		alignItems: "center",
+		justifyContent: "center",
 		textAlign: "center",
 	},
 
@@ -133,6 +150,10 @@ const styles = StyleSheet.create({
 
 	positiveOption: {
 		borderWidth: 0,
-		backgroundColor: colors.mainColor,
+	},
+
+	positiveOptionText: {
+		color: "#fff",
+		textAlign: "center",
 	},
 });
