@@ -7,6 +7,7 @@ import ButtonGroup from "../../../src/components/ButtonGroup";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { View, StyleSheet, TextInput, Image } from "react-native";
 import MapView, { LatLng, Marker, Region } from "react-native-maps";
+import { ImagePickerAsset } from "expo-image-picker";
 
 type Location = Region & {
 	longitude: number;
@@ -17,7 +18,11 @@ type Location = Region & {
 
 export default function JobLocation() {
 	const { images } = useGlobalSearchParams<{ images: string }>();
-	const decodedImages = images ? JSON.parse(decodeURIComponent(images)) : [];
+	// const decodedImages: ImagePickerAsset[] = images
+	// 	? JSON.parse(decodeURIComponent(images))
+	// 	: [];
+
+	// const encodedImages = encodeURIComponent(JSON.stringify(decodedImages));
 
 	const [location, setLocation] = useState<Location>({
 		longitude: 0,
@@ -112,9 +117,7 @@ export default function JobLocation() {
 					<ButtonGroup
 						negativeOption="Cancel"
 						positiveOption="Proceed"
-						href={`/(customerPages)/JobSummary?images=${encodeURIComponent(
-							decodedImages
-						)}`}
+						href={`/(customerPages)/JobSummary?images=${images}`}
 						reverse
 					/>
 				</View>

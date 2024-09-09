@@ -31,7 +31,7 @@ const JobSummary = () => {
 		return (
 			<>
 				{decodedImages.map((imageUri: ImagePickerAsset, index: number) => {
-					console.log("Images:", imageUri, index);
+					console.log("Images:", imageUri.uri, index);
 					return (
 						<Image
 							source={{ uri: imageUri.uri }}
@@ -93,7 +93,8 @@ const JobSummary = () => {
 						<Ionicons name="pencil" />
 					</View>
 				</View>
-				<View style={styles.uploadedMediaContainer}>
+				<View style={styles.summaryTitleContainer}>
+					<Text style={styles.summaryTitle}>Media</Text>
 					<DecodedImagesComponent />
 				</View>
 				<View style={styles.summaryTitleContainer}>

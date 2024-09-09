@@ -112,11 +112,11 @@ export default function NewJob() {
 						</TouchableOpacity>
 						<View style={styles.uploadedMediaContainer}>
 							{selectedImages.length > 0 ? (
-								selectedImages.map((selectedImage) => {
+								selectedImages.map((selectedImage, index) => {
 									return (
 										<Image
 											source={{ uri: selectedImage.uri }}
-											key={selectedImage.assetId}
+											key={selectedImage.assetId ?? index}
 											style={styles.uploadedImage}
 										/>
 									);
@@ -174,9 +174,7 @@ export default function NewJob() {
 					<ButtonGroup
 						positiveOption="Proceed"
 						negativeOption="Cancel"
-						href={`/(customerPages)/JobLocation?images=${encodeURIComponent(
-							encodedImages
-						)}`}
+						href={`/(customerPages)/JobLocation?images=${encodedImages}`}
 						paddingHorizontal={30}
 						reverse
 					/>
