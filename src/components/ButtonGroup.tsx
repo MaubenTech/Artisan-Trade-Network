@@ -1,6 +1,5 @@
 import {
 	View,
-	Text,
 	StyleSheet,
 	Touchable,
 	TouchableOpacity,
@@ -9,10 +8,11 @@ import {
 	TextStyle,
 	ColorValue,
 	DimensionValue,
+	StyleProp,
 } from "react-native";
 import React from "react";
+import { Text } from "./Text";
 import colors from "../helpers/colors";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link } from "expo-router";
 import { ExpoRouter } from "expo-router/types/expo-router";
 
@@ -22,44 +22,61 @@ type ButtonOptionParams = {
 };
 
 export default function ButtonGroup({
-	negativeOption,
+	containerStyle,
 	positiveOption,
+	positiveOptionStyle,
 	positiveOptionBg,
+	negativeOption,
+	negativeOptionStyle,
 	negativeOptionBg,
 	isNop,
 	href,
 	paddingHorizontal,
+	paddingVertical,
 }: {
-	negativeOption?: string;
+	containerStyle?: StyleProp<ViewStyle>;
 	positiveOption: string;
+	positiveOptionStyle?: StyleProp<ViewStyle>;
 	positiveOptionBg?: ColorValue;
+	negativeOption?: string;
+	negativeOptionStyle?: StyleProp<ViewStyle>;
 	negativeOptionBg?: ColorValue;
 	isNop?: boolean;
 	href?: ExpoRouter.Href;
 	paddingHorizontal?: DimensionValue;
+	paddingVertical?: DimensionValue;
 }) {
 	return (
 		<View
 			style={
 				isNop
-					? [styles.container, { paddingHorizontal: paddingHorizontal }]
+					? [
+							styles.container,
+							{ paddingHorizontal: paddingHorizontal },
+							containerStyle,
+					  ]
 					: [
 							{
 								paddingHorizontal: paddingHorizontal,
 								alignItems: "center",
 							},
+							containerStyle,
 					  ]
 			}
 		>
 			<TouchableOpacity
-				style={isNop ? [styles.option, styles.negativeOption] : { width: 0 }}
+				style={
+					isNop
+						? [styles.option, styles.negativeOption, negativeOptionStyle]
+						: { width: 0 }
+				}
 			>
 				<Text>{negativeOption}</Text>
 			</TouchableOpacity>
 			<Link
 				href={href || "#"}
 				asChild
-				style={
+				style={[
 					isNop
 						? {
 								...styles.option,
@@ -70,13 +87,16 @@ export default function ButtonGroup({
 								...styles.positiveOption,
 								width: "90%",
 								backgroundColor: positiveOptionBg || colors.mainColor,
-						  }
-				}
+						  },
+					positiveOptionStyle,
+				]}
 			>
 				<TouchableOpacity
-					style={{
-						justifyContent: "center",
-					}}
+					style={[
+						{
+							justifyContent: "center",
+						},
+					]}
 				>
 					<Text style={{ color: "white", textAlign: "center" }}>
 						{positiveOption}

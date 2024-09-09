@@ -1,16 +1,19 @@
-import React from "react";
 import colors from "../helpers/colors";
+import React, { useEffect, useState } from "react";
 import {
 	View,
-	Text,
 	StyleSheet,
 	TouchableOpacity,
 	ScrollView,
+	Dimensions,
 } from "react-native";
+import { Text } from "./Text";
+import { router } from "expo-router";
 
 type FilterOptions = {
 	optionTitle: string;
 };
+const { width, height } = Dimensions.get("window");
 
 export default function FilterComponent({
 	filterOptions,
@@ -25,23 +28,23 @@ export default function FilterComponent({
 		<ScrollView
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			contentContainerStyle={{
-				justifyContent: "space-evenly",
-				width: "100%",
-				gap: 10,
-			}}
+			contentContainerStyle={styles.filterOptions}
 		>
 			{filterOptions.map((filterOption) => {
 				let activeOption = selectedOption == filterOption.optionTitle;
 				return (
 					<TouchableOpacity
-						style={
+						style={[
+							styles.filterOption,
 							activeOption
-								? [styles.filterOption, styles.activeFilterOption]
-								: [styles.filterOption, styles.inactiveFilterOption]
-						}
+								? styles.activeFilterOption
+								: styles.inactiveFilterOption,
+						]}
 						key={filterOption.optionTitle}
-						onPress={() => onOptionChanged(filterOption.optionTitle)}
+						onPress={() => {
+							router.navigate("/BidSubmitted");
+							onOptionChanged(filterOption.optionTitle);
+						}}
 					>
 						<Text
 							style={
@@ -60,36 +63,41 @@ export default function FilterComponent({
 }
 
 const styles = StyleSheet.create({
-	// filterOptions: {
-	// 	// gap: 10,
-	// 	flexDirection: "row",
-	// 	// flexWrap: "wrap",
-	// },
+	filterOptions: {
+		width: width,
+		gap: 5,
+		flexDirection: "row",
+		// justifyContent: "space-between",
+	},
 
 	filterOption: {
-		// width: "31%",
-		flex: 0.4,
+		flexGrow: 1,
+		alignItems: "center",
+		textAlign: "center",
 		flexDirection: "row",
-		padding: "3%",
-		borderRadius: 10,
-		justifyContent: "center",
+		padding: "1%",
+		paddingHorizontal: "4%",
+		borderRadius: 5,
 		borderWidth: 1,
 		borderColor: colors.greyBorder,
 	},
 
 	activeFilterOption: {
 		backgroundColor: colors.mainColor,
+		textAlign: "center",
 	},
 
 	inactiveFilterOption: {
-		backgroundColor: colors.grey2,
+		// backgroundColor: colors.grey2,
 	},
 
 	activeFilterOptionText: {
 		color: colors.whiteShade,
+		textAlign: "center",
 	},
 
 	inactiveFilterOptionText: {
 		color: colors.greySecondaryShade,
+		textAlign: "center",
 	},
 });

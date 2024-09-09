@@ -7,23 +7,22 @@ import {
 	ScrollView,
 } from "react-native";
 import { Text } from "../../src/components/Text";
-import { Link, useNavigation } from "expo-router";
+import { Link, useNavigation, useRouter } from "expo-router";
 
 import HeaderImage from "../../assets/images/resetPasswordHeader.svg";
-import { useState } from "react";
 import React from "react";
 import colors from "../../src/helpers/colors";
 
 const { width, height } = Dimensions.get("window");
 
 const ResetPassword = (): JSX.Element => {
-	const [isChecked, setChecked] = useState(false);
-	const navigation = useNavigation();
+	const router = useRouter();
 	return (
 		<ScrollView
 			contentContainerStyle={styles.container}
 			keyboardShouldPersistTaps="handled"
 			scrollEnabled={true}
+			bounces={false}
 		>
 			<View style={styles.imageContainer}>
 				<HeaderImage width={250} height={250} />
@@ -45,71 +44,30 @@ const ResetPassword = (): JSX.Element => {
 						<TextInput style={styles.resetPasswordInput} secureTextEntry />
 					</View>
 				</View>
-				<View style={styles.resetPasswordButtonContainer}>
+				<View style={styles.buttonsContainer}>
 					<Link
-						style={{
-							alignItems: "center",
-							backgroundColor: colors.mainColor,
-							borderRadius: 15,
-							justifyContent: "center",
-							padding: 15,
-						}}
+						style={[styles.button, styles.primaryButton]}
 						asChild
-						href={"(home)/Home"}
+						href={"/PasswordUpdated"}
 					>
-						<TouchableOpacity
-							style={[
-								{
-									alignItems: "center",
-									justifyContent: "center",
-									padding: 20,
-								},
-							]}
-						>
-							<Text
-								style={[
-									{
-										textAlign: "center",
-										fontWeight: "400",
-										fontSize: 16,
-										color: "white",
-									},
-								]}
-							>
+						<TouchableOpacity>
+							<Text style={[styles.buttonText, styles.primaryButtonText]}>
 								Reset Password
 							</Text>
 						</TouchableOpacity>
 					</Link>
-					<Link
-						style={{
-							alignItems: "center",
-							borderRadius: 15,
-							justifyContent: "center",
-							padding: 15,
-							borderWidth: 1,
+					<TouchableOpacity
+						style={[styles.button, styles.secondaryButton]}
+						onPress={() => {
+							router.navigate("/");
 						}}
-						asChild
-						href={"/"}
-						replace
 					>
-						<TouchableOpacity>
-							<Text
-								style={[
-									{
-										textAlign: "center",
-										fontWeight: "600",
-										fontSize: 16,
-									},
-								]}
-							>
-								Back to Login
-							</Text>
-						</TouchableOpacity>
-					</Link>
+						<Text style={styles.buttonText}>Back to Login</Text>
+					</TouchableOpacity>
 					<View style={styles.signUpOption}>
 						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
 						<Link href="/SignUp" style={{ textDecorationLine: "underline" }}>
-							Sign up
+							<Text>Sign up</Text>
 						</Link>
 					</View>
 				</View>
@@ -123,105 +81,101 @@ export default ResetPassword;
 const styles = StyleSheet.create({
 	container: {
 		// flex: 1,
-		backgroundColor: "#fff",
+		flexGrow: 1,
 		alignItems: "center",
 		gap: 10,
 	},
 
 	imageContainer: {
-		paddingTop: "20%",
-		marginBottom: "8%",
+		paddingTop: "15%",
+		// marginBottom: "8%",
 	},
 
 	image: {},
 
 	resetPasswordContainer: {
+		flex: 1,
 		width: "100%",
 		justifyContent: "flex-start",
 		paddingLeft: 30,
 		paddingRight: 30,
-		gap: 10,
+		gap: 20,
+		paddingBottom: "5%",
 	},
 
 	lch: {
 		alignItems: "flex-start",
 		width: "100%",
-		gap: 7,
-		marginBottom: "5%",
+		// marginBottom: "5%",
 	},
 
 	lchHeader: {
-		fontSize: 25,
+		fontSize: 23,
 		fontWeight: "700",
-		textAlign: "left",
 	},
 
 	lchText: {
 		fontWeight: "300",
+		fontSize: 12,
+		paddingRight: "10%",
 	},
 
 	resetPasswordFormContainer: {
-		gap: 20,
-		marginBottom: "6%",
+		flex: 1,
+		gap: 15,
+		// flexShrink: 1,
+		// marginBottom: "6%",
 	},
 
 	resetPasswordDetailContainer: {},
 
 	resetPasswordInput: {
-		backgroundColor: "#FFFFFF",
-		padding: "5%",
+		padding: "3%",
+		paddingLeft: 25,
+		paddingRight: 25,
 		borderColor: colors.inputBorderColor,
 		borderWidth: 1.05,
 		borderRadius: 10,
-		textAlign: "left",
+		fontSize: 12,
 	},
 
 	formText: {
-		fontSize: 16,
-		marginBottom: 5,
+		fontSize: 14,
+		// marginBottom: 5,
 	},
 
-	resetPasswordActions: {
-		flexDirection: "row",
+	buttonsContainer: {
+		gap: 10,
+		// backgroundColor: "#f0f",
+	},
+
+	button: {
+		backgroundColor: "000",
 		alignItems: "center",
-		justifyContent: "space-between",
+		borderRadius: 15,
+		justifyContent: "center",
+		padding: 15,
 	},
 
-	check: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 5,
-	},
-
-	checkbox: {
-		borderRadius: 5,
-		backgroundColor: "#F8F9FB",
-	},
-
-	resetPasswordButtonContainer: {
-		gap: 20,
-	},
-
-	resetPasswordButton: {
+	primaryButton: {
 		backgroundColor: colors.mainColor,
-		borderRadius: 12,
 	},
 
-	resetPasswordOptionsContainer: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		marginBottom: "10%",
-	},
-
-	logoBorder: {
-		borderColor: "#97A3B1",
+	secondaryButton: {
 		borderWidth: 1,
-		borderRadius: 40,
-		padding: "5%",
-		alignItems: "center",
+	},
+
+	buttonText: {
+		textAlign: "center",
+		fontSize: 16,
+	},
+
+	primaryButtonText: {
+		color: "#fff",
 	},
 
 	signUpOption: {
+		marginTop: "5%",
 		flexDirection: "row",
 		justifyContent: "center",
 	},
