@@ -9,7 +9,15 @@ import { View, StyleSheet, ViewStyle, TextStyle, ColorValue, Platform } from "re
 
 const ios = Platform.OS == "ios";
 const ProfilePic = require("../../assets/images/profilePic.png");
-export default function PageHeader({ pageName, style, icon, profile }: { pageName: string; style?: ViewStyle | TextStyle | ColorValue; icon?: ReactElement<any, any>; profile?: boolean }) {
+
+interface PageHeaderParams {
+    pageName?: string;
+    style?: ViewStyle | TextStyle | ColorValue;
+    icon?: ReactElement<any, any>;
+    profile?: boolean;
+    profileName?: string;
+}
+const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName }) => {
     const { top } = useSafeAreaInsets();
     return (
         <View
@@ -28,15 +36,20 @@ export default function PageHeader({ pageName, style, icon, profile }: { pageNam
                             : styles.pageHeaderElementsContainer
                     }
                 >
-                    <View
-                        style={{
-                            backgroundColor: colors.buttonsBg,
-                            padding: 5,
-                            borderRadius: 200,
-                        }}
-                    >
-                        <Ionicons name="chevron-back" size={20} onPress={() => router.back()} />
-                    </View>
+                    {pageName ? (
+                        <View
+                            style={{
+                                backgroundColor: colors.buttonsBg,
+                                padding: 5,
+                                borderRadius: 200,
+                            }}
+                        >
+                            <Ionicons name="chevron-back" size={20} onPress={() => router.back()} />
+                        </View>
+                    ) : (
+                        <></>
+                    )}
+
                     <Text style={styles.pageHeaderTitle}>{pageName}</Text>
                     {profile ? (
                         <Link style={styles.settingsContainer} asChild href={"/(customerPages)/(profile)/Settings"}>
@@ -52,10 +65,14 @@ export default function PageHeader({ pageName, style, icon, profile }: { pageNam
                     <View style={styles.profilePicContainer}>
                         <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
                     </View>
-                    <Text style={styles.profileName}>Nonso Rob</Text>
-                    <Link href={"/"} style={styles.editProfile}>
-                        Edit
-                    </Link>
+                    <Text style={styles.profileName}>{profileName ? profileName : "Nonso Rob"}</Text>
+                    {profileName ? (
+                        <Text>Carpenter</Text>
+                    ) : (
+                        <Link href={"/"} style={styles.editProfile}>
+                            Edit
+                        </Link>
+                    )}
                 </View>
             ) : (
                 <></>
@@ -64,7 +81,7 @@ export default function PageHeader({ pageName, style, icon, profile }: { pageNam
             <View style={profile ? {} : styles.pageHeaderContainerBorder}></View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     pageHeaderContainer: {
@@ -140,3 +157,5 @@ const styles = StyleSheet.create({
         color: colors.greySecondaryShade,
     },
 });
+
+export default PageHeader;

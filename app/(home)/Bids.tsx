@@ -8,7 +8,6 @@ import MenuHeader from "../../src/components/MenuHeader";
 import JobPicture from "../../assets/images/JobPicture.svg";
 import FilterComponent from "../../src/components/FilterComponent";
 import MoreIcon from "../../assets/icons/services/moreIcon.svg";
-import PostedJobs from "../../src/components/JobComponents/PostedJobs";
 import LocationIcon from "../../assets/icons/services/locationIcon.svg";
 import { View, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 
