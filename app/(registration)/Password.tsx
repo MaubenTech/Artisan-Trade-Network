@@ -1,14 +1,8 @@
-import { View, Text } from 'react-native'
-import {
-    StyleSheet,
-    Image,
-    TextInput,
-    Pressable,
-    Button,
-} from "react-native";
+import { View, Text } from "react-native";
+import { StyleSheet, Image, TextInput, Pressable, Button } from "react-native";
 import { Link, Redirect } from "expo-router";
-import React, { useState } from 'react'
-import Checkbox from 'expo-checkbox';
+import React, { useState } from "react";
+import Checkbox from "expo-checkbox";
 
 const Password = () => {
     const [isSelected, setSelection] = useState(false);
@@ -35,7 +29,7 @@ const Password = () => {
                 <Checkbox
                     value={isSelected}
                     onValueChange={setSelection}
-                // style={styles.checkbox}
+                    // style={styles.checkbox}
                 />
                 <Text>Yes, I agree to the Terms & Condition</Text>
             </View>
@@ -51,23 +45,18 @@ const Password = () => {
                             alignSelf: "center",
                         },
                     ]}
-
                     // href={"(home)/Home"}
-                    href={'/(registration)/OnboardingOne'}
+                    href={"/(registration)/OnboardingScreen"}
                     asChild
                 >
                     <Pressable>
-                        <Text>
-
-                            Proceed
-                        </Text>
-
+                        <Text>Proceed</Text>
                     </Pressable>
                 </Link>
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -88,8 +77,7 @@ const styles = StyleSheet.create({
         fontSize: 23,
         fontWeight: "bold",
     },
-    subHeader: {
-    },
+    subHeader: {},
     detailsContainer: {
         paddingLeft: 20,
         paddingRight: 20,
@@ -134,5 +122,5 @@ const styles = StyleSheet.create({
         backgroundColor: "#52A2f2",
         position: "relative",
     },
-})
-export default Password
+});
+export default Password;
