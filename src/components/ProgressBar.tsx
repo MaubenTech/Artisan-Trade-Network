@@ -2,8 +2,8 @@ import React from "react";
 import { Text } from "./Text";
 import colors from "../helpers/colors";
 import * as Progress from "react-native-progress";
-import { JobStatus } from "./JobComponents/PostedJobs";
 import { View, StyleSheet, Dimensions } from "react-native";
+import { JobStatus } from "../../app/(home)/Jobs";
 
 const { width } = Dimensions.get("window");
 

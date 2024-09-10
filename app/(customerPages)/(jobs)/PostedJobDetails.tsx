@@ -69,18 +69,14 @@ const PostedJobDetails = () => {
                     <View style={styles.applicantContainer}>
                         <Text style={styles.headerText}>10 Applicants</Text>
                         <Text style={styles.subText}>Click to view all applicants.</Text>
-                        <Link style={styles.button} asChild href={"/(jobs)/PostedJobApplicants"}>
-                            <TouchableOpacity>
-                                <Text style={styles.buttonText}>View all applicants</Text>
-                            </TouchableOpacity>
-                        </Link>
+                        <ButtonGroup positiveOption="View All Applicants" href={"/PostedJobApplicants"} />
                     </View>
                 ) : (
                     <Shadow distance={10} startColor="#000">
                         <View style={styles.applicantContainer}>
                             <Text style={styles.headerText}>10 Applicants</Text>
                             <Text style={styles.subText}>Click to view all applicants.</Text>
-                            <Link style={styles.button} asChild href={"/(jobs)/PostedJobApplicants"}>
+                            <Link style={styles.button} asChild href={"/PostedJobApplicants"}>
                                 <TouchableOpacity>
                                     <Text style={styles.buttonText}>View all applicants</Text>
                                 </TouchableOpacity>

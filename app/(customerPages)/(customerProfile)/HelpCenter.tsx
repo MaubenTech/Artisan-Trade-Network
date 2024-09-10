@@ -51,7 +51,7 @@ const HelpCenter = () => {
                             {helpCenterOptions.map((helpCenterOption) => {
                                 return (
                                     <>
-                                        <Link style={styles.helpCenterOption} href={"#"} asChild>
+                                        <Link style={styles.helpCenterOption} href={"#"} asChild key={helpCenterOption.optionTitle}>
                                             <TouchableOpacity>
                                                 <View style={styles.optionIconContainer}>{helpCenterOption.optionIcon}</View>
                                                 <Text style={styles.optionTitle}>{helpCenterOption.optionTitle}</Text>
