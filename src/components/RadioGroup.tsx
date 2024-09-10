@@ -4,7 +4,7 @@ import colors from "../helpers/colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { View, StyleSheet, Touchable, TouchableOpacity, ViewStyle, ImageStyle, TextStyle } from "react-native";
 
-type OptionParams = {
+export type OptionParams = {
     label: string;
     value: string;
 };
@@ -14,11 +14,13 @@ export default function RadioGroup({
     selectedOption,
     onChanged,
     style,
+    optionStyle,
 }: {
     options: OptionParams[];
     selectedOption: string;
     onChanged: React.Dispatch<React.SetStateAction<string>>;
     style?: ViewStyle | TextStyle | ImageStyle;
+    optionStyle?: ViewStyle | TextStyle | ImageStyle;
 }) {
     return (
         <View style={[styles.container, style]}>
@@ -26,7 +28,11 @@ export default function RadioGroup({
                 {options.map((option: OptionParams) => {
                     let activeOption = selectedOption == option.value;
                     return (
-                        <TouchableOpacity style={activeOption ? [styles.radioOption, styles.activeRadioOption] : styles.radioOption} key={option.value} onPress={() => onChanged(option.value)}>
+                        <TouchableOpacity
+                            style={activeOption ? [styles.radioOption, styles.activeRadioOption, optionStyle] : [styles.radioOption, optionStyle]}
+                            key={option.value}
+                            onPress={() => onChanged(option.value)}
+                        >
                             <MaterialIcons name={activeOption ? "radio-button-on" : "radio-button-off"} color={colors.inputBorderColor} size={25} />
                             <Text style={styles.radioOptionLabel}>{option.label}</Text>
                         </TouchableOpacity>
