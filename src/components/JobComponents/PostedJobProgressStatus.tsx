@@ -4,8 +4,8 @@ import { compactStyles } from "@helpers/styles";
 import ProgressBar from "@components/ProgressBar";
 import { UserTypeContext } from "context/UserTypeProvider";
 import USER_TYPE from "constants/UserType";
-import { JobStatus } from "../../(home)/Jobs";
-import { BidStatus } from "../../(home)/Bids";
+import { JobStatus } from "../../../app/(home)/Jobs";
+import { BidStatus } from "../../../app/(home)/Bids";
 
 const PostedJobProgressStatus = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);

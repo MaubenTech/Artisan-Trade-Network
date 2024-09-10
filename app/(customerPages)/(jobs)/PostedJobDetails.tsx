@@ -13,8 +13,8 @@ import { UserTypeContext } from "context/UserTypeProvider";
 import USER_TYPE from "constants/UserType";
 import { JobStatus } from "../../(home)/Jobs";
 import { BidStatus } from "../../(home)/Bids";
-import BottomModal from "./PostedJobBottomModal";
-import PostedJobProgressStatus from "./PostedJobProgressStatus";
+import BottomModal from "../../../src/components/JobComponents/PostedJobBottomModal";
+import PostedJobProgressStatus from "../../../src/components/JobComponents/PostedJobProgressStatus";
 
 const { width, height } = Dimensions.get("window");
 

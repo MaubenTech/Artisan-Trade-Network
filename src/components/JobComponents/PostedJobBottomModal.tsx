@@ -4,8 +4,8 @@ import { UserTypeContext } from "context/UserTypeProvider";
 import { Link } from "expo-router";
 import { useState, useContext } from "react";
 import { View, TouchableOpacity, TextInput, StyleSheet, Dimensions } from "react-native";
-import { BidStatus } from "../../(home)/Bids";
-import { JobStatus } from "../../(home)/Jobs";
+import { BidStatus } from "../../../app/(home)/Bids";
+import { JobStatus } from "../../../app/(home)/Jobs";
 import { Text } from "@components/Text";
 import colors from "@helpers/colors";
 
