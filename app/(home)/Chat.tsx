@@ -5,71 +5,117 @@ import SearchBar from "../../src/components/SearchBar";
 import MenuHeader from "../../src/components/MenuHeader";
 import FilterComponent from "../../src/components/FilterComponent";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { compactStyles } from "@helpers/styles";
 
 const filterOptions = [
-    {
-        optionTitle: "All",
-    },
-    {
-        optionTitle: "Active",
-    },
-    {
-        optionTitle: "Closed Jobs",
-    },
+	{
+		optionTitle: "All",
+	},
+	{
+		optionTitle: "Active",
+	},
+	{
+		optionTitle: "Closed Jobs",
+	},
 ];
 
 export default function Chat() {
-    const router = useRouter();
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const router = useRouter();
 
-    const navigation = useNavigation();
-    const [filterOption, setFilterOption] = useState<string | number>("All");
-    const [users, setUsers] = useState([1, 2]);
-    return (
-        <View style={styles.container}>
-            <View style={{ paddingHorizontal: 20 }}>
-                <MenuHeader />
-            </View>
-            <SafeAreaView style={styles.contentContainer}>
-                <View style={[{ paddingHorizontal: 20 }]}>
-                    <SearchBar />
-                </View>
-                <View style={[styles.searchFilterContainer, { paddingHorizontal: 20 }]}>
-                    <FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
-                </View>
-                <View>
-                    <FlatList
-                        data={users}
-                        contentContainerStyle={styles.chatListContainer}
-                        renderItem={({ item, index }) => <ChatList item={item} />}
-                        // keyExtractor={(item) => Math.random()}
-                        showsVerticalScrollIndicator={false}
-                    />
-                </View>
-            </SafeAreaView>
-        </View>
-    );
+	const navigation = useNavigation();
+	const [filterOption, setFilterOption] = useState<string | number>("All");
+	const [users, setUsers] = useState([1, 2]);
+	return (
+		<View style={styles.container}>
+			<View style={styles.menuContainer}>
+				<MenuHeader />
+			</View>
+			<SafeAreaView style={styles.contentContainer}>
+				<View style={styles.searchBarContainer}>
+					<SearchBar />
+				</View>
+				<View style={[styles.searchFilterContainer, { paddingHorizontal: 20 }]}>
+					<FilterComponent
+						filterOptions={filterOptions}
+						selectedOption={filterOption}
+						onOptionChanged={setFilterOption}
+					/>
+				</View>
+				<View>
+					<FlatList
+						data={users}
+						contentContainerStyle={styles.chatListContainer}
+						renderItem={({ item, index }) => <ChatList item={item} />}
+						// keyExtractor={(item) => Math.random()}
+						showsVerticalScrollIndicator={false}
+					/>
+				</View>
+			</SafeAreaView>
+		</View>
+	);
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        // alignItems: "center",
-        // paddingHorizontal: 20,
-        gap: 50,
-    },
+const generalStyles = StyleSheet.create({});
 
-    contentContainer: {
-        flex: 1,
-        gap: 20,
-    },
+const androidStyles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		// alignItems: "center",
+		// paddingHorizontal: 20,
+		gap: 50,
+	},
 
-    searchFilterContainer: {},
+	menuContainer: {
+		paddingHorizontal: 20,
+	},
 
-    searchFilters: {},
+	searchBarContainer: {
+		paddingHorizontal: 20,
+	},
 
-    chatListContainer: {
-        marginTop: 15,
-        gap: 20,
-    },
+	contentContainer: {
+		flex: 1,
+	},
+
+	searchFilterContainer: {
+		marginTop: 20,
+	},
+
+	searchFilters: {},
+
+	chatListContainer: {},
+});
+
+const iosStyles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		// alignItems: "center",
+		// paddingHorizontal: 20,
+		gap: 50,
+	},
+
+	menuContainer: {
+		paddingHorizontal: 20,
+	},
+
+	searchBarContainer: {
+		paddingHorizontal: 20,
+	},
+
+	contentContainer: {
+		flex: 1,
+		gap: 20,
+	},
+
+	searchFilterContainer: {},
+
+	searchFilters: {},
+
+	chatListContainer: {
+		marginTop: 15,
+		gap: 20,
+	},
 });

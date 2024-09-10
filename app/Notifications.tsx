@@ -4,6 +4,7 @@ import ProfilePicture from "../assets/components/chatList/images/profilePicture.
 import colors from "../src/helpers/colors";
 import PageHeader from "../src/components/PageHeader";
 import { Text } from "../src/components/Text";
+import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +23,7 @@ const applications = [
 	},
 ];
 const Notifications = () => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	return (
 		<>
 			<PageHeader pageName="Notifications" />
@@ -97,7 +99,94 @@ const Notifications = () => {
 
 export default Notifications;
 
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({});
+
+const androidStyles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	notificationContainer: {
+		flexDirection: "column",
+	},
+	notification: {
+		flexDirection: "row",
+		gap: 15,
+		paddingHorizontal: 30,
+		paddingVertical: 15,
+		borderBottomWidth: 1,
+		borderColor: "#E5E5E5",
+	},
+	jobPicture: {
+		// backgroundColor: "#ff0",
+	},
+	applicationDetailContainer: {
+		// backgroundColor: "#0ff",
+		// gap: 5,
+		flex: 1,
+	},
+	top: {
+		// backgroundColor: "#00f",
+		//
+	},
+	notificationDetailHeader: {
+		// backgroundColor: "#f0f",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+	},
+	fromName: {
+		fontWeight: "500",
+		fontSize: 20,
+		marginTop: 2.5,
+		// backgroundColor: "#f00",
+	},
+	time: {
+		color: "#4C4C4C",
+		fontSize: 12,
+	},
+	subTextContainer: {
+		marginTop: -5,
+		// backgroundColor: "#0f0",
+		color: "#4C4C4C",
+		flexDirection: "row",
+		gap: 30,
+	},
+	jobDetailContent: {
+		color: "#4C4C4C",
+	},
+	jobServiceCategory: {
+		color: "#4C4C4C",
+	},
+	bottom: {
+		// backgroundColor: "#ff0",
+	},
+	buttonContainer: {
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+	button: {
+		alignItems: "center",
+		borderRadius: 5,
+		justifyContent: "center",
+		paddingVertical: 8,
+		width: "45%",
+		marginTop: "4%",
+		borderWidth: 1,
+		borderColor: "#94A3B1",
+	},
+	declineButton: {
+		backgroundColor: "#EA4435",
+	},
+	acceptButton: {
+		backgroundColor: "#33A852",
+	},
+	buttonText: {
+		color: "#fff",
+	},
+});
+const iosStyles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
