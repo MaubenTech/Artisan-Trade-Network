@@ -2,16 +2,18 @@ import React from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import colors from "../helpers/colors";
+import { compactStyles } from "@helpers/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MenuIcon from "../../assets/images/menuIcon.svg";
+import ProfilePic from "../../assets/images/profilePic.png";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NotificationPresent from "../../assets/images/notificationPresent.svg";
 import { View, StyleSheet, Platform, Button, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 
-import ProfilePic from "../../assets/images/profilePic.png";
-
 const ios = Platform.OS == "ios";
 const MenuHeader = () => {
+    const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+
     const { top } = useSafeAreaInsets();
     return (
         <View style={(styles.menuContainer, { paddingTop: ios ? top : top + 10, backgroundColor: "white" })}>
@@ -26,12 +28,12 @@ const MenuHeader = () => {
                 <MenuIcon />
                 <View style={styles.menuOptions}>
                     <Link style={styles.notificationIconContainer} asChild href={"/Notifications"}>
-                        <TouchableWithoutFeedback>
+                        <TouchableOpacity>
                             <View>
                                 <Ionicons name="notifications-outline" size={25} style={styles.notificationBell} />
                                 <NotificationPresent style={styles.notificationPresent} />
                             </View>
-                        </TouchableWithoutFeedback>
+                        </TouchableOpacity>
                     </Link>
                     <Link
                         style={styles.profilePicContainer}
@@ -49,7 +51,7 @@ const MenuHeader = () => {
     );
 };
 
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
     menuContainer: {
         flexDirection: "row",
         alignItems: "center",
@@ -59,7 +61,6 @@ const styles = StyleSheet.create({
 
     menuOptions: {
         flexDirection: "row",
-        // width: "50%",
         justifyContent: "space-between",
         alignItems: "center",
     },
@@ -95,5 +96,9 @@ const styles = StyleSheet.create({
         objectFit: "contain",
     },
 });
+
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({});
 
 export default MenuHeader;
