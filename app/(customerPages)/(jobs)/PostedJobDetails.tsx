@@ -93,7 +93,6 @@ const PostedJobDetails = () => {
                     </View>
                 </ScrollView>
                 {jobStage &&
-                    jobStage == "Posted" &&
                     (Platform.OS === "ios" ? (
                         <BottomModal jobStage={jobStage} bidStage={bidStage} />
                     ) : (

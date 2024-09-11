@@ -35,7 +35,7 @@ const ApplicantsPage = () => {
 
     return (
         <>
-            <PageHeader profile profileName="Drew Berry" />
+            <PageHeader profile profileName="Drew Berry" isApplicantPage pageName="" />
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.componentContainer}>
                     <Text style={styles.componentContainerHeader}>Bio</Text>
@@ -79,11 +79,11 @@ const ApplicantsPage = () => {
             {isBidApproved ? (
                 pendingState ? (
                     <View style={styles.applicationChoiceContainer}>
-                        <ButtonGroup href={"/PaymentDetails"} positiveOption="Proceed to Payment" paddingHorizontal={20} />
+                        <ButtonGroup href={"/PaymentDetails"} positiveOption="Proceed to Payment" paddingHorizontal={10} />
                     </View>
                 ) : (
                     <View style={styles.applicationChoiceContainer}>
-                        <ButtonGroup onPress={togglePendingState} positiveOption="Pending" positiveOptionBg={colors.greyBorder} paddingHorizontal={20} positiveOptionTextStyle={{ color: "black" }} />
+                        <ButtonGroup onPress={togglePendingState} positiveOption="Pending" positiveOptionBg={colors.greyBorder} positiveOptionTextStyle={{ color: "black" }} paddingHorizontal={10} />
                     </View>
                 )
             ) : Platform.OS === "ios" ? (

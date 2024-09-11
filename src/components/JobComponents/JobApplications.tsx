@@ -38,7 +38,7 @@ const JobApplications = () => {
                             <View style={styles.applicationDetailContainer}>
                                 <View style={styles.applicationDetailHeader}>
                                     <Text style={styles.applicationDetailText}>{application.applier}</Text>
-                                    <MoreIcon />
+                                    <MoreIcon color={"black"} />
                                 </View>
                                 <View style={{ flexDirection: "row", gap: 10 }}>
                                     <Text style={styles.jobDetailContent} lineBreakMode="middle" numberOfLines={2}>

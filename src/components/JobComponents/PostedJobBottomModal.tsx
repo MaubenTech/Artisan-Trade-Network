@@ -34,9 +34,56 @@ const Posted = () => {
     );
 };
 
-const Active = () => {};
+const Active = () => {
+    return Platform.OS === "ios" ? (
+        <View style={styles.applicantContainer}>
+            <ButtonGroup positiveOption="Open Chat" href={"/Chat"} paddingHorizontal={20} containerStyle={{ marginBottom: 10 }} />
+            <ButtonGroup
+                positiveOption="Job Completed"
+                positiveOptionBg={colors.greenShade}
+                negativeHref={"/CancelJob"}
+                negativeOption="Cancel Job"
+                // negativeOptionStyle={{ borderColor: colors.brownShade, borderWidth: 1, borderRadius: 10 }}
+                paddingHorizontal={20}
+                onPress={() => {}}
+                reverse
+                containerStyle={{ gap: 30 }}
+            />
+        </View>
+    ) : (
+        <Shadow distance={10}>
+            <View style={styles.applicantContainer}>
+                <View>
+                    <ButtonGroup positiveOption="Open Chat" href={"/Chat"} paddingHorizontal={20} />
+                </View>
+                <ButtonGroup
+                    positiveOption="Job Completed"
+                    positiveOptionBg={colors.greenShade}
+                    negativeOption="Cancel Job"
+                    paddingHorizontal={20}
+                    href={"/"}
+                    negativeHref={"/CancelJob"}
+                    reverse
+                    containerStyle={{ gap: 30 }}
+                />
+            </View>
+        </Shadow>
+    );
+};
 
-const Completed = () => {};
+const Completed = () => {
+    return Platform.OS === "ios" ? (
+        <View style={styles.applicantContainer}>
+            <ButtonGroup positiveOption="Open Chat" href={"/Chat"} paddingHorizontal={20} />
+        </View>
+    ) : (
+        <Shadow distance={10}>
+            <View style={styles.applicantContainer}>
+                <ButtonGroup positiveOption="Open Chat" href={"/Chat"} paddingHorizontal={20} />
+            </View>
+        </Shadow>
+    );
+};
 
 const SPPending = () => {
     return (
@@ -98,10 +145,14 @@ const SPCompleted = () => {};
 const BottomModal = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus }) => {
     const userType = useContext(UserTypeContext);
 
-    if (userType.type === USER_TYPE.NORMAL) {
+    if (userType.type == USER_TYPE.NORMAL) {
         switch (jobStage) {
             case "Posted":
                 return <Posted />;
+            case "Active":
+                return <Active />;
+            case "Completed":
+                return <Completed />;
         }
     }
 
@@ -119,13 +170,6 @@ const BottomModal = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: 
                 return <></>;
             default:
                 return <SPDefault />;
-        }
-    }
-
-    if (userType.type == USER_TYPE.NORMAL) {
-        switch (jobStage) {
-            case "Posted":
-                return <Posted />;
         }
     }
 };

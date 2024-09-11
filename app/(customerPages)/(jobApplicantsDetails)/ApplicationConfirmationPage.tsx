@@ -28,7 +28,7 @@ const ApplicationConfirmationPage = () => {
                     </View>
                 </View>
                 <View style={[styles.componentContainer, { alignItems: "flex-start", paddingHorizontal: 20, paddingVertical: 20, gap: 10 }]}>
-                    <Text style={[styles.paymentHeader, styles.paymentTexts, { fontWeight: "400" }]}>Payment Details</Text>
+                    <Text style={[styles.paymentHeader, { fontWeight: "400" }]}>Payment Details</Text>
                     <View style={styles.paymentDetail}>
                         <Text style={[styles.paymentDetailKey, styles.paymentTexts]}>Ref Number</Text>
                         <Text style={styles.paymentTexts}>0003939922</Text>
@@ -62,7 +62,7 @@ const ApplicationConfirmationPage = () => {
                     </Link>
                 </View>
             </View>
-            <ButtonGroup href={"/PostedJobDetails"} positiveOption="Job Page" paddingHorizontal={20} />
+            <ButtonGroup href={"/ReviewJobApplicant"} positiveOption="Job Page" paddingHorizontal={20} />
         </>
     );
 };
@@ -103,6 +103,7 @@ const generalStyles = StyleSheet.create({
 
     paymentTexts: {
         color: "#434343",
+        fontSize: 12,
     },
 });
 
