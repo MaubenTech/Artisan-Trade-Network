@@ -3,6 +3,7 @@ import { StyleSheet, Image, TextInput, Pressable, Button } from "react-native";
 import { Link, Redirect } from "expo-router";
 import React, { useState } from "react";
 import Checkbox from "expo-checkbox";
+import ButtonGroup from "@components/ButtonGroup";
 
 const Password = () => {
     const [isSelected, setSelection] = useState(false);
@@ -29,31 +30,11 @@ const Password = () => {
                 <Checkbox
                     value={isSelected}
                     onValueChange={setSelection}
-                    // style={styles.checkbox}
+                // style={styles.checkbox}
                 />
                 <Text>Yes, I agree to the Terms & Condition</Text>
             </View>
-            <View style={styles.loginButtonContainer}>
-                <Link
-                    style={[
-                        {
-                            color: "white",
-                            textAlign: "center",
-                            fontSize: 18,
-                            // fontWeight: "800",
-                            letterSpacing: 1,
-                            alignSelf: "center",
-                        },
-                    ]}
-                    // href={"(home)/Home"}
-                    href={"/(registration)/OnboardingScreen"}
-                    asChild
-                >
-                    <Pressable>
-                        <Text>Proceed</Text>
-                    </Pressable>
-                </Link>
-            </View>
+            <ButtonGroup href={"/OnboardingScreen"} positiveOption="Proceed" paddingHorizontal={20} />
         </View>
     );
 };
@@ -107,20 +88,6 @@ const styles = StyleSheet.create({
         marginLeft: "10%",
         gap: 10,
     },
-    loginButtonContainer: {
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingTop: "3%",
-        paddingBottom: "5%",
-        paddingLeft: "7%",
-        paddingRight: "7%",
-        marginLeft: "7%",
-        marginRight: "7%",
-        marginTop: "25%",
-        alignItems: "center",
-        borderColor: "#52A2f2",
-        backgroundColor: "#52A2f2",
-        position: "relative",
-    },
+
 });
 export default Password;

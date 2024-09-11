@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Link, Redirect } from "expo-router";
 import React from 'react'
+import ButtonGroup from '@components/ButtonGroup';
 
 const OtpVerification = () => {
     return (
@@ -32,30 +33,7 @@ const OtpVerification = () => {
                 <Text style={styles.codeQuestion}>Didn't receive an OTP code?</Text>
                 <Text style={styles.resend}>Resend Code</Text>
             </View>
-            <View style={styles.loginButtonContainer}>
-                <Link
-                    style={[
-                        {
-                            color: "white",
-                            textAlign: "center",
-                            fontSize: 18,
-                            // fontWeight: "800",
-                            letterSpacing: 1,
-                            alignSelf: "center",
-                        },
-                    ]}
-
-                    href={'/(registration)/Password'}
-                    asChild
-                >
-                    <Pressable>
-                        <Text>
-
-                            Verrify & Proceed
-                        </Text>
-                    </Pressable>
-                </Link>
-            </View>
+            <ButtonGroup href={"/Password"} positiveOption="Verify & Proceed" paddingHorizontal={20} />
         </View>
     )
 }
@@ -112,20 +90,20 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
     },
-    loginButtonContainer: {
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingTop: "3%",
-        paddingBottom: "5%",
-        paddingLeft: "7%",
-        paddingRight: "7%",
-        marginLeft: "7%",
-        marginRight: "7%",
-        marginTop: "35%",
-        alignItems: "center",
-        borderColor: "#52A2f2",
-        backgroundColor: "#52A2f2",
-        position: "relative",
-    },
+    // loginButtonContainer: {
+    //     borderWidth: 1,
+    //     borderRadius: 10,
+    //     paddingTop: "3%",
+    //     paddingBottom: "5%",
+    //     paddingLeft: "7%",
+    //     paddingRight: "7%",
+    //     marginLeft: "7%",
+    //     marginRight: "7%",
+    //     marginTop: "35%",
+    //     alignItems: "center",
+    //     borderColor: "#52A2f2",
+    //     backgroundColor: "#52A2f2",
+    //     position: "relative",
+    // },
 })
 export default OtpVerification

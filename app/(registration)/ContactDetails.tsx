@@ -9,6 +9,7 @@ import {
     Button,
 } from "react-native";
 import { Link, Redirect } from "expo-router";
+import ButtonGroup from '@components/ButtonGroup';
 
 export default function ContactDetails() {
     return (
@@ -34,30 +35,7 @@ export default function ContactDetails() {
                     <TextInput style={styles.placeholder} placeholder="+234" />
                 </View>
             </View>
-            <View style={styles.loginButtonContainer}>
-                <Link
-                    style={[
-                        {
-                            color: "white",
-                            textAlign: "center",
-                            fontSize: 18,
-                            // fontWeight: "800",
-                            letterSpacing: 1,
-                            alignSelf: "center",
-                        },
-                    ]}
-
-                    href={'/(registration)/OtpVerification'}
-                    asChild
-                >
-                    <Pressable>
-                        <Text>
-
-                            Proceed
-                        </Text>
-                    </Pressable>
-                </Link>
-            </View>
+            <ButtonGroup href={"/OtpVerification"} positiveOption="Proceed" paddingHorizontal={20} />
         </View>
     )
 }
