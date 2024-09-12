@@ -26,17 +26,24 @@ const ProfilePageSP = () => {
                         <Text style={styles.profileNumberDetail}>Rating</Text>
                     </View>
                 </View>
-                <View>
-                    <View>
-                        <Text>Bio</Text>
-                        <Text>Edit</Text>
+                <View style={styles.mainBiocontainer}>
+                    <View style={styles.bioContainer}>
+                        <Text style={styles.bio}>Bio</Text>
+                        <Text style={styles.edit}>Edit</Text>
                     </View>
+                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Etiam sed metus at est iaculis mattis. Sed vitae state
+                        dignissim, iaculis nisi pellentesque
+
+                    </Text>
                 </View>
                 <View style={styles.profileLinksContainer}>
                     <Link style={styles.profileLinks} asChild href={"/(customerPages)/(profile)/JobHistory"}>
                         <TouchableOpacity>
                             <View style={styles.profileLinksIconContainer}>
                                 <Ionicons name="time-outline" size={20} color={"white"} />
+                                {/* <Image source={require("../../assets/images/logo.png")} /> */}
+                                {/* <Image source={require("../../assets/icons/profileSp/jobHistory.png")} /> */}
                             </View>
                             <Text style={styles.profileLinksText}>Job {"\n"}History</Text>
                         </TouchableOpacity>
@@ -75,7 +82,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        gap: 40,
+        gap: 30,
     },
 
     profileActivities: {
@@ -102,6 +109,28 @@ const styles = StyleSheet.create({
         color: colors.greySecondaryShade,
     },
 
+    mainBiocontainer: {
+
+    },
+
+    bioContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: '20%',
+        marginTop: "-7.8%",
+        marginBottom: "2.5%",
+    },
+
+    bio: {
+        fontWeight: "500",
+        fontSize: 18,
+    },
+
+    edit: {
+        textDecorationLine: "underline",
+        marginTop: "4%",
+    },
     profileLinksContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
