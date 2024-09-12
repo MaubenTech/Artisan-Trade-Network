@@ -53,8 +53,11 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 
     const CompleteNegativeOption = () => {
         return negativeHref ? (
-            <Link href={negativeHref} style={negativeStyle}>
-                <NegativeOption />
+            <Link href={negativeHref} style={negativeStyle} asChild>
+                {/* <NegativeOption /> */}
+                <TouchableOpacity>
+                    <Text style={negativeOptionTextStyle}>{negativeOption}</Text>
+                </TouchableOpacity>
             </Link>
         ) : (
             <NegativeOption addStyle />

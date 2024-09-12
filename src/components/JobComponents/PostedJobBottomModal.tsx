@@ -42,8 +42,8 @@ const Active = () => {
                 positiveOption="Job Completed"
                 positiveOptionBg={colors.greenShade}
                 negativeHref={"/CancelJob"}
+                negativeOptionStyle={{ borderWidth: 1, borderColor: "#94A3B1" }}
                 negativeOption="Cancel Job"
-                // negativeOptionStyle={{ borderColor: colors.brownShade, borderWidth: 1, borderRadius: 10 }}
                 paddingHorizontal={20}
                 onPress={() => {}}
                 reverse
