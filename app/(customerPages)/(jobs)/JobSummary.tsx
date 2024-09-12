@@ -100,7 +100,7 @@ const JobSummary = () => {
                     </View>
                 </View>
                 <View style={{ marginBottom: 60 }}>
-                    <ButtonGroup paddingHorizontal={30} positiveOption="Post Job" positiveOptionBg={colors.greenShade} href={"/(customerPages)/JobPosted"} />
+                    <ButtonGroup paddingHorizontal={20} positiveOption="Post Job" positiveOptionBg={colors.greenShade} href={"/(customerPages)/JobPosted"} />
                 </View>
             </ScrollView>
         </View>

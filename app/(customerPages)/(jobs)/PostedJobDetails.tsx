@@ -20,8 +20,8 @@ const { width, height } = Dimensions.get("window");
 
 const PostedJobDetails = () => {
 	const { jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus } = useLocalSearchParams();
-	console.log("Jobstage: " + jobStage);
-	console.log("Bidstage: " + bidStage);
+	// console.log("Jobstage: " + jobStage);
+	// console.log("Bidstage: " + bidStage);
 	const userType = useContext(UserTypeContext);
 	return (
 		<>
@@ -96,7 +96,7 @@ const PostedJobDetails = () => {
 				{Platform.OS === "ios" ? (
 					<BottomModal jobStage={jobStage} bidStage={bidStage} />
 				) : (
-					<Shadow distance={5} style={{ borderRadius: 20 }}>
+					<Shadow startColor="#00000030" distance={2} style={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
 						<BottomModal jobStage={jobStage} bidStage={bidStage} />
 					</Shadow>
 				)}

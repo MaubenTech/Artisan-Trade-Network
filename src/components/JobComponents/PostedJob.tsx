@@ -27,19 +27,13 @@ const setStatusBackgroundColor = (status: JobStatus) => {
 
 const PostedJob = ({ job }: { job: Job }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const [jobStage, setJobStage] = useState<JobStatus>(null);
-	const [bidStage, setBidStage] = useState<BidStatus>("Bid"); //change Bid status value to see different pages
+	const [jobStage, setJobStage] = useState<JobStatus>("Completed");
+	const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 	return (
 		<Link
 			style={styles.job}
 			asChild
-			href={{
-				pathname: "/(jobs)/PostedJobDetails",
-				params: {
-					jobStage,
-					bidStage,
-				},
-			}}
+			href={{ pathname: "/(jobs)/PostedJobDetails", params: { jobStage, bidStage } }}
 			key={job.jobTitle}
 		>
 			<TouchableOpacity key={job.jobTitle}>

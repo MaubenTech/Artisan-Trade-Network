@@ -46,7 +46,7 @@ const PaymentDetails = () => {
                 </View>
                 <View style={{ gap: 20 }}>
                     {radiOptions.map(({ label, icon }) => (
-                        <RadioOption label={label} icon={icon} containerStyle={{ paddingHorizontal: 20 }} selected={selectedMethod === label} onPress={() => setSelectedMethod(label)} />
+                        <RadioOption label={label} icon={icon} key={label} containerStyle={{ paddingHorizontal: 20 }} selected={selectedMethod === label} onPress={() => setSelectedMethod(label)} />
                     ))}
                 </View>
             </View>

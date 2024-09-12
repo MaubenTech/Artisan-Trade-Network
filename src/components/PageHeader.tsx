@@ -4,6 +4,7 @@ import colors from "../helpers/colors";
 import { Link, router } from "expo-router";
 import React, { ReactElement } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MoreIcon from "../../assets/icons/services/moreIcon.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, StyleSheet, ViewStyle, TextStyle, ColorValue, Platform } from "react-native";
 
@@ -16,8 +17,9 @@ interface PageHeaderParams {
     icon?: ReactElement<any, any>;
     profile?: boolean;
     profileName?: string;
+    isApplicantPage?: boolean;
 }
-const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName }) => {
+const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage }) => {
     const { top } = useSafeAreaInsets();
     return (
         <View
@@ -36,7 +38,7 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                             : styles.pageHeaderElementsContainer
                     }
                 >
-                    {pageName ? (
+                    {pageName || pageName == "" ? (
                         <View
                             style={{
                                 backgroundColor: colors.buttonsBg,
@@ -52,9 +54,15 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
 
                     <Text style={styles.pageHeaderTitle}>{pageName}</Text>
                     {profile ? (
-                        <Link style={styles.settingsContainer} asChild href={"/(customerPages)/(profile)/Settings"}>
-                            <Ionicons name="settings-outline" size={20} />
-                        </Link>
+                        isApplicantPage ? (
+                            <Link style={styles.settingsContainer} asChild href={"/Settings"}>
+                                <MoreIcon color={"black"} />
+                            </Link>
+                        ) : (
+                            <Link style={styles.settingsContainer} asChild href={"/Settings"}>
+                                <Ionicons name="settings-outline" size={20} />
+                            </Link>
+                        )
                     ) : (
                         <></>
                     )}

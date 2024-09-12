@@ -16,8 +16,14 @@ const PostedJobProgressStatus = ({ jobStage, bidStage }: { jobStage?: JobStatus;
 
 	if (!isServiceProvider) {
 		switch (jobStage) {
+			case "Posted":
+				return <ProgressBar status="Posted" numerator={1} denominator={denominator} />;
+			case "Active":
+				return <ProgressBar status="Active" numerator={2} denominator={denominator} showCompleteLevel />;
+			case "Completed":
+				return <ProgressBar status="Completed" numerator={3} denominator={denominator} showCompleteLevel />;
 			default:
-				return <View></View>;
+				return <></>;
 		}
 	} else {
 		switch (bidStage) {
