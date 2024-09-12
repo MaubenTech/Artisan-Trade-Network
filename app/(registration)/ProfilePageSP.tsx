@@ -10,7 +10,7 @@ import PageHeader from "@components/PageHeader";
 const ProfilePageSP = () => {
     return (
         <View style={styles.container}>
-            <PageHeader pageName="Profile" profile isProfileSP profileName="Drew Berry" profileTitle="Carpenter" />
+            <PageHeader pageName="Profile" profile isProfileSP profileName="Drew Berry" profileServiceCategory="Carpenter" />
             <View style={styles.profileActivities}>
                 <View style={styles.profileNumberContainer}>
                     <View style={styles.profileNumber}>
@@ -31,11 +31,7 @@ const ProfilePageSP = () => {
                         <Text style={styles.bio}>Bio</Text>
                         <Text style={styles.edit}>Edit</Text>
                     </View>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Etiam sed metus at est iaculis mattis. Sed vitae state
-                        dignissim, iaculis nisi pellentesque
-
-                    </Text>
+                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed metus at est iaculis mattis. Sed vitae state dignissim, iaculis nisi pellentesque</Text>
                 </View>
                 <View style={styles.profileLinksContainer}>
                     <Link style={styles.profileLinks} asChild href={"/(customerPages)/(profile)/JobHistory"}>
@@ -109,15 +105,13 @@ const styles = StyleSheet.create({
         color: colors.greySecondaryShade,
     },
 
-    mainBiocontainer: {
-
-    },
+    mainBiocontainer: {},
 
     bioContainer: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        width: '20%',
+        width: "20%",
         marginTop: "-7.8%",
         marginBottom: "2.5%",
     },

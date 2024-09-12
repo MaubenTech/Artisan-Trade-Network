@@ -19,9 +19,9 @@ interface PageHeaderParams {
     profileName?: string;
     isApplicantPage?: boolean;
     isProfileSP?: boolean;
-    profileTitle?: string;
+    profileServiceCategory?: string;
 }
-const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileTitle }) => {
+const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileServiceCategory: profileTitle }) => {
     const { top } = useSafeAreaInsets();
 
     return (
