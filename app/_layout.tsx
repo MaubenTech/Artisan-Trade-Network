@@ -8,7 +8,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import FontsProvider from "../src/components/FontsProvider";
-import UserTypeContext from "../src/context/UserTypeProvider";
 import UserTypeProvider from "../src/context/UserTypeProvider";
 
 // export const unstable_settings = {
