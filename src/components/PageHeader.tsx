@@ -18,9 +18,12 @@ interface PageHeaderParams {
     profile?: boolean;
     profileName?: string;
     isApplicantPage?: boolean;
+    isProfileSP?: boolean;
+    profileTitle?: string;
 }
-const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage }) => {
+const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileTitle }) => {
     const { top } = useSafeAreaInsets();
+
     return (
         <View
             style={
@@ -32,9 +35,9 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                     style={
                         profile
                             ? {
-                                ...styles.pageHeaderElementsContainer,
-                                justifyContent: "space-between",
-                            }
+                                  ...styles.pageHeaderElementsContainer,
+                                  justifyContent: "space-between",
+                              }
                             : styles.pageHeaderElementsContainer
                     }
                 >
@@ -75,7 +78,10 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                     </View>
                     <Text style={styles.profileName}>{profileName ? profileName : "Nonso Rob"}</Text>
                     {profileName ? (
-                        <Text>Carpenter</Text>
+                        <>
+                            <Text>{profileTitle}</Text>
+                            {isProfileSP ? <Text style={styles.editProfile}>Edit</Text> : null}
+                        </>
                     ) : (
                         <Link href={"/"} style={styles.editProfile}>
                             Edit
@@ -87,8 +93,6 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
             )}
 
             <View style={profile ? {} : styles.pageHeaderContainerBorder}></View>
-
-
         </View>
     );
 };

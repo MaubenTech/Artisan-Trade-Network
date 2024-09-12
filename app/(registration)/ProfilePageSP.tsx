@@ -10,7 +10,7 @@ import PageHeader from "@components/PageHeader";
 const ProfilePageSP = () => {
     return (
         <View style={styles.container}>
-            <PageHeader pageName="Profile" profile />
+            <PageHeader pageName="Profile" profile isProfileSP profileName="Drew Berry" profileTitle="Carpenter" />
             <View style={styles.profileActivities}>
                 <View style={styles.profileNumberContainer}>
                     <View style={styles.profileNumber}>
@@ -31,7 +31,6 @@ const ProfilePageSP = () => {
                         <Text>Bio</Text>
                         <Text>Edit</Text>
                     </View>
-
                 </View>
                 <View style={styles.profileLinksContainer}>
                     <Link style={styles.profileLinks} asChild href={"/(customerPages)/(profile)/JobHistory"}>
