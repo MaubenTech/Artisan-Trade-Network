@@ -33,7 +33,7 @@ const PostedJob = ({ job }: { job: Job }) => {
 		<Link
 			style={styles.job}
 			asChild
-			href={{ pathname: "/(jobs)/PostedJobDetails", params: { jobStage, bidStage } }}
+			href={{ pathname: "/PostedJobDetails", params: { jobStage, bidStage } }}
 			key={job.jobTitle}
 		>
 			<TouchableOpacity key={job.jobTitle}>
