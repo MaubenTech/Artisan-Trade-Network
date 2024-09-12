@@ -70,7 +70,7 @@ export default function OnboardingScreen() {
                 </View>
             </View>
             {finalObPage ? (
-                <ButtonGroup href={"/Home"} positiveOption="Proceed" paddingHorizontal={20} />
+                <ButtonGroup href={"/ProfilePageSP"} positiveOption="Proceed" paddingHorizontal={20} />
             ) : (
                 <ButtonGroup onPress={handleNextOnboardingPage} positiveOption="Next" negativeOption="Skip" paddingHorizontal={20} reverse />
             )}

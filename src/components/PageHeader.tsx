@@ -32,9 +32,9 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                     style={
                         profile
                             ? {
-                                  ...styles.pageHeaderElementsContainer,
-                                  justifyContent: "space-between",
-                              }
+                                ...styles.pageHeaderElementsContainer,
+                                justifyContent: "space-between",
+                            }
                             : styles.pageHeaderElementsContainer
                     }
                 >
@@ -87,6 +87,8 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
             )}
 
             <View style={profile ? {} : styles.pageHeaderContainerBorder}></View>
+
+
         </View>
     );
 };
