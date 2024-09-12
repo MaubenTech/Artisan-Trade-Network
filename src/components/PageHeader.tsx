@@ -2,11 +2,12 @@ import { Text } from "./Text";
 import { Image } from "expo-image";
 import colors from "../helpers/colors";
 import { Link, router } from "expo-router";
-import React, { ReactElement } from "react";
+import React, { Component, ReactElement } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MoreIcon from "../../assets/icons/services/moreIcon.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, StyleSheet, ViewStyle, TextStyle, ColorValue, Platform } from "react-native";
+import { View, StyleSheet, ViewStyle, TextStyle, ColorValue, Platform, ImageSourcePropType } from "react-native";
+import { SvgProps } from "react-native-svg";
 
 const ios = Platform.OS == "ios";
 const ProfilePic = require("../../assets/images/profilePic.png");
@@ -20,8 +21,9 @@ interface PageHeaderParams {
     isApplicantPage?: boolean;
     isProfileSP?: boolean;
     profileServiceCategory?: string;
+    profilePicture?: React.FC<SvgProps> | ImageSourcePropType;
 }
-const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileServiceCategory: profileTitle }) => {
+const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileServiceCategory: profileTitle, profilePicture }) => {
     const { top } = useSafeAreaInsets();
 
     return (
@@ -62,7 +64,7 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                                 <MoreIcon color={"black"} />
                             </Link>
                         ) : (
-                            <Link style={styles.settingsContainer} asChild href={"/Settings"}>
+                            <Link style={[styles.settingsContainer]} asChild href={"/Settings"}>
                                 <Ionicons name="settings-outline" size={20} />
                             </Link>
                         )
@@ -74,9 +76,18 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
             {profile ? (
                 <View style={styles.profileDetails}>
                     <View style={styles.profilePicContainer}>
-                        <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
+                        {/* <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" /> */}
+                        {profilePicture ? (
+                            typeof profilePicture === "function" ? (
+                                React.createElement(profilePicture)
+                            ) : (
+                                <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
+                            )
+                        ) : (
+                            <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
+                        )}
                     </View>
-                    <Text style={styles.profileName}>{profileName ? profileName : "Nonso Rob"}</Text>
+                    <Text style={[profilePicture ? { marginTop: 30, ...styles.profileName } : styles.profileName]}>{profileName ? profileName : "Nonso Rob"}</Text>
                     {profileName ? (
                         <>
                             <Text>{profileTitle}</Text>

@@ -7,10 +7,12 @@ import MenuHeader from "@components/MenuHeader";
 import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import PageHeader from "@components/PageHeader";
 
+import ProfilePicture from "../../assets/images/ProfilePicture.svg";
+
 const ProfilePageSP = () => {
     return (
         <View style={styles.container}>
-            <PageHeader pageName="Profile" profile isProfileSP profileName="Drew Berry" profileServiceCategory="Carpenter" />
+            <PageHeader pageName="Profile" profile isProfileSP profileName="Drew Berry" profileServiceCategory="Carpenter" profilePicture={ProfilePicture} />
             <View style={styles.profileActivities}>
                 <View style={styles.profileNumberContainer}>
                     <View style={styles.profileNumber}>
