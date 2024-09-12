@@ -19,7 +19,7 @@ const JobPosted = () => {
                         <Text style={styles.successSubTitle}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat, dolore tempore?</Text>
                     </View>
                 </View>
-                <ButtonGroup positiveOption="Go Back Home" paddingHorizontal={30} href={"/(home)/Home"} />
+                <ButtonGroup positiveOption="Go Back Home" paddingHorizontal={40} href={"/(home)/Home"} />
             </View>
         </View>
     );
