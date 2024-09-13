@@ -93,13 +93,13 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 		const positiveStyle: StyleProp<ViewStyle> = [
 			styles.option,
 			styles.positiveOption,
-			vertical && { width: "100%" },
 			{
 				backgroundColor: positiveOptionBg ?? colors.mainColor,
 			},
 			!isNop && {
 				width: width * 0.9,
 			},
+			vertical && { width: "100%" },
 			positiveOptionStyle,
 		];
 		return onPress ? (
