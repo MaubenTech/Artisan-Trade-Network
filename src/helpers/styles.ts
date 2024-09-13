@@ -10,50 +10,32 @@ type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
  * @param iosStyles The ios-specific styles to be applied for every component.
  * @returns The overall stylesheet
  */
-export const compactStyles = <
-	T extends NamedStyles<T>,
-	U extends Partial<NamedStyles<U>>,
-	V extends Partial<NamedStyles<V>>
->(
+export const compactStyles = <T extends NamedStyles<T>, U extends NamedStyles<U>, V extends NamedStyles<V>>(
 	generalStyles: T,
 	androidStyles?: U,
 	iosStyles?: V
 ): T & U & V => {
-	const platformStyles =
-		Platform.OS === "android"
-			? androidStyles
-			: Platform.OS === "ios"
-			? iosStyles
-			: {};
+	const platformStyles = Platform.OS === "android" ? androidStyles : Platform.OS === "ios" ? iosStyles : {};
 	return deepMerge({ ...generalStyles }, platformStyles) as T & U & V;
 	// return deepMerge2({ ...generalStyles }, platformStyles) as T & U & V; //also works
 };
 
 const deepMerge = <T>(target: T, source: Partial<T>): T => {
+	const tempTarget = { ...target };
 	for (const key of Object.keys(source)) {
 		const value = source[key as keyof T];
-		if (
-			typeof value === "object" &&
-			value !== null &&
-			!Array.isArray(value) &&
-			Object.keys(target).includes(key)
-		) {
-			target[key] = deepMerge(target[key], value);
+		if (typeof value === "object" && value !== null && !Array.isArray(value) && Object.keys(target).includes(key)) {
+			tempTarget[key] = deepMerge(target[key], value);
 		} else {
-			target[key] = value;
+			tempTarget[key] = value;
 		}
 	}
 
-	return target;
+	return tempTarget;
 };
 
-export const deepMerge2 = <
-	T extends NamedStyles<T>,
-	U extends Partial<NamedStyles<U>>
->(
-	target: T,
-	source: U
-) => {
+export const deepMerge2 = <T extends NamedStyles<T>, U extends NamedStyles<U>>(target: T, source: U) => {
+	const tempTarget = { ...target };
 	// console.log("Target is: ");
 	// console.log(target);
 	// console.log("Source is: ");
@@ -68,26 +50,23 @@ export const deepMerge2 = <
 			!Array.isArray(value) &&
 			Object.keys(target).includes(elementStyleKey)
 		) {
-			target[elementStyleKey] = plainMerge(target[elementStyleKey], value);
+			tempTarget[elementStyleKey] = plainMerge(target[elementStyleKey], value);
 		} else {
-			target[elementStyleKey] = value;
+			tempTarget[elementStyleKey] = value;
 		}
 	}
 
-	return target;
+	return tempTarget;
 };
 
-const plainMerge = (
-	target: ViewStyle | TextStyle | ImageStyle,
-	source: ViewStyle | TextStyle | ImageStyle
-) => {
+const plainMerge = (target: ViewStyle | TextStyle | ImageStyle, source: ViewStyle | TextStyle | ImageStyle) => {
+	const tempTarget = { ...target };
 	for (const stylePropertyKey of Object.keys(source)) {
-		const value: keyof ViewStyle | keyof TextStyle | keyof ImageStyle =
-			source[stylePropertyKey];
+		const value: keyof ViewStyle | keyof TextStyle | keyof ImageStyle = source[stylePropertyKey];
 		// if (value !== null && Object.keys(target).includes(value)) {
 		// }
-		target[stylePropertyKey] = value;
+		tempTarget[stylePropertyKey] = value;
 	}
 
-	return target;
+	return tempTarget;
 };
