@@ -80,15 +80,7 @@ const SPInitial = () => {
 
 const SPActive = () => (
 	<View style={[styles.applicantContainer, styles.spApplicantContainer, { paddingTop: 20 }]}>
-		<ButtonGroup
-			containerStyle={{ flexDirection: "column", gap: 20 }}
-			positiveOptionStyle={{ width: "100%" }}
-			negativeOptionStyle={{ width: "100%" }}
-			href={""}
-			// negativeHref={""}
-			positiveOption="Open Chat"
-			negativeOption="Cancel Job"
-		/>
+		<ButtonGroup href={""} positiveOption="Open Chat" negativeOption="Cancel Job" vertical />
 	</View>
 );
 
