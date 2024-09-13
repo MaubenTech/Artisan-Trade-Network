@@ -78,7 +78,7 @@ export default function Home() {
 			title: "View available Jobs",
 			subtitle: "With the click of a button, view available jobs today",
 			buttonTitle: "Unlock",
-			buttonColor: colors.whiteSecondaryShade,
+			buttonColor: colors.listItemBorderColor,
 			secondIcon: <Ionicons name="lock-open" style={{ color: "white" }} size={15} />,
 			icon: <Ionicons name="arrow-forward-outline" style={{ color: "white", textAlign: "center" }} size={20} />,
 			href: "/(customerPages)/NewJob",
