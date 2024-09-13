@@ -89,48 +89,33 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 		onPress,
 	}: {
 		onPress?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent) => void;
-	}) =>
-		onPress ? (
+	}) => {
+		const positiveStyle: StyleProp<ViewStyle> = [
+			styles.option,
+			styles.positiveOption,
+			vertical && { width: "100%" },
+			{
+				backgroundColor: positiveOptionBg ?? colors.mainColor,
+			},
+			!isNop && {
+				width: width * 0.9,
+			},
+			positiveOptionStyle,
+		];
+		return onPress ? (
 			// If onPress is provided, render TouchableOpacity without Link
-			<TouchableOpacity
-				style={[
-					styles.option,
-					styles.positiveOption,
-					{
-						backgroundColor: positiveOptionBg ?? colors.mainColor,
-					},
-					!isNop && {
-						width: width * 0.9,
-					},
-					positiveOptionStyle,
-				]}
-				onPress={onPress}
-			>
+			<TouchableOpacity style={positiveStyle} onPress={onPress}>
 				<Text style={[styles.positiveOptionText, positiveOptionTextStyle]}>{positiveOption}</Text>
 			</TouchableOpacity>
 		) : (
 			// If onPress is not provided, render Link with TouchableOpacity inside
-			<Link
-				href={href}
-				asChild
-				style={[
-					styles.option,
-					styles.positiveOption,
-					vertical && { width: "100%" },
-					{
-						backgroundColor: positiveOptionBg ?? colors.mainColor,
-					},
-					!isNop && {
-						width: width * 0.9,
-					},
-					positiveOptionStyle,
-				]}
-			>
+			<Link href={href} asChild style={positiveStyle}>
 				<TouchableOpacity>
 					<Text style={[styles.positiveOptionText, positiveOptionTextStyle]}>{positiveOption}</Text>
 				</TouchableOpacity>
 			</Link>
 		);
+	};
 
 	return (
 		<View
