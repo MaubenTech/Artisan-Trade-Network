@@ -28,7 +28,7 @@ const setStatusBackgroundColor = (status: JobStatus) => {
 const PostedJob = ({ job }: { job: Job }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [jobStage, setJobStage] = useState<JobStatus>("Completed");
-	const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
+	const [bidStage, setBidStage] = useState<BidStatus>("Active"); //change Bid status value to see different pages
 	return (
 		<Link
 			style={styles.job}

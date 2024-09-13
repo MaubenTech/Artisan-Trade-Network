@@ -1,10 +1,8 @@
 import {
 	View,
 	StyleSheet,
-	Touchable,
 	TouchableOpacity,
 	ViewStyle,
-	ImageStyle,
 	TextStyle,
 	ColorValue,
 	DimensionValue,
