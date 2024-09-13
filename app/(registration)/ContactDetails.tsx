@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { Link, Redirect } from "expo-router";
 import ButtonGroup from '@components/ButtonGroup';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ContactDetails() {
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logo}>
                 <Image source={require("../../assets/images/logo.png")} />
             </View>
@@ -36,7 +37,7 @@ export default function ContactDetails() {
                 </View>
             </View>
             <ButtonGroup href={"/OtpVerification"} positiveOption="Proceed" paddingHorizontal={20} />
-        </View>
+        </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({

@@ -22,8 +22,10 @@ interface PageHeaderParams {
     isProfileSP?: boolean;
     profileServiceCategory?: string;
     profilePicture?: React.FC<SvgProps> | ImageSourcePropType;
+    width?: number,
+    height?: number
 }
-const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileServiceCategory: profileTitle, profilePicture }) => {
+const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile, profileName, isApplicantPage, isProfileSP, profileServiceCategory: profileTitle, profilePicture, width = 60, height = 100 }) => {
     const { top } = useSafeAreaInsets();
 
     return (
@@ -37,9 +39,9 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                     style={
                         profile
                             ? {
-                                  ...styles.pageHeaderElementsContainer,
-                                  justifyContent: "space-between",
-                              }
+                                ...styles.pageHeaderElementsContainer,
+                                justifyContent: "space-between",
+                            }
                             : styles.pageHeaderElementsContainer
                     }
                 >
@@ -79,18 +81,19 @@ const PageHeader: React.FC<PageHeaderParams> = ({ pageName, style, icon, profile
                         {/* <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" /> */}
                         {profilePicture ? (
                             typeof profilePicture === "function" ? (
-                                React.createElement(profilePicture)
+                                React.createElement(profilePicture, { width, height })
                             ) : (
                                 <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
                             )
                         ) : (
-                            <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
+                            // <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
+                            <></>
                         )}
                     </View>
-                    <Text style={[profilePicture ? { marginTop: 30, ...styles.profileName } : styles.profileName]}>{profileName ? profileName : "Nonso Rob"}</Text>
+                    <Text style={[profilePicture ? { marginTop: 80, ...styles.profileName } : styles.profileName]}>{profileName ? profileName : "Nonso Rob"}</Text>
                     {profileName ? (
                         <>
-                            <Text>{profileTitle}</Text>
+                            <Text >{profileTitle}</Text>
                             {isProfileSP ? <Text style={styles.editProfile}>Edit</Text> : null}
                         </>
                     ) : (
@@ -160,11 +163,12 @@ const styles = StyleSheet.create({
 
     profileDetails: {
         alignItems: "center",
-        gap: 10,
+        gap: 5,
     },
 
     profilePicContainer: {
-        height: 70,
+        // height: 50,
+        flex: 1
     },
 
     profilePic: {

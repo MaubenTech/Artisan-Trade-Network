@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, TextInput, Pressable, Button } from "react-native";
+import { StyleSheet, View, Image, TextInput, Pressable, Button, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import { Text } from "@components/Text";
 import { Link } from "expo-router";
@@ -46,7 +46,7 @@ export default function OnboardingScreen() {
     ];
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logoContainer}>
                 {/* <View style={styles.logo}> */}
                 <Image source={require("../../assets/images/logo.png")} />
@@ -74,7 +74,7 @@ export default function OnboardingScreen() {
             ) : (
                 <ButtonGroup onPress={handleNextOnboardingPage} positiveOption="Next" negativeOption="Skip" paddingHorizontal={20} reverse />
             )}
-        </View>
+        </SafeAreaView>
     );
 }
 

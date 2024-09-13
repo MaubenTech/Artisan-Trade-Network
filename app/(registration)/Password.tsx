@@ -4,11 +4,12 @@ import { Link, Redirect } from "expo-router";
 import React, { useState } from "react";
 import Checkbox from "expo-checkbox";
 import ButtonGroup from "@components/ButtonGroup";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Password = () => {
     const [isSelected, setSelection] = useState(false);
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logo}>
                 <Image source={require("../../assets/images/logo.png")} />
             </View>
@@ -35,7 +36,7 @@ const Password = () => {
                 <Text>Yes, I agree to the Terms & Condition</Text>
             </View>
             <ButtonGroup href={"/OnboardingScreen"} positiveOption="Proceed" paddingHorizontal={20} />
-        </View>
+        </SafeAreaView>
     );
 };
 

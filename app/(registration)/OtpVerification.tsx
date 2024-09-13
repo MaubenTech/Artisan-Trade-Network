@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, SafeAreaView } from 'react-native'
 import {
     StyleSheet,
     Image,
@@ -12,7 +12,7 @@ import ButtonGroup from '@components/ButtonGroup';
 
 const OtpVerification = () => {
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logo}>
                 <Image source={require("../../assets/images/logo.png")} />
             </View>
@@ -34,7 +34,7 @@ const OtpVerification = () => {
                 <Text style={styles.resend}>Resend Code</Text>
             </View>
             <ButtonGroup href={"/Password"} positiveOption="Verify & Proceed" paddingHorizontal={20} />
-        </View>
+        </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({

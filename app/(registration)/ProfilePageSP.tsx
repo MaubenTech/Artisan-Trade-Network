@@ -4,8 +4,12 @@ import colors from "@helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text } from "@components/Text";
 import MenuHeader from "@components/MenuHeader";
-import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import PageHeader from "@components/PageHeader";
+import JobHistory from '../../assets/icons/profileSp/JobHistory.svg'
+import Ratings from '../../assets/icons/profileSp/Ratings.svg'
+import HelpCenter from '../../assets/icons/profileSp/HelpCenter.svg'
+import Logout from '../../assets/icons/profileSp/logout.svg'
+import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 
 import ProfilePicture from "../../assets/images/ProfilePicture.svg";
 
@@ -33,41 +37,34 @@ const ProfilePageSP = () => {
                         <Text style={styles.bio}>Bio</Text>
                         <Text style={styles.edit}>Edit</Text>
                     </View>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed metus at est iaculis mattis. Sed vitae state dignissim, iaculis nisi pellentesque</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '300' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed metus at est iaculis mattis. Sed vitae state dignissim, iaculis nisi pellentesque</Text>
                 </View>
                 <View style={styles.profileLinksContainer}>
                     <Link style={styles.profileLinks} asChild href={"/(customerPages)/(profile)/JobHistory"}>
                         <TouchableOpacity>
-                            <View style={styles.profileLinksIconContainer}>
-                                <Ionicons name="time-outline" size={20} color={"white"} />
-                                {/* <Image source={require("../../assets/images/logo.png")} /> */}
-                                {/* <Image source={require("../../assets/icons/profileSp/jobHistory.png")} /> */}
-                            </View>
-                            <Text style={styles.profileLinksText}>Job {"\n"}History</Text>
+                            <JobHistory width={120} style={{}} />
+                            <Text style={styles.profileLinksText}>Job History</Text>
                         </TouchableOpacity>
+
                     </Link>
                     <Link style={styles.profileLinks} asChild href={"/(customerPages)/(profile)/MyRatings"}>
                         <TouchableOpacity>
-                            <View style={styles.profileLinksIconContainer}>
-                                <Ionicons name="thumbs-up-outline" size={20} color={"white"} />
-                            </View>
-                            <Text style={styles.profileLinksText}>My {"\n"}Ratings</Text>
+                            <Ratings width={120} />
+                            <Text style={styles.profileLinksText}>Ratings</Text>
                         </TouchableOpacity>
                     </Link>
                     <Link style={styles.profileLinks} asChild href={"/(customerPages)/(profile)/HelpCenter"}>
                         <TouchableOpacity>
-                            <View style={styles.profileLinksIconContainer}>
-                                <Ionicons name="information-circle-outline" size={20} color={"white"} />
-                            </View>
-                            <Text style={styles.profileLinksText}>Help {"\n"}Center</Text>
+                            <HelpCenter width={120} />
+                            <Text style={styles.profileLinksText}>Help Center</Text>
                         </TouchableOpacity>
                     </Link>
-                    <Link style={styles.profileLinks} asChild href={"#"}>
+                    <Link style={[styles.profileLinks, { backgroundColor: colors.mainColor }]} asChild href={"#"}>
                         <TouchableOpacity>
-                            <View style={styles.profileLinksIconContainer}>
-                                <Ionicons name="log-out-outline" size={20} color={"white"} />
+                            <View style={{ backgroundColor: 'white', padding: 10, borderRadius: 50, position: 'absolute', left: 10, top: 10 }}>
+                                <Logout />
                             </View>
-                            <Text style={styles.profileLinksText}>Logout</Text>
+                            <Text style={[styles.profileLinksText, { color: colors.white }]}>Logout</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>
@@ -85,7 +82,7 @@ const styles = StyleSheet.create({
 
     profileActivities: {
         paddingHorizontal: 30,
-        gap: 50,
+        gap: 40,
     },
 
     profileNumberContainer: {
@@ -119,7 +116,7 @@ const styles = StyleSheet.create({
     },
 
     bio: {
-        fontWeight: "500",
+        fontWeight: "400",
         fontSize: 18,
     },
 
@@ -136,7 +133,7 @@ const styles = StyleSheet.create({
     },
 
     profileLinks: {
-        backgroundColor: colors.white,
+        // backgroundColor: '#E6E7E9',
         width: "40%",
         height: 120,
         borderStyle: "solid",
@@ -146,9 +143,10 @@ const styles = StyleSheet.create({
         shadowColor: "#E3E3E3",
         shadowOffset: { width: 0, height: 3 },
         gap: 20,
-        alignItems: "flex-start",
+        alignItems: "center",
         padding: 10,
         justifyContent: "center",
+        position: "relative"
     },
 
     profileLinksIconContainer: {
@@ -161,7 +159,12 @@ const styles = StyleSheet.create({
     },
 
     profileLinksText: {
-        fontSize: 18,
+        fontSize: 12,
+        width: 50,
+        color: 'black',
+        position: 'absolute',
+        bottom: 10,
+        left: 20,
     },
 });
 
