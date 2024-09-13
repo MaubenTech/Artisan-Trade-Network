@@ -1,20 +1,17 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
-import colors from "../../../src/helpers/colors";
+import colors from "../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Text, TextInput } from "../../../src/components/Text";
-import JobRating from "../../assets/images/JobRating.svg";
-import PageHeader from "../../../src/components/PageHeader";
-import ProgressBar from "../../../src/components/ProgressBar";
-import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Platform, Button } from "react-native";
-import ButtonGroup from "../../../src/components/ButtonGroup";
+import { Text } from "../../src/components/Text";
+import PageHeader from "../../src/components/PageHeader";
+import { View, StyleSheet, Dimensions, ScrollView, Platform } from "react-native";
 import { UserTypeContext } from "context/UserTypeProvider";
 import USER_TYPE from "constants/UserType";
-import { JobStatus } from "../../(home)/Jobs";
-import { BidStatus } from "../../(home)/Bids";
-import BottomModal from "../../../src/components/JobComponents/PostedJobBottomModal";
-import PostedJobProgressStatus from "../../../src/components/JobComponents/PostedJobProgressStatus";
+import { JobStatus } from "../(home)/Jobs";
+import { BidStatus } from "../(home)/Bids";
+import BottomModal from "../../src/components/JobComponents/PostedJobBottomModal";
+import PostedJobProgressStatus from "../../src/components/JobComponents/PostedJobProgressStatus";
 
 const { width, height } = Dimensions.get("window");
 
