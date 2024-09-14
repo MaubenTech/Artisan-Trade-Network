@@ -1,23 +1,23 @@
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
-import colors from "../../src/helpers/colors";
-import { Text } from "../../src/components/Text";
+import colors from "@helpers/colors";
+import { Text } from "@components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import RewardIcon from "../../assets/images/reward.svg";
+import RewardIcon from "@assets/images/reward.svg";
 import { LinkProps } from "expo-router/build/link/Link";
-import MenuHeader from "../../src/components/MenuHeader";
-import HomeCarousel from "../../src/components/HomeCarousel";
+import MenuHeader from "@components/MenuHeader";
+import HomeCarousel from "@components/HomeCarousel";
 import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ImageBackground, ScrollView, Dimensions, FlatListProps, ImagePropsBase } from "react-native";
 import { compactStyles } from "@helpers/styles";
 import { Bid, PostedBid } from "./Bids";
 
-const HomeCard1 = require("../../assets/images/homeCard1.png");
-const HomeCard2 = require("../../assets/images/homeCard2.png");
+const HomeCard1 = require("@assets/images/homeCard1.png");
+const HomeCard2 = require("@assets/images/homeCard2.png");
 
 const { width, height } = Dimensions.get("window");
 
-export interface SwipeData extends LinkProps {
+export interface SwipeData extends LinkProps<string> {
 	index: number;
 	img: ImagePropsBase;
 	title: string;
@@ -49,7 +49,6 @@ const recommendedJobs: Bid[] = [
 export default function Home() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [notificationPresent, setNotificationPresent] = useState(false);
-	// console.log(styles);
 
 	const navigation = useNavigation();
 
@@ -81,7 +80,7 @@ export default function Home() {
 			buttonColor: colors.listItemBorderColor,
 			secondIcon: <Ionicons name="lock-open" style={{ color: "white" }} size={15} />,
 			icon: <Ionicons name="arrow-forward-outline" style={{ color: "white", textAlign: "center" }} size={20} />,
-			href: "/(customerPages)/NewJob",
+			href: "/NewJob",
 		},
 	];
 
@@ -90,7 +89,7 @@ export default function Home() {
 			<View style={styles.menuHeaderContainer}>
 				<MenuHeader />
 			</View>
-			<ScrollView contentContainerStyle={styles.container}>
+			<ScrollView style={{ backgroundColor: colors.white }} contentContainerStyle={styles.container}>
 				<View style={styles.contentSection}>
 					<View style={styles.salutationContainer}>
 						<Text style={styles.salutationText}>Hello</Text>
@@ -154,11 +153,9 @@ export default function Home() {
 	);
 }
 
-const generalStyles = StyleSheet.create({});
-
-const androidStyles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	menuHeaderContainer: {
-		backgroundColor: "#fff",
+		backgroundColor: colors.white,
 		alignItems: "center",
 		paddingHorizontal: 20,
 		paddingBottom: 20,
@@ -166,7 +163,7 @@ const androidStyles = StyleSheet.create({
 
 	container: {
 		// flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: colors.white,
 		alignItems: "center",
 		paddingBottom: "35%",
 	},
@@ -181,11 +178,13 @@ const androidStyles = StyleSheet.create({
 		alignItems: "flex-start",
 		paddingHorizontal: "10%",
 	},
+
 	salutationText: {
 		color: colors.greyShade,
 		fontSize: 30,
 		marginRight: "3%",
 	},
+
 	userName: {
 		fontSize: 30,
 	},
@@ -212,7 +211,7 @@ const androidStyles = StyleSheet.create({
 	},
 
 	recommendedViewAll: {
-		color: "#4C4C4C",
+		color: colors.subTitlesColor,
 		textDecorationLine: "underline",
 	},
 
@@ -235,100 +234,16 @@ const androidStyles = StyleSheet.create({
 	},
 
 	basicTextStyle: {
-		color: "white",
+		color: colors.white,
 	},
 
 	cardButtonTitle: {
 		fontSize: 20,
-		color: "white",
+		color: colors.white,
 		marginLeft: 5,
 	},
 });
 
-const iosStyles = StyleSheet.create({
-	menuHeaderContainer: {
-		backgroundColor: "#fff",
-		alignItems: "center",
-		paddingHorizontal: 20,
-		paddingBottom: 20,
-	},
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		paddingBottom: "35%",
-	},
+const androidStyles = StyleSheet.create({});
 
-	contentSection: {
-		width: "100%",
-		gap: 5,
-	},
-
-	salutationContainer: {
-		flexDirection: "row",
-		alignItems: "flex-start",
-		paddingHorizontal: "10%",
-	},
-	salutationText: {
-		color: colors.greyShade,
-		fontSize: 30,
-		marginRight: "3%",
-	},
-	userName: {
-		fontSize: 30,
-	},
-
-	cardSection: {
-		alignItems: "flex-end",
-	},
-
-	recommendedContainer: {
-		marginTop: "5%",
-		marginBottom: "5%",
-	},
-
-	recommendedHeader: {
-		paddingHorizontal: "10%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-
-	recommendedTitle: {
-		fontSize: 20,
-		fontWeight: "600",
-	},
-
-	recommendedViewAll: {
-		color: "#4C4C4C",
-		textDecorationLine: "underline",
-	},
-
-	recommendedJobContainer: {},
-
-	recommendedJob: {
-		paddingHorizontal: "10%",
-	},
-
-	rewardContainer: {
-		backgroundColor: colors.brownShade,
-		height: height * 0.125,
-		borderRadius: 15,
-		marginTop: 10,
-		flexDirection: "row",
-		padding: 20,
-		marginHorizontal: "10%",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-
-	basicTextStyle: {
-		color: "white",
-	},
-
-	cardButtonTitle: {
-		fontSize: 20,
-		color: "white",
-		marginLeft: 5,
-	},
-});
+const iosStyles = StyleSheet.create({});

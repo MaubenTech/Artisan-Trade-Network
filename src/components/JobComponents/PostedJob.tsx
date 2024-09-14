@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Text } from "../Text";
 import { Link } from "expo-router";
-import colors from "../../helpers/colors";
+import colors from "@helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import Clock from "../../../assets/icons/Clock.svg";
-import JobPicture from "../../../assets/images/JobPicture.svg";
-import MoreIcon from "../../../assets/icons/services/moreIcon.svg";
+import Clock from "@assets/icons/Clock.svg";
+import JobPicture from "@assets/images/JobPicture.svg";
+import MoreIcon from "@assets/icons/services/moreIcon.svg";
 import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
-import { Job, JobStatus } from "../../../app/(home)/Jobs";
-import { compactStyles } from "../../helpers/styles";
-import { BidStatus } from "../../../app/(home)/Bids";
+import { Job, JobStatus } from "app/(home)/Jobs";
+import { compactStyles } from "@helpers/styles";
+import { BidStatus } from "app/(home)/Bids";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,7 +28,7 @@ const setStatusBackgroundColor = (status: JobStatus) => {
 const PostedJob = ({ job }: { job: Job }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [jobStage, setJobStage] = useState<JobStatus>("Completed");
-	const [bidStage, setBidStage] = useState<BidStatus>("Active"); //change Bid status value to see different pages
+	const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 	return (
 		<Link
 			style={styles.job}
@@ -56,14 +56,14 @@ const PostedJob = ({ job }: { job: Job }) => {
 					<View style={[styles.jobDetailFooter]}>
 						<View style={styles.jobStatus}>
 							<View style={[styles.jobStatusIcon, setStatusBackgroundColor(job.jobStatus)]}></View>
-							<Text style={{ fontWeight: "200", fontSize: 12 }}>{job.jobStatus}</Text>
+							<Text style={styles.jobStatusText}>{job.jobStatus}</Text>
 						</View>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							<Text style={{ fontWeight: "500" }}>₦</Text>
 							<Text style={styles.jobPriceDetail}> {job.jobPrice}</Text>
 						</View>
 						<View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-							<Clock />
+							<Clock style={styles.clock} />
 							<Text style={styles.jobDate}>11/04/2023</Text>
 						</View>
 					</View>
@@ -73,9 +73,7 @@ const PostedJob = ({ job }: { job: Job }) => {
 	);
 };
 
-const generalStyles = StyleSheet.create({});
-
-const androidStyles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	job: {
 		flexDirection: "row",
 		paddingHorizontal: 20,
@@ -83,7 +81,6 @@ const androidStyles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: colors.greyBorder,
 		// backgroundColor: "#f0f",
-		alignItems: "center",
 		gap: 10,
 	},
 
@@ -91,105 +88,83 @@ const androidStyles = StyleSheet.create({
 		backgroundColor: "green",
 		borderRadius: 10,
 	},
+
 	jobDetailContainer: {
 		flex: 1,
-		// gap: 4,
 	},
+
 	jobServiceCategory: {
-		// color: colors.greySecondaryShade,
 		fontWeight: "300",
 		fontSize: 12,
-		marginTop: -5,
 	},
+
 	jobDetailHeader: {},
+
 	jobDetailText: {
 		fontWeight: "500",
 	},
+
 	jobDetailContent: {
 		fontWeight: "200",
 		fontSize: 10,
 	},
+
 	jobDetailFooter: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		color: colors.greySecondaryShade,
 		fontWeight: "200",
 	},
+
 	jobStatus: {
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 5,
 	},
+
 	jobStatusIcon: {
-		height: 15,
-		width: 15,
+		height: 13,
+		width: 13,
 		borderRadius: 50,
 	},
+
+	jobStatusText: {
+		fontWeight: "200",
+		fontSize: 12,
+	},
+
 	jobPriceDetail: {
 		fontWeight: "200",
 		fontSize: 12,
 	},
+
 	jobDate: {
 		fontWeight: "200",
 		fontSize: 12,
 	},
 });
 
-const iosStyles = StyleSheet.create({
-	job: {
-		flexDirection: "row",
-		gap: 5,
-		paddingHorizontal: 20,
-		paddingVertical: 10,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.greyBorder,
-		alignItems: "center",
+const androidStyles = StyleSheet.create({
+	jobPicture: {
+		alignSelf: "center",
 	},
 
-	jobPicture: {
-		backgroundColor: "green",
-		borderRadius: 10,
-	},
-	jobDetailContainer: {
-		flex: 1,
-		gap: 4,
-	},
 	jobServiceCategory: {
-		// color: colors.greySecondaryShade,
-		fontWeight: "300",
-		fontSize: 12,
+		marginTop: -5,
 	},
-	jobDetailHeader: {},
-	jobDetailText: {
-		fontWeight: "500",
-	},
-	jobDetailContent: {
-		fontWeight: "200",
-		fontSize: 10,
-	},
-	jobDetailFooter: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		color: colors.greySecondaryShade,
-		fontWeight: "200",
-	},
-	jobStatus: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 5,
-	},
+
 	jobStatusIcon: {
-		height: 15,
-		width: 15,
-		borderRadius: 50,
+		marginTop: -3,
 	},
-	jobPriceDetail: {
-		fontWeight: "200",
-		fontSize: 12,
+
+	clock: {
+		marginTop: -3,
 	},
-	jobDate: {
-		fontWeight: "200",
-		fontSize: 12,
+});
+
+const iosStyles = StyleSheet.create({
+	jobDetailContainer: {
+		gap: 4,
 	},
 });
 

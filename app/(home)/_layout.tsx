@@ -18,6 +18,7 @@ type BottomTabProps = {
 	iconName: any;
 };
 
+//TODO: Add a mechanism on the tabBar, so Scrollable content don't plainly go under it. You can add a blur or break the page from where the tab bar starts, so content don't get to it
 export const CustomTabBar = (props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const { onPress, accessibilityState, iconName, text } = props;

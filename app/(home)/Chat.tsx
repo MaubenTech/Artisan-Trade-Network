@@ -6,6 +6,7 @@ import MenuHeader from "../../src/components/MenuHeader";
 import FilterComponent from "../../src/components/FilterComponent";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { compactStyles } from "@helpers/styles";
+import colors from "@helpers/colors";
 
 const filterOptions = [
 	{
@@ -21,9 +22,6 @@ const filterOptions = [
 
 export default function Chat() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const router = useRouter();
-
-	const navigation = useNavigation();
 	const [filterOption, setFilterOption] = useState<string | number>("All");
 	const [users, setUsers] = useState([1, 2]);
 	return (
@@ -35,7 +33,7 @@ export default function Chat() {
 				<View style={styles.searchBarContainer}>
 					<SearchBar />
 				</View>
-				<View style={[styles.searchFilterContainer, { paddingHorizontal: 20 }]}>
+				<View style={styles.searchFilterContainer}>
 					<FilterComponent
 						filterOptions={filterOptions}
 						selectedOption={filterOption}
@@ -56,14 +54,10 @@ export default function Chat() {
 	);
 }
 
-const generalStyles = StyleSheet.create({});
-
-const androidStyles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
-		// alignItems: "center",
-		// paddingHorizontal: 20,
+		backgroundColor: colors.white,
 		gap: 50,
 	},
 
@@ -81,41 +75,12 @@ const androidStyles = StyleSheet.create({
 
 	searchFilterContainer: {
 		marginTop: 20,
+		paddingHorizontal: 20,
 	},
-
-	searchFilters: {},
 
 	chatListContainer: {},
 });
 
-const iosStyles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		// alignItems: "center",
-		// paddingHorizontal: 20,
-		gap: 50,
-	},
+const androidStyles = StyleSheet.create({});
 
-	menuContainer: {
-		paddingHorizontal: 20,
-	},
-
-	searchBarContainer: {
-		paddingHorizontal: 20,
-	},
-
-	contentContainer: {
-		flex: 1,
-		gap: 20,
-	},
-
-	searchFilterContainer: {},
-
-	searchFilters: {},
-
-	chatListContainer: {
-		marginTop: 15,
-		gap: 20,
-	},
-});
+const iosStyles = StyleSheet.create({});

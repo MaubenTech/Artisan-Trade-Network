@@ -91,34 +91,27 @@ const generalStyles = StyleSheet.create({
 		paddingHorizontal: 20,
 		backgroundColor: "#fff",
 	},
+
 	container: {
 		paddingTop: 40,
 		flex: 1,
 		backgroundColor: "#fff",
 		// paddingHorizontal: 20,
 	},
+
 	componentContainer: {
 		paddingHorizontal: 20,
 	},
+
 	filterContainer: {
 		marginTop: 20,
 	},
-});
-
-const androidStyles = StyleSheet.create({
-	container: {},
 
 	jobContainer: {},
 });
 
-const iosStyles = StyleSheet.create({
-	container: {
-		gap: 20,
-	},
+const androidStyles = StyleSheet.create({});
 
-	jobContainer: {
-		marginTop: 20,
-	},
-});
+const iosStyles = StyleSheet.create({});
 
 export default Jobs;

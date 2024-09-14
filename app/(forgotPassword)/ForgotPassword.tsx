@@ -1,38 +1,29 @@
-import {
-	StyleSheet,
-	View,
-	TextInput,
-	TouchableOpacity,
-	Dimensions,
-	ScrollView,
-} from "react-native";
+import { StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Platform } from "react-native";
 import { Link, useNavigation } from "expo-router";
 
-import HeaderImage from "../../assets/images/forgotPasswordHeader.svg";
-import { useState } from "react";
+import HeaderImage from "@assets/images/forgotPasswordHeader.svg";
 import React from "react";
-import colors from "../../src/helpers/colors";
-import { Text } from "../../src/components/Text";
-
-const { width, height } = Dimensions.get("window");
+import colors from "@helpers/colors";
+import { Text } from "@components/Text";
+import { compactStyles } from "@helpers/styles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useKeyboardHeight from "@helpers/useKeyboardHeight";
 
 const ForgotPassword = (): JSX.Element => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	// console.log(styles.container);
 	const navigation = useNavigation();
+	const { top } = useSafeAreaInsets();
+	const keyboardHeight = useKeyboardHeight();
 	return (
-		<ScrollView
-			contentContainerStyle={styles.container}
-			keyboardShouldPersistTaps="handled"
-			scrollEnabled={false}
-		>
+		<ScrollView style={{ marginTop: top }} contentContainerStyle={styles.container}>
 			<View style={styles.imageContainer}>
 				<HeaderImage width={250} height={250} />
 			</View>
 			<View style={styles.forgotPasswordContainer}>
 				<View style={styles.lch}>
 					<Text style={styles.lchHeader}>Forgot Password?</Text>
-					<Text style={styles.lchText}>
-						No worries, we'll send you reset instruction
-					</Text>
+					<Text style={styles.lchText}>No worries, we'll send you reset instruction</Text>
 				</View>
 				<View style={styles.forgotPasswordFormContainer}>
 					<Text style={styles.formText}>Email or Username</Text>
@@ -42,16 +33,10 @@ const ForgotPassword = (): JSX.Element => {
 						placeholderTextColor={"#8F8F8F"}
 					/>
 				</View>
-				<View style={styles.buttonsContainer}>
-					<Link
-						style={[styles.button, styles.primaryButton]}
-						asChild
-						href={"/ResetPassword"}
-					>
+				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
+					<Link style={[styles.button, styles.primaryButton]} asChild href={"/ResetPassword"}>
 						<TouchableOpacity>
-							<Text style={[styles.buttonText, styles.primaryButtonText]}>
-								Reset Password
-							</Text>
+							<Text style={[styles.buttonText, styles.primaryButtonText]}>Reset Password</Text>
 						</TouchableOpacity>
 					</Link>
 					<TouchableOpacity
@@ -76,9 +61,8 @@ const ForgotPassword = (): JSX.Element => {
 
 export default ForgotPassword;
 
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	container: {
-		// flex: 1,
 		flexGrow: 1,
 		alignItems: "center",
 		gap: 10,
@@ -86,10 +70,7 @@ const styles = StyleSheet.create({
 
 	imageContainer: {
 		paddingTop: "15%",
-		// marginBottom: "8%",
 	},
-
-	image: {},
 
 	forgotPasswordContainer: {
 		flex: 1,
@@ -104,7 +85,6 @@ const styles = StyleSheet.create({
 	lch: {
 		alignItems: "flex-start",
 		width: "100%",
-		// gap: 7,
 		marginBottom: "5%",
 	},
 
@@ -121,7 +101,6 @@ const styles = StyleSheet.create({
 
 	forgotPasswordFormContainer: {
 		flex: 1,
-		// gap: 20,
 		marginBottom: "6%",
 	},
 
@@ -172,10 +151,16 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 	},
+});
 
-	links: {
-		textDecorationColor: "#52A2F2",
-		textDecorationLine: "underline",
-		color: "#52A2F2",
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({
+	container: {
+		paddingBottom: 30,
+	},
+
+	lch: {
+		gap: 7,
 	},
 });

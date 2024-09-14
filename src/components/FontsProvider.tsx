@@ -21,11 +21,12 @@ import {
 	Poppins_900Black,
 	Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
-import * as SplashScreen from "expo-splash-screen";
 import CustomSplashScreen from "./CustomSplashScreen";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
+
+//TODO: Implement a mechanism to prevent the Splash screen from hiding when the vector icons are not loaded yet.
 
 const FontsProvider = ({ children }): JSX.Element => {
 	const [fontsLoaded] = useFonts({

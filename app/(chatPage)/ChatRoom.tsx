@@ -13,9 +13,10 @@ const ChatRoom = () => {
 
 	const [message, setMessage] = useState<string>("");
 
+	//FIXME: When user attempts going back from the chatroom, the page navigates back to Home, instead of Chat. Fix it!
 	return (
 		<CustomKeyboardView>
-			<View style={{ flex: 1, paddingBottom: 10 }}>
+			<View style={styles.parentContainer}>
 				<View style={styles.container}>
 					<View>
 						<ChatHeader />
@@ -33,14 +34,7 @@ const ChatRoom = () => {
 							</View>
 							<Text style={styles.messageTime}>12:20</Text>
 						</View>
-						<View
-							style={[
-								styles.messageReceivedBubble,
-								{
-									marginTop: Platform.OS === "ios" ? 130 : 140,
-								},
-							]}
-						>
+						<View style={styles.messageReceivedBubble}>
 							<View style={styles.messageReceived}>
 								<Text style={styles.messageSentReceived}>
 									Yes I will, I am currently finishing up a job but will head to your axis in an hour time.
@@ -79,12 +73,15 @@ const ChatRoom = () => {
 	);
 };
 
-const generalStyles = StyleSheet.create({});
+const generalStyles = StyleSheet.create({
+	parentContainer: {
+		flex: 1,
+		paddingBottom: 10,
+	},
 
-const androidStyles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: colors.white,
 		gap: 20,
 	},
 
@@ -198,120 +195,15 @@ const androidStyles = StyleSheet.create({
 	},
 });
 
-const iosStyles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		gap: 20,
-	},
-
-	pageHeaderContainerBorder: {
-		borderBottomWidth: 3,
-		borderStyle: "solid",
-		borderColor: colors.whiteShade,
-		shadowOpacity: 3,
-		shadowColor: "#E0E0E0",
-		shadowOffset: { width: 0, height: -1 },
-	},
-
-	chatContainer: {
-		paddingHorizontal: 20,
-		position: "relative",
-		// backgroundColor: "#f0f",
-	},
-
-	dateContainer: {
-		alignItems: "center",
-		marginBottom: 20,
-	},
-
-	date: {
-		backgroundColor: colors.inputBorderColor,
-		paddingVertical: 5,
-		borderRadius: 30,
-		width: 90,
-		textAlign: "center",
-		alignItems: "center",
-	},
-
-	messageSentBubble: {
-		backgroundColor: colors.mainColor,
-		padding: 15,
-		borderRadius: 10,
-		width: "75%",
-		marginTop: 50,
-		position: "absolute",
-		right: 20,
-	},
-
-	messageSent: {},
-
-	messageSentText: {
-		color: colors.white,
-	},
-
+const androidStyles = StyleSheet.create({
 	messageReceivedBubble: {
-		backgroundColor: colors.chatBubbleSecondary,
-		padding: 15,
-		borderRadius: 10,
-		width: "75%",
-		position: "absolute",
-		top: 20,
-		left: 20,
+		marginTop: 140,
 	},
+});
 
-	messageReceived: {},
-
-	messageSentReceived: {
-		fontWeight: "300",
-	},
-
-	messageTime: {
-		color: colors.white,
-		alignSelf: "flex-end",
-		fontSize: 12,
-	},
-
-	receivedMessageTime: {
-		alignSelf: "flex-end",
-		fontWeight: "200",
-		fontSize: 12,
-	},
-
-	chatActions: {
-		// backgroundColor: "#ff0",
-		flexDirection: "row",
-		padding: 20,
-		alignItems: "center",
-		justifyContent: "space-between",
-		borderWidth: 1,
-		borderBottomWidth: 0,
-		borderColor: colors.inputBorderColor,
-		borderTopRightRadius: 20,
-		borderTopLeftRadius: 20,
-		// height: "15%",
-		paddingVertical: 40,
-	},
-
-	textMessage: {
-		borderWidth: 1,
-		borderRadius: 20,
-		borderColor: colors.greyBorder,
-		backgroundColor: colors.grey2,
-		width: "65%",
-	},
-
-	textMessageInput: {
-		height: 30,
-		paddingLeft: 20,
-		paddingRight: 10,
-	},
-
-	chatActionIcon: {
-		backgroundColor: colors.grey2,
-		padding: 8,
-		borderRadius: 20,
-		justifyContent: "center",
+const iosStyles = StyleSheet.create({
+	messageReceivedBubble: {
+		marginTop: 130,
 	},
 });
 
