@@ -2,12 +2,12 @@ import React from "react";
 import { useState } from "react";
 import { Link } from "expo-router";
 import Checkbox from "expo-checkbox";
-import colors from "../src/helpers/colors";
-import GoogleLogo from "../assets/images/google.svg";
-import AppleLogo from "../assets/images/apple-logo.svg";
-import FacebookLogo from "../assets/images/facebook.svg";
-import { Text, TextInput } from "../src/components/Text";
-import HeaderImage from "../assets/images/loginPageHeader.svg";
+import colors from "@helpers/colors";
+import GoogleLogo from "@assets/images/google.svg";
+import AppleLogo from "@assets/images/apple-logo.svg";
+import FacebookLogo from "@assets/images/facebook.svg";
+import { Text, TextInput } from "@components/Text";
+import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { StyleSheet, View, TouchableWithoutFeedback, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 
 const { width, height } = Dimensions.get("window");
