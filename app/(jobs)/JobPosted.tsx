@@ -1,10 +1,10 @@
 import React from "react";
 import { compactStyles } from "@helpers/styles";
 import { View, StyleSheet } from "react-native";
-import colors from "../../src/helpers/colors";
-import { Text } from "../../src/components/Text";
-import ButtonGroup from "../../src/components/ButtonGroup";
-import JobPostedSuccessfully from "../../assets/images/JobPostedSuccessfully.svg";
+import colors from "@helpers/colors";
+import { Text } from "@components/Text";
+import ButtonGroup from "@components/ButtonGroup";
+import JobPostedSuccessfully from "@assets/images/JobPostedSuccessfully.svg";
 
 const JobPosted = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);

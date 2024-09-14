@@ -6,9 +6,9 @@ import PageHeader from "@components/PageHeader";
 import { compactStyles } from "@helpers/styles";
 import ButtonGroup from "@components/ButtonGroup";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import JobRating from "../../../assets/images/JobRating.svg";
+import JobRating from "@assets/images/JobRating.svg";
 import React, { useCallback, useEffect, useState } from "react";
-import ProfilePicture from "../../../assets/components/chatList/images/profilePicture.svg";
+import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import { StyleSheet, View, Platform, Dimensions, TouchableOpacity, ScrollView } from "react-native";
 
 const { width } = Dimensions.get("window");

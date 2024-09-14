@@ -1,15 +1,15 @@
 import { Image } from "expo-image";
 import React, { useState } from "react";
 import { compactStyles } from "@helpers/styles";
-import colors from "../../src/helpers/colors";
+import colors from "@helpers/colors";
 import * as ImagePicker from "expo-image-picker";
-import { Text } from "../../src/components/Text";
+import { Text } from "@components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import RadioGroup from "../../src/components/RadioGroup";
-import PageHeader from "../../src/components/PageHeader";
-import ButtonGroup from "../../src/components/ButtonGroup";
-import UploadImages from "../../assets/images/uploadImages.svg";
-import ButtonOptions from "../../src/components/ButtonOptions";
+import RadioGroup from "@components/RadioGroup";
+import PageHeader from "@components/PageHeader";
+import ButtonGroup from "@components/ButtonGroup";
+import UploadImages from "@assets/images/uploadImages.svg";
+import ButtonOptions from "@components/ButtonOptions";
 import { View, StyleSheet, TextInput, Dimensions, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 
 const { width, height } = Dimensions.get("window");
