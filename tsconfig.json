@@ -1,10 +1,13 @@
 {
 	"extends": "expo/tsconfig.base",
 	"compilerOptions": {
-		"baseUrl": "./src",
+		"baseUrl": "./",
 		"paths": {
-			"@components/*": ["components/*"],
-			"@helpers/*": ["helpers/*"]
+			"@components/*": ["src/components/*"],
+			"@helpers/*": ["src/helpers/*"],
+			"@constants/*": ["src/constants/*"],
+			"@context/*": ["src/context/*"],
+			"@assets/*": ["assets/*"]
 		}
 	},
 	"include": ["**/*.ts", "**/*.tsx", "types/declaration.d.ts"]

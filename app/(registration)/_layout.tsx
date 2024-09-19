@@ -6,12 +6,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 export default function Layout() {
     const rootNavigation = useNavigation();
     return (
-        <Stack>
+        <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
                 name="SignUp"
-                options={{
-                    headerShown: false,
-                }}
+
             />
         </Stack>
     );

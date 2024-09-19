@@ -8,13 +8,13 @@ import MenuHeader from "../../src/components/MenuHeader";
 import JobPicture from "../../assets/images/JobPicture.svg";
 import FilterComponent from "../../src/components/FilterComponent";
 import MoreIcon from "../../assets/icons/services/moreIcon.svg";
-import PostedJob from "../../src/components/JobComponents/PostedJob";
 import LocationIcon from "../../assets/icons/services/locationIcon.svg";
 import { View, StyleSheet, TouchableOpacity, Dimensions, ScrollView, StyleProp, ViewStyle } from "react-native";
+import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
-type Bid = {
+export type Bid = {
     jobTitle: string;
     jobServiceCategory: string;
     jobDetail: string;
@@ -41,19 +41,19 @@ const bids: Bid[] = [
     },
 ];
 
-const PostedBid = ({ job, containerStyle }: { job: Bid; containerStyle?: StyleProp<ViewStyle> }) => {
+export const PostedBid = ({ job, containerStyle }: { job: Bid; containerStyle?: StyleProp<ViewStyle> }) => {
     return (
-        <Link style={{ ...styles.job }} asChild href={"/(jobs)/PostedJobDetails"} key={job.jobTitle}>
-            <TouchableOpacity style={styles.jobDetails} key={job.jobTitle}>
+        <Link href={"/PostedJobDetails"} style={[styles.job, containerStyle]} asChild>
+            <TouchableOpacity key={job.jobTitle}>
                 <View style={styles.jobPicture}>
                     <JobPicture />
                 </View>
                 <View style={styles.jobDetailContainer}>
                     <View style={[styles.jobDetailHeader]}>
                         <Text style={styles.jobDetailText}>{job.jobTitle}</Text>
-                        <MoreIcon color={"#000"} />
+                        <MoreIcon color={"#000"} style={styles.moreIcon} />
                     </View>
-                    <View style={{ flexWrap: "nowrap" }}>
+                    <View style={styles.jobDetailMiddle}>
                         <View style={styles.jobServiceCategory}>
                             <Text style={styles.jobServiceCategoryText}>{job.jobServiceCategory}</Text>
                             <View style={styles.location}>
@@ -99,7 +99,9 @@ export default function Bids() {
                 <MenuHeader />
             </View>
             <View style={styles.container}>
-                <SearchBar />
+                <View style={styles.searchBarContainer}>
+                    <SearchBar />
+                </View>
                 <View style={styles.filterComponentContainer}>
                     <FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
                 </View>
@@ -113,19 +115,22 @@ export default function Bids() {
     );
 }
 
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
     container: {
         paddingTop: 40,
         flex: 1,
-        backgroundColor: "#fff",
-        // gap: 20,
-        paddingHorizontal: 20,
+        backgroundColor: colors.white,
     },
 
     componentContainer: {},
 
+    searchBarContainer: {
+        paddingHorizontal: 20,
+    },
+
     filterComponentContainer: {
         marginTop: 20,
+        paddingHorizontal: 20,
     },
 
     job: {
@@ -134,74 +139,114 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         borderBottomWidth: 1,
         borderBottomColor: colors.greyBorder,
-        // backgroundColor: "#f00",
+        paddingHorizontal: 20,
     },
-    jobDetails: {},
 
-    jobPicture: {
-        // height: "100%",
-        // backgroundColor: "#f0f",
-    },
+    jobPicture: {},
+
     jobDetailContainer: {
-        // width: width * 0.65,
-        // gap: 5,
         flex: 1,
+        justifyContent: "space-between",
     },
+
     jobDetailHeader: {
         marginTop: -3,
         flexDirection: "row",
-        alignItems: "flex-end",
         justifyContent: "space-between",
-        // backgroundColor: "#00f",
     },
+
     jobDetailText: {
         fontWeight: "600",
-        // fontSize: 15,
     },
+
     jobServiceCategory: {
         flexDirection: "row",
         gap: 8,
-        marginTop: -5,
     },
-    jobServiceCategoryText: {
-        // color: colors.greySecondaryShade,
-        // backgroundColor: "#f0f",
-        fontSize: 10,
-    },
+
     location: {
         flexDirection: "row",
         alignItems: "center",
-        // backgroundColor: "#f0f",
         gap: 2,
     },
-    locationIcon: {
-        marginTop: -4,
-    },
-    locationText: {
-        fontSize: 10,
-    },
+
     jobDetailContent: {
-        fontSize: 10,
         fontWeight: "300",
+        paddingRight: 15,
     },
+
     jobDetailFooter: {
         flexDirection: "row",
         justifyContent: "space-between",
-        // color: colors.greySecondaryShade,
-        // fontWeight: "200",
         alignItems: "center",
         marginTop: 5,
     },
-    jobPriceDetail: {
-        // color: colors.greySecondaryShade,
 
+    jobPriceDetail: {
         fontWeight: "500",
         fontSize: 10,
     },
+
     jobDate: {
         fontWeight: "500",
-        // color: colors.greySecondaryShade,
-        // fontWeight: "100",
         fontSize: 10,
     },
 });
+
+const androidStyles = StyleSheet.create({
+    jobDetailHeader: {
+        alignItems: "flex-end",
+    },
+
+    jobServiceCategory: {
+        marginTop: -5,
+    },
+
+    jobServiceCategoryText: {
+        fontSize: 10,
+    },
+
+    locationIcon: {
+        marginTop: -4,
+    },
+
+    locationText: {
+        fontSize: 10,
+    },
+
+    jobDetailContent: {
+        fontSize: 10,
+    },
+});
+
+const iosStyles = StyleSheet.create({
+    jobDetailHeader: {
+        alignItems: "flex-start",
+    },
+
+    moreIcon: {
+        marginTop: 7,
+    },
+
+    jobDetailMiddle: {
+        gap: 5,
+    },
+
+    jobServiceCategory: {
+        marginTop: -12,
+    },
+
+    jobServiceCategoryText: {
+        fontSize: 11,
+    },
+
+    locationText: {
+        fontSize: 11,
+    },
+
+    jobDetailContent: {
+        fontSize: 11,
+    },
+});
+
+const styles = compactStyles(generalStyles, androidStyles, iosStyles);

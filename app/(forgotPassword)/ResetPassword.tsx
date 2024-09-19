@@ -1,38 +1,31 @@
-import {
-	StyleSheet,
-	View,
-	TextInput,
-	TouchableOpacity,
-	Dimensions,
-	ScrollView,
-} from "react-native";
-import { Text } from "../../src/components/Text";
-import { Link, useNavigation, useRouter } from "expo-router";
+import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Platform } from "react-native";
+import { Text } from "@components/Text";
+import { Link, useRouter } from "expo-router";
 
-import HeaderImage from "../../assets/images/resetPasswordHeader.svg";
+import HeaderImage from "@assets/images/resetPasswordHeader.svg";
 import React from "react";
-import colors from "../../src/helpers/colors";
+import colors from "@helpers/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ButtonGroup from "@components/ButtonGroup";
+import { compactStyles } from "@helpers/styles";
+import useKeyboardHeight from "@helpers/useKeyboardHeight";
 
 const { width, height } = Dimensions.get("window");
 
 const ResetPassword = (): JSX.Element => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const router = useRouter();
+	const keyboardHeight = useKeyboardHeight();
+	const { top } = useSafeAreaInsets();
 	return (
-		<ScrollView
-			contentContainerStyle={styles.container}
-			keyboardShouldPersistTaps="handled"
-			scrollEnabled={true}
-			bounces={false}
-		>
+		<ScrollView style={{ marginTop: top }} contentContainerStyle={styles.container}>
 			<View style={styles.imageContainer}>
 				<HeaderImage width={250} height={250} />
 			</View>
 			<View style={styles.resetPasswordContainer}>
 				<View style={styles.lch}>
 					<Text style={styles.lchHeader}>Reset Password?</Text>
-					<Text style={styles.lchText}>
-						You have passed the verification, now you can change your password.
-					</Text>
+					<Text style={styles.lchText}>You have passed the verification, now you can change your password.</Text>
 				</View>
 				<View style={styles.resetPasswordFormContainer}>
 					<View style={styles.resetPasswordDetailContainer}>
@@ -44,26 +37,16 @@ const ResetPassword = (): JSX.Element => {
 						<TextInput style={styles.resetPasswordInput} secureTextEntry />
 					</View>
 				</View>
-				<View style={styles.buttonsContainer}>
-					<Link
-						style={[styles.button, styles.primaryButton]}
-						asChild
-						href={"/PasswordUpdated"}
-					>
-						<TouchableOpacity>
-							<Text style={[styles.buttonText, styles.primaryButtonText]}>
-								Reset Password
-							</Text>
-						</TouchableOpacity>
-					</Link>
-					<TouchableOpacity
-						style={[styles.button, styles.secondaryButton]}
-						onPress={() => {
+				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
+					<ButtonGroup
+						positiveOption="Reset Password"
+						href="/PasswordUpdated"
+						negativeOption="Back to Login"
+						negativeOnPress={() => {
 							router.navigate("/");
 						}}
-					>
-						<Text style={styles.buttonText}>Back to Login</Text>
-					</TouchableOpacity>
+						vertical
+					/>
 					<View style={styles.signUpOption}>
 						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
 						<Link href="/SignUp" style={{ textDecorationLine: "underline" }}>
@@ -78,35 +61,22 @@ const ResetPassword = (): JSX.Element => {
 
 export default ResetPassword;
 
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	container: {
-		// flex: 1,
 		flexGrow: 1,
 		alignItems: "center",
-		gap: 10,
 	},
-
-	imageContainer: {
-		paddingTop: "15%",
-		// marginBottom: "8%",
-	},
-
-	image: {},
 
 	resetPasswordContainer: {
 		flex: 1,
 		width: "100%",
 		justifyContent: "flex-start",
-		paddingLeft: 30,
-		paddingRight: 30,
-		gap: 20,
-		paddingBottom: "5%",
+		paddingHorizontal: 30,
 	},
 
 	lch: {
 		alignItems: "flex-start",
 		width: "100%",
-		// marginBottom: "5%",
 	},
 
 	lchHeader: {
@@ -116,73 +86,80 @@ const styles = StyleSheet.create({
 
 	lchText: {
 		fontWeight: "300",
-		fontSize: 12,
 		paddingRight: "10%",
+		fontSize: 12,
 	},
 
 	resetPasswordFormContainer: {
 		flex: 1,
 		gap: 15,
-		// flexShrink: 1,
-		// marginBottom: "6%",
 	},
 
 	resetPasswordDetailContainer: {},
 
+	formText: {},
+
 	resetPasswordInput: {
-		padding: "3%",
-		paddingLeft: 25,
-		paddingRight: 25,
+		paddingHorizontal: 25,
 		borderColor: colors.inputBorderColor,
 		borderWidth: 1.05,
 		borderRadius: 10,
-		fontSize: 12,
+		fontSize: 13,
 	},
 
-	formText: {
-		fontSize: 14,
-		// marginBottom: 5,
-	},
-
-	buttonsContainer: {
-		gap: 10,
-		// backgroundColor: "#f0f",
-	},
-
-	button: {
-		backgroundColor: "000",
-		alignItems: "center",
-		borderRadius: 15,
-		justifyContent: "center",
-		padding: 15,
-	},
-
-	primaryButton: {
-		backgroundColor: colors.mainColor,
-	},
-
-	secondaryButton: {
-		borderWidth: 1,
-	},
-
-	buttonText: {
-		textAlign: "center",
-		fontSize: 16,
-	},
-
-	primaryButtonText: {
-		color: "#fff",
-	},
+	buttonsContainer: {},
 
 	signUpOption: {
 		marginTop: "5%",
 		flexDirection: "row",
 		justifyContent: "center",
 	},
+});
 
-	links: {
-		textDecorationColor: "#52A2F2",
-		textDecorationLine: "underline",
-		color: "#52A2F2",
+const androidStyles = StyleSheet.create({
+	container: {
+		gap: 10,
+	},
+
+	imageContainer: {
+		paddingTop: "10%",
+	},
+
+	resetPasswordContainer: {
+		gap: 20,
+		paddingBottom: "5%",
+	},
+
+	resetPasswordInput: {
+		paddingVertical: "3%",
+		fontSize: 12,
+	},
+});
+
+const iosStyles = StyleSheet.create({
+	container: {
+		paddingBottom: 30,
+	},
+
+	imageContainer: {
+		paddingTop: "5%",
+	},
+
+	resetPasswordContainer: {
+		gap: 15,
+	},
+
+	lch: {
+		gap: 5,
+	},
+
+	resetPasswordFormContainer: {
+		flex: 1,
+		gap: 15,
+	},
+
+	resetPasswordInput: {
+		paddingVertical: "5%",
+		fontSize: 13,
 	},
 });

@@ -1,13 +1,12 @@
 import * as Location from "expo-location";
-import colors from "../../../src/helpers/colors";
+import colors from "../../src/helpers/colors";
 import React, { useEffect, useState } from "react";
-import { Text } from "../../../src/components/Text";
-import PageHeader from "../../../src/components/PageHeader";
-import ButtonGroup from "../../../src/components/ButtonGroup";
+import { Text } from "../../src/components/Text";
+import PageHeader from "../../src/components/PageHeader";
+import ButtonGroup from "../../src/components/ButtonGroup";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { View, StyleSheet, TextInput, Image } from "react-native";
 import MapView, { LatLng, Marker, Region } from "react-native-maps";
-import { ImagePickerAsset } from "expo-image-picker";
 
 type Location = Region & {
 	longitude: number;
@@ -108,11 +107,7 @@ export default function JobLocation() {
 					</View>
 					<View style={styles.addedInformationContainer}>
 						<Text style={styles.addedInfoTitle}>Added Information</Text>
-						<TextInput
-							style={styles.addedInformation}
-							multiline
-							numberOfLines={10}
-						/>
+						<TextInput style={styles.addedInformation} multiline numberOfLines={10} />
 					</View>
 					<ButtonGroup
 						negativeOption="Cancel"

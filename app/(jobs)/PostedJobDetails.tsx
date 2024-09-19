@@ -1,24 +1,24 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
-import colors from "../../../src/helpers/colors";
+import colors from "@helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Text, TextInput } from "../../../src/components/Text";
-import JobRating from "../../assets/images/JobRating.svg";
-import PageHeader from "../../../src/components/PageHeader";
-import ProgressBar from "../../../src/components/ProgressBar";
-import { View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Platform, Button } from "react-native";
-import ButtonGroup from "../../../src/components/ButtonGroup";
-import { UserTypeContext } from "context/UserTypeProvider";
-import USER_TYPE from "constants/UserType";
-import { JobStatus } from "../../(home)/Jobs";
-import { BidStatus } from "../../(home)/Bids";
-import BottomModal from "../../../src/components/JobComponents/PostedJobBottomModal";
-import PostedJobProgressStatus from "../../../src/components/JobComponents/PostedJobProgressStatus";
+import { Text } from "@components/Text";
+import PageHeader from "@components/PageHeader";
+import { View, StyleSheet, Dimensions, ScrollView, Platform } from "react-native";
+import { UserTypeContext } from "@context/UserTypeProvider";
+import USER_TYPE from "@constants/UserType";
+import { JobStatus } from "app/(home)/Jobs";
+import { BidStatus } from "app/(home)/Bids";
+import BottomModal from "@components/JobComponents/PostedJobBottomModal";
+import PostedJobProgressStatus from "@components/JobComponents/PostedJobProgressStatus";
+import LocationIcon from "@assets/icons/services/locationIcon.svg";
+import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
 const PostedJobDetails = () => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const { jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus } = useLocalSearchParams();
 	// console.log("Jobstage: " + jobStage);
 	// console.log("Bidstage: " + bidStage);
@@ -29,23 +29,28 @@ const PostedJobDetails = () => {
 			<PostedJobProgressStatus jobStage={jobStage} bidStage={bidStage} />
 			<View style={[styles.container]}>
 				<ScrollView contentContainerStyle={styles.contentContainer}>
-					<View style={styles.summaryTitleContainer}>
+					<View
+						style={[
+							styles.summaryTitleContainer,
+							userType.type === USER_TYPE.SERVICE_PROVIDER && bidStage !== "Initial" && { paddingTop: 0 },
+						]}
+					>
 						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Job Title</Text>
 							<Text style={styles.summarySubTitle}>Need to Repair my toilet</Text>
 						</View>
 					</View>
-					<View style={styles.summaryTitleContainer}>
-						<View style={{ width: width * 0.4 }}>
+					<View style={[styles.summaryTitleContainer, styles.twoInOneTitleContainer]}>
+						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Job Type</Text>
 							<Text style={styles.summarySubTitle}>Maintenance</Text>
 						</View>
-						<View style={{ width: width * 0.5 }}>
+						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Distance</Text>
-							<Text style={styles.summarySubTitle}>
-								<Ionicons name="pin" color={"blue"} />
-								20km
-							</Text>
+							<View style={styles.distanceContent}>
+								<LocationIcon style={styles.locationIcon} />
+								<Text style={styles.summarySubTitle}>20km</Text>
+							</View>
 						</View>
 					</View>
 					<View style={styles.summaryTitleContainer}>
@@ -59,33 +64,39 @@ const PostedJobDetails = () => {
 						</View>
 					</View>
 					<View style={styles.summaryTitleContainer}>
-						<Text style={styles.summaryTitle}>Media</Text>
-						{/* <Image
+						<View style={styles.summaryTitleSubContainer}>
+							<Text style={styles.summaryTitle}>Media</Text>
+							{/* <Image
 						source={selectedImage.uri}
 						key={selectedImage.assetId}
 						style={styles.uploadedImage}
-					/> */}
+						/> */}
+						</View>
 					</View>
 
-					<View style={[styles.summaryTitleContainer, styles.lastSummaryTitleContainer]}>
+					<View>
 						{userType.type === USER_TYPE.NORMAL ? (
-							<View style={styles.summaryTitleSubContainer}>
-								<Text style={styles.summaryTitle}>Address</Text>
-								<Text style={styles.summarySubTitle}>Address</Text>
+							<View style={styles.summaryTitleContainer}>
+								<View style={styles.summaryTitleSubContainer}>
+									<Text style={styles.summaryTitle}>Address</Text>
+									<Text style={styles.summarySubTitle}>Address</Text>
+								</View>
 							</View>
 						) : (
-							<View style={styles.budgetContainer}>
-								<View>
+							<View
+								style={[styles.summaryTitleContainer, styles.twoInOneTitleContainer, styles.lastSummaryTitleContainer]}
+							>
+								<View style={styles.summaryTitleSubContainer}>
 									<Text style={styles.summaryTitle}>Budget</Text>
 									<Text style={styles.summarySubTitle}>
-										<Text style={{ fontWeight: "600", color: colors.brownShade }}>₦</Text> 50,000 - 70,000
+										<Text style={styles.nairaSymbol}>₦</Text> 50,000 - 70,000
 									</Text>
 								</View>
 								{bidStage && bidStage !== "Initial" && bidStage !== "Bid" && (
-									<View>
+									<View style={styles.summaryTitleSubContainer}>
 										<Text style={styles.summaryTitle}>Bid</Text>
 										<Text style={styles.summarySubTitle}>
-											<Text style={{ fontWeight: "600", color: colors.brownShade }}>₦</Text> 50,000
+											<Text style={styles.nairaSymbol}>₦</Text> 50,000
 										</Text>
 									</View>
 								)}
@@ -105,7 +116,7 @@ const PostedJobDetails = () => {
 	);
 };
 
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
@@ -118,12 +129,10 @@ const styles = StyleSheet.create({
 
 	summaryTitleContainer: {
 		flexDirection: "row",
-		paddingBottom: 10,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.greyBorder,
-		justifyContent: "space-between",
 		alignItems: "flex-start",
-		paddingTop: 20,
+		paddingVertical: 20,
 		paddingHorizontal: 20,
 	},
 
@@ -131,14 +140,9 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 0,
 	},
 
-	summaryTitleSubContainer: {
-		width: width * 0.8,
-	},
+	summaryTitleSubContainer: {},
 
-	budgetContainer: {
-		flexDirection: "row",
-		gap: 60,
-	},
+	twoInOneTitleContainer: {},
 
 	summaryTitle: {
 		fontSize: 18,
@@ -148,6 +152,13 @@ const styles = StyleSheet.create({
 	summarySubTitle: {
 		fontSize: 13,
 		color: colors.greySecondaryShade,
+		paddingRight: "20%",
+	},
+
+	distanceContent: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 5,
 	},
 
 	editText: {
@@ -167,6 +178,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		height: 100,
 		borderRadius: 10,
+	},
+
+	nairaSymbol: {
+		fontWeight: "600",
+		color: colors.brownShade,
 	},
 
 	ratingContainer: {
@@ -256,6 +272,18 @@ const styles = StyleSheet.create({
 	},
 	spPendingButtonText: {
 		fontSize: undefined,
+	},
+});
+
+const androidStyles = StyleSheet.create({
+	locationIcon: {
+		marginTop: -3,
+	},
+});
+
+const iosStyles = StyleSheet.create({
+	summaryTitleSubContainer: {
+		gap: 5,
 	},
 });
 

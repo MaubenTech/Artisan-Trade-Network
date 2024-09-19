@@ -1,14 +1,16 @@
 import ButtonGroup from "@components/ButtonGroup";
-import USER_TYPE from "constants/UserType";
-import { UserTypeContext } from "context/UserTypeProvider";
+import USER_TYPE from "@constants/UserType";
+import { UserTypeContext } from "@context/UserTypeProvider";
 import { Link } from "expo-router";
 import { useState, useContext } from "react";
 import { View, TouchableOpacity, TextInput, StyleSheet, Dimensions, Platform } from "react-native";
-import { BidStatus } from "../../../app/(home)/Bids";
-import { JobStatus } from "../../../app/(home)/Jobs";
+import { BidStatus } from "app/(home)/Bids";
+import { JobStatus } from "app/(home)/Jobs";
 import { Text } from "@components/Text";
 import colors from "@helpers/colors";
 import { compactStyles } from "@helpers/styles";
+import LocationIcon from "@assets/icons/services/locationIcon.svg";
+import useKeyboardHeight from "@helpers/useKeyboardHeight";
 
 const { width, height } = Dimensions.get("window");
 
@@ -58,8 +60,16 @@ const SPPending = () => (
 
 const SPInitial = () => {
 	const [inputFocused, setInputFocused] = useState(false);
+	const keyboardHeight = useKeyboardHeight();
 	return (
-		<View style={[styles.applicantContainer, styles.spApplicantContainer]}>
+		<View
+			style={[
+				styles.applicantContainer,
+				styles.spApplicantContainer,
+				,
+				Platform.OS === "ios" && { paddingBottom: keyboardHeight + 30 },
+			]}
+		>
 			<Text style={[styles.subText, styles.spSubText]}>Amount</Text>
 			<TextInput
 				style={[styles.bidInput, inputFocused ? styles.bidInputFocused : {}]}
@@ -80,15 +90,7 @@ const SPInitial = () => {
 
 const SPActive = () => (
 	<View style={[styles.applicantContainer, styles.spApplicantContainer, { paddingTop: 20 }]}>
-		<ButtonGroup
-			containerStyle={{ flexDirection: "column", gap: 20 }}
-			positiveOptionStyle={{ width: "100%" }}
-			negativeOptionStyle={{ width: "100%" }}
-			href={""}
-			// negativeHref={""}
-			positiveOption="Open Chat"
-			negativeOption="Cancel Job"
-		/>
+		<ButtonGroup href={""} positiveOption="Open Chat" negativeOption="Cancel Job" vertical />
 	</View>
 );
 
@@ -196,7 +198,7 @@ const androidStyles = StyleSheet.create({
 	},
 
 	applicantContainer: {
-		// backgroundColor: "#fff",
+		// backgroundColor: colors.white,
 		padding: 20,
 		borderColor: "#94A3B1",
 		// borderWidth: 1,
@@ -247,7 +249,7 @@ const androidStyles = StyleSheet.create({
 		marginBottom: 40,
 	},
 	bidInputFocused: {
-		backgroundColor: "#fff",
+		backgroundColor: colors.white,
 		// color: "#000",
 	},
 	button: {
@@ -270,7 +272,7 @@ const androidStyles = StyleSheet.create({
 		backgroundColor: "#33A852",
 	},
 	buttonText: {
-		color: "#fff",
+		color: colors.white,
 		fontSize: 16,
 		textAlign: "center",
 	},
@@ -347,7 +349,7 @@ const iosStyles = StyleSheet.create({
 	},
 
 	applicantContainer: {
-		// backgroundColor: "#fff",
+		backgroundColor: colors.white,
 		padding: 20,
 		borderColor: "#94A3B1",
 		borderWidth: 1,
@@ -398,7 +400,7 @@ const iosStyles = StyleSheet.create({
 		marginBottom: 40,
 	},
 	bidInputFocused: {
-		backgroundColor: "#fff",
+		backgroundColor: colors.white,
 		// color: "#000",
 	},
 	button: {
@@ -421,7 +423,7 @@ const iosStyles = StyleSheet.create({
 		backgroundColor: "#33A852",
 	},
 	buttonText: {
-		color: "#fff",
+		color: colors.white,
 		fontSize: 16,
 		textAlign: "center",
 	},

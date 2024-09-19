@@ -4,11 +4,9 @@
 // 	ThemeProvider,
 // } from "@react-navigation/native";
 import { Slot, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
 import "react-native-reanimated";
-import FontsProvider from "../src/components/FontsProvider";
-import UserTypeProvider from "../src/context/UserTypeProvider";
+import FontsProvider from "@components/FontsProvider";
+import UserTypeProvider from "@context/UserTypeProvider";
 
 // export const unstable_settings = {
 // 	initialRouteName: "/(home)/Services",
@@ -17,7 +15,7 @@ import UserTypeProvider from "../src/context/UserTypeProvider";
 export default function RootLayout() {
 	// const colorScheme = useColorScheme();
 	// const [fontsLoaded] = useFonts({
-	// 	SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+	// 	SpaceMono: require("@assets/fonts/SpaceMono-Regular.ttf"),
 	// });
 
 	return (

@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import BidSubmittedSuccessfully from "../../../assets/images/BidSubmittedSuccessfuilly.svg";
-import ButtonGroup from "../../../src/components/ButtonGroup";
-import colors from "../../../src/helpers/colors";
-import { Text } from "../../../src/components/Text";
+import BidSubmittedSuccessfully from "@assets/images/BidSubmittedSuccessfuilly.svg";
+import ButtonGroup from "@components/ButtonGroup";
+import colors from "@helpers/colors";
+import { Text } from "@components/Text";
 
 const BidSubmitted = () => {
 	return (
@@ -13,16 +13,11 @@ const BidSubmitted = () => {
 				<Text style={styles.successTitle}>Bid Submitted Successfully</Text>
 				<View style={styles.successSubTitleContainer}>
 					<Text style={styles.successSubTitle}>
-						Lorem ipsum dolor sit amet, consecteturelit. Etiam sed metus at est
-						iaculis
+						Lorem ipsum dolor sit amet, consecteturelit. Etiam sed metus at est iaculis
 					</Text>
 				</View>
 			</View>
-			<ButtonGroup
-				positiveOptionStyle={{}}
-				positiveOption="Go back to home"
-				href={"/(home)/Home"}
-			/>
+			<ButtonGroup positiveOptionStyle={{}} positiveOption="Go back to home" href={"/(home)/Home"} />
 		</View>
 	);
 };

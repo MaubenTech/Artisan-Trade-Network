@@ -1,9 +1,9 @@
 import React from "react";
-import colors from "../../src/helpers/colors";
+import colors from "@helpers/colors";
 import { router, useNavigation, useRouter } from "expo-router";
-import { Text } from "../../src/components/Text";
+import { Text } from "@components/Text";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
-import ProfilePicture from "../../assets/components/chatList/images/profilePicture.svg";
+import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
@@ -28,11 +28,7 @@ const ChatList = ({ item }: { item: number }) => {
 					<Text style={styles.chatTime}>12:20pm</Text>
 				</View>
 				<View style={{ width: width * 0.7 }}>
-					<Text
-						style={styles.chatPreview}
-						numberOfLines={2}
-						ellipsizeMode="tail"
-					>
+					<Text style={styles.chatPreview} numberOfLines={2} ellipsizeMode="tail">
 						Hello Nonso, Please can you still make it today?
 					</Text>
 				</View>
@@ -41,24 +37,14 @@ const ChatList = ({ item }: { item: number }) => {
 	);
 };
 
-const generalStyles = StyleSheet.create({});
-
-const androidStyles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	chat: {
 		flexDirection: "row",
-		alignItems: "center",
 		gap: 10,
 		paddingHorizontal: 20,
 		paddingVertical: 15,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.greyBorder,
-	},
-
-	profilePictureContainer: {},
-
-	chatPreviewContainer: {
-		// gap: 4,
-		// backgroundColor: "#f0f",
 	},
 
 	chatPreviewDetail: {
@@ -79,49 +65,25 @@ const androidStyles = StyleSheet.create({
 	},
 
 	chatPreview: {
-		// flexWrap: "wrap",
-		// width: "90%",
-		// paddingRight: 20,
 		marginTop: -3,
 		fontSize: 12,
 		color: colors.subTitlesColor,
 	},
 });
 
+const androidStyles = StyleSheet.create({
+	profilePictureContainer: {
+		alignSelf: "center",
+	},
+});
+
 const iosStyles = StyleSheet.create({
-	chat: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 10,
-		paddingHorizontal: 20,
-		paddingVertical: 5,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.greyBorder,
-	},
-
-	profilePictureContainer: {},
-
 	chatPreviewContainer: {
-		gap: 4,
-	},
-
-	sender: {
-		fontWeight: "700",
-		fontSize: 18,
-	},
-
-	chatPreviewDetail: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
-
-	chatTime: {
-		color: colors.greySecondaryShade,
+		gap: 6,
 	},
 
 	chatPreview: {
-		flexWrap: "wrap",
-		width: "90%",
+		paddingRight: 20,
 	},
 });
 
