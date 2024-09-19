@@ -10,7 +10,7 @@ import FilterComponent from "../../src/components/FilterComponent";
 import MoreIcon from "../../assets/icons/services/moreIcon.svg";
 import PostedJob from "../../src/components/JobComponents/PostedJob";
 import LocationIcon from "../../assets/icons/services/locationIcon.svg";
-import { View, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Dimensions, ScrollView, StyleProp, ViewStyle } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,16 +35,15 @@ const bids: Bid[] = [
     {
         jobTitle: "Need to repair my toilet again",
         jobServiceCategory: "Maintenance",
-        jobDetail:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+        jobDetail: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
         jobPrice: "50,000 - 70,000",
         jobDate: "Posted 2 hours ago",
     },
 ];
 
-const PostedBid = ({ job }: { job: Bid }) => {
+const PostedBid = ({ job, containerStyle }: { job: Bid; containerStyle?: StyleProp<ViewStyle> }) => {
     return (
-        <Link style={styles.job} asChild href={"/(jobs)/PostedJobDetails"} key={job.jobTitle}>
+        <Link style={{ ...styles.job }} asChild href={"/(jobs)/PostedJobDetails"} key={job.jobTitle}>
             <TouchableOpacity style={styles.jobDetails} key={job.jobTitle}>
                 <View style={styles.jobPicture}>
                     <JobPicture />
@@ -102,11 +101,7 @@ export default function Bids() {
             <View style={styles.container}>
                 <SearchBar />
                 <View style={styles.filterComponentContainer}>
-                    <FilterComponent
-                        filterOptions={filterOptions}
-                        selectedOption={filterOption}
-                        onOptionChanged={setFilterOption}
-                    />
+                    <FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
                 </View>
                 <View style={styles.componentContainer}>
                     {bids.map((job, index) => {

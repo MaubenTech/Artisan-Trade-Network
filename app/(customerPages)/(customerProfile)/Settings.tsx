@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import colors from "../../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text } from "../../../src/components/Text";
@@ -59,7 +59,7 @@ const Settings = () => {
     return (
         <>
             <PageHeader pageName="Settings" />
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.searchBarContainer}>
                     <SearchBar />
                 </View>
@@ -102,7 +102,7 @@ const Settings = () => {
                         );
                     })}
                 </View>
-            </View>
+            </ScrollView>
         </>
     );
 };
@@ -117,11 +117,13 @@ const styles = StyleSheet.create({
 
     searchBarContainer: {
         paddingHorizontal: 30,
+        marginBottom: 30,
     },
 
     settingsByTypeContainer: {
         gap: 20,
         paddingHorizontal: 30,
+        marginBottom: 60,
     },
 
     settingsByType: {

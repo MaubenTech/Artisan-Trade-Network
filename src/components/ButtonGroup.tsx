@@ -94,7 +94,7 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
                         backgroundColor: positiveOptionBg ?? colors.mainColor,
                     },
                     !isNop && {
-                        width: width * 0.9,
+                        width: "100%",
                     },
                     positiveOptionStyle,
                 ]}

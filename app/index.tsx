@@ -3,221 +3,248 @@ import { useState } from "react";
 import { Link } from "expo-router";
 import Checkbox from "expo-checkbox";
 import colors from "../src/helpers/colors";
-import GoogleLogo from "../assets/images/google.svg";
-import AppleLogo from "../assets/images/apple-logo.svg";
-import FacebookLogo from "../assets/images/facebook.svg";
+import { compactStyles } from "@helpers/styles";
+import ButtonGroup from "@components/ButtonGroup";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import GoogleIcon from "../assets/images/google.svg";
+import AppleIcon from "../assets/images/apple-logo.svg";
 import { Text, TextInput } from "../src/components/Text";
+import FacebookIcon from "../assets/images/facebook.svg";
 import HeaderImage from "../assets/images/loginPageHeader.svg";
-import { StyleSheet, View, TouchableWithoutFeedback, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, View, TouchableWithoutFeedback, TouchableOpacity, Dimensions, ScrollView, SafeAreaView, Platform, StatusBar } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
-function Login() {
-	const [isChecked, setChecked] = useState(false);
-	return (
-		<ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" scrollEnabled={false}>
-			<View style={styles.imageContainer}>
-				<HeaderImage width={86} height={86} />
-			</View>
-			<View style={styles.loginContainer}>
-				<View style={styles.lch}>
-					<Text style={styles.lchHeader}>Login to your account</Text>
-					<Text style={styles.lchText}>Welcome back! Please enter your details</Text>
-				</View>
-				<View style={styles.loginFormContainer}>
-					<View style={styles.loginDetailContainer}>
-						<Text style={styles.formText}>Email</Text>
-						<TextInput style={styles.loginInput} placeholder="example@gmail.com" placeholderTextColor={"#8F8F8F"} />
-					</View>
-					<View style={styles.loginDetailContainer}>
-						<Text style={styles.formText}>Password</Text>
-						<TextInput style={styles.loginInput} placeholder="Enter Your Password" placeholderTextColor={"#8F8F8F"} />
-					</View>
-					<View style={styles.loginActions}>
-						<View style={styles.check}>
-							<Checkbox style={styles.checkbox} value={isChecked} onValueChange={setChecked} />
-							<Text>Remember Me</Text>
-						</View>
-						<Link href={"/ForgotPassword"} asChild>
-							<TouchableWithoutFeedback>
-								<Text style={styles.formText}>Forgot Password ?</Text>
-							</TouchableWithoutFeedback>
-						</Link>
-					</View>
-				</View>
-				<View style={styles.loginButtonContainer}>
-					<Link style={styles.loginButton} asChild href={"/Home"}>
-						<TouchableOpacity>
-							<Text style={styles.loginButtonText}>Login</Text>
-						</TouchableOpacity>
-					</Link>
-					<View style={styles.loginOptions}>
-						<Text style={[{ textAlign: "center" }, styles.formText]}>Or Login With</Text>
-						<View style={styles.loginOptionsContainer}>
-							<View style={styles.logoBorder}>
-								<FacebookLogo />
-							</View>
-							<View style={styles.logoBorder}>
-								<GoogleLogo />
-							</View>
-							<View style={styles.logoBorder}>
-								<AppleLogo />
-							</View>
-						</View>
-					</View>
-					<View style={styles.signUpOption}>
-						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
-						<Link href={"(registration)/SignUp"} style={styles.links}>
-							<Text>Sign up</Text>
-						</Link>
-					</View>
-				</View>
-			</View>
-		</ScrollView>
-	);
-}
+const index = () => {
+    const { top, bottom } = useSafeAreaInsets();
+    const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+    const ios = Platform.OS === "ios";
+    const android = Platform.OS === "android";
 
-export default Login;
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
 
-const styles = StyleSheet.create({
-	container: {
-		// flex: 1,
-		flexGrow: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		gap: 10,
-	},
+    return (
+        <SafeAreaView style={[styles.container, { paddingTop: android ? top : 0, paddingBottom: android ? bottom : 0 }]}>
+            <View style={[styles.componentContainer, { marginBottom: 50 }]}>
+                <HeaderImage />
+            </View>
+            <View style={[styles.ctaComponentContainer]}>
+                <View style={[styles.ctaComponentHeader]}>
+                    <Text style={styles.ctaHeader}>Login to your account</Text>
+                    <Text style={styles.ctaSubtext}>Welcome back! Please enter your details</Text>
+                </View>
+                <View style={[styles.userInputContainer]}>
+                    <View style={[styles.userInputSubContainer]}>
+                        <Text style={[styles.userInputLabel]}>Email</Text>
+                        <TextInput style={[styles.userInput]} value={email} onChangeText={setEmail} />
+                    </View>
+                    <View style={[styles.userInputSubContainer]}>
+                        <Text style={[styles.userInputLabel]}>Password</Text>
+                        <TextInput style={[styles.userInput]} />
+                    </View>
+                </View>
+                <View style={[styles.optionsContainer]}>
+                    <TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
+                        <View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
+                        <Text>Remember Me</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Text style={[styles.infoText]}>Forgot Password</Text>
+                    </TouchableOpacity>
+                </View>
+                <ButtonGroup positiveOption="Login" href={"/Home"} />
+            </View>
+            <View style={[styles.componentContainer, styles.otherLoginContainer]}>
+                <Text style={[styles.infoText]}>or Login with</Text>
+                <View style={[styles.componentContainer, styles.socialLoginContainer]}>
+                    <TouchableOpacity style={styles.socialButton}>
+                        <FacebookIcon />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.socialButton}>
+                        <GoogleIcon />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.socialButton}>
+                        <AppleIcon />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={[styles.componentContainer, styles.signUpContainer]}>
+                <Text style={[styles.noAccount]}>Don't have an account?</Text>
+                <Link href={"/SignUp"} asChild style={[styles.signUp]}>
+                    <TouchableOpacity>
+                        <Text style={styles.signUpText}>Sign Up</Text>
+                    </TouchableOpacity>
+                </Link>
+            </View>
+        </SafeAreaView>
+    );
+};
 
-	imageContainer: {
-		paddingTop: "20%",
-		marginBottom: "8%",
-	},
+export default index;
 
-	image: {},
+const generalStyles = StyleSheet.create({
+    container: {
+        padding: 30,
+    },
 
-	loginContainer: {
-		flex: 1,
-		width: "100%",
-		justifyContent: "flex-start",
-		paddingLeft: 30,
-		paddingRight: 30,
-		gap: 10,
-		paddingBottom: "5%",
-		// backgroundColor: "#f0f",
-	},
+    ctaHeader: {
+        fontWeight: "600",
+        fontSize: 22,
+    },
 
-	lch: {
-		// backgroundColor: "#f0f",
-		// flex: 0.3,
-		marginBottom: "5%",
-		alignItems: "flex-start",
-		width: "100%",
-		// gap: 7,
-	},
+    ctaSubtext: {
+        fontSize: 11,
+    },
 
-	lchHeader: {
-		fontSize: 23,
-		fontWeight: "700",
-		// backgroundColor: "#f0f",
-	},
+    userInputLabel: {},
 
-	lchText: {
-		fontWeight: "300",
-		fontSize: 12,
-	},
+    optionsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+    },
+    checkboxContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    checkboxUnchecked: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        marginRight: 10,
+        borderRadius: 4,
+    },
+    checkboxChecked: {
+        width: 20,
+        height: 20,
+        backgroundColor: "#007BFF",
+        marginRight: 10,
+        borderRadius: 4,
+    },
 
-	loginFormContainer: {
-		flex: 1,
-		gap: 20,
-		// marginBottom: "6%",
-	},
+    socialButton: {
+        width: 50,
+        height: 50,
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 25,
+    },
 
-	loginDetailContainer: {},
+    signUpText: {
+        fontSize: 12,
+        textDecorationLine: "underline",
+        color: colors.mainColor,
+    },
+});
 
-	loginInput: {
-		padding: "4%",
-		paddingLeft: 25,
-		paddingRight: 25,
-		borderColor: colors.inputBorderColor,
-		borderWidth: 1.05,
-		borderRadius: 10,
-		fontSize: 13,
-	},
+const androidStyles = StyleSheet.create({
+    componentContainer: {
+        alignItems: "center",
+        paddingHorizontal: 20,
+    },
+    ctaComponentContainer: {
+        alignItems: "flex-start",
+        gap: 15,
+    },
+    userInputContainer: {
+        alignItems: "flex-start",
+        gap: 30,
+    },
 
-	formText: {
-		fontSize: 14,
-		// marginBottom: 5,
-	},
+    userInput: {
+        width: width * 0.85,
+        borderColor: colors.inputBorderColor,
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 5,
+    },
 
-	loginActions: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		// backgroundColor: "#f0f",
-	},
+    otherLoginContainer: {
+        gap: 10,
+    },
+    infoText: {
+        fontSize: 12,
+    },
+    socialLoginContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "100%",
+        marginBottom: 20,
+    },
+    signUpContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 5,
+    },
 
-	check: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 5,
-		// backgroundColor: "#f0f",
-	},
+    noAccount: {
+        fontSize: 12,
+        color: colors.greyShade,
+    },
 
-	checkbox: {
-		borderRadius: 5,
-		backgroundColor: "#F8F9FB",
-	},
+    signUp: {},
+});
 
-	loginButtonContainer: {
-		justifyContent: "center",
-		width: "100%",
-		// backgroundColor: "#f0f",
-		gap: 40,
-	},
+const iosStyles = StyleSheet.create({
+    componentContainer: {
+        paddingHorizontal: 20,
+        alignItems: "center",
+    },
 
-	loginButton: {
-		alignItems: "center",
-		backgroundColor: colors.mainColor,
-		borderRadius: 15,
-		justifyContent: "center",
-		padding: 15,
-	},
+    ctaComponentContainer: {
+        alignItems: "flex-start",
+        gap: 30,
+        paddingHorizontal: 20,
+    },
 
-	loginButtonText: {
-		textAlign: "center",
-		fontWeight: "600",
-		fontSize: 16,
-		color: "white",
-	},
+    ctaComponentHeader: {
+        gap: 5,
+    },
 
-	loginOptions: {
-		// flex: 1,
-		gap: 10,
-	},
+    userInputContainer: {
+        alignItems: "flex-start",
+        gap: 30,
+    },
 
-	loginOptionsContainer: {
-		flexDirection: "row",
-		justifyContent: "center",
-		gap: 25,
-		// marginBottom: "10%",
-	},
+    userInputSubContainer: {
+        gap: 5,
+    },
 
-	logoBorder: {
-		borderColor: "#97A3B1",
-		borderWidth: 1,
-		borderRadius: 40,
-		padding: "5%",
-		alignItems: "center",
-	},
+    userInput: {
+        width: width * 0.9,
+        borderColor: colors.inputBorderColor,
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+    },
 
-	signUpOption: {
-		flexDirection: "row",
-		justifyContent: "center",
-	},
+    otherLoginContainer: {
+        gap: 10,
+        marginBottom: 30,
+    },
 
-	links: {
-		textDecorationColor: "#52A2F2",
-		textDecorationLine: "underline",
-		color: "#52A2F2",
-	},
+    infoText: {
+        fontSize: 14,
+    },
+
+    socialLoginContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "80%",
+        marginBottom: 20,
+    },
+
+    signUpContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 5,
+    },
 });
