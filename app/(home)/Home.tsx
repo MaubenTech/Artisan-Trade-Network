@@ -4,7 +4,6 @@ import colors from "../../src/helpers/colors";
 import { compactStyles } from "@helpers/styles";
 import { Text } from "../../src/components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { LinkProps, useNavigation } from "expo-router";
 import RewardIcon from "@assets/images/reward.svg";
 import MenuHeader from "@components/MenuHeader";
 import HomeCarousel from "@components/HomeCarousel";
