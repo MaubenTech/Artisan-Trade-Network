@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-// import { useNavigation } from "expo-router";
+import { LinkProps, useNavigation } from "expo-router";
 import colors from "../../src/helpers/colors";
 import { compactStyles } from "@helpers/styles";
 import { Text } from "../../src/components/Text";
@@ -10,6 +10,7 @@ import MenuHeader from "@components/MenuHeader";
 import HomeCarousel from "@components/HomeCarousel";
 import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ImageBackground, ScrollView, Dimensions, FlatListProps, ImagePropsBase } from "react-native";
+
 import { Bid, PostedBid } from "./Bids";
 
 const HomeCard1 = require("@assets/images/homeCard1.png");
