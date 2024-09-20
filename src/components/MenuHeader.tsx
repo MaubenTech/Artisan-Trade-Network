@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import colors from "../helpers/colors";
@@ -9,10 +9,13 @@ import ProfilePic from "@assets/images/profilePic.png";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NotificationPresent from "@assets/images/notificationPresent.svg";
 import { View, StyleSheet, Platform, Button, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { UserTypeContext } from "@context/UserTypeProvider";
+import USER_TYPE from "@constants/UserType";
 
 const ios = Platform.OS == "ios";
 const MenuHeader = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const { type: userType, changeUserType } = useContext(UserTypeContext);
 
 	const { top } = useSafeAreaInsets();
 	return (
@@ -38,7 +41,7 @@ const MenuHeader = () => {
 					<Link
 						style={styles.profilePicContainer}
 						// href={"/(customerPages)/(profile)/Profile"}
-						href={"/Profile"}
+						href={userType === USER_TYPE.NORMAL ? "/Profile" : "/ProfilePageSP"}
 						asChild
 					>
 						<TouchableWithoutFeedback>

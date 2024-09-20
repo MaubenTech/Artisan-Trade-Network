@@ -8,11 +8,11 @@ interface UserTypeContextType {
 
 export const UserTypeContext = createContext<UserTypeContextType>({
 	type: USER_TYPE.NORMAL,
-	changeUserType: () => {},
+	changeUserType: () => { },
 });
 
 const UserTypeProvider = ({ children }) => {
-	const [userType, setUserType] = useState<(typeof USER_TYPE)[keyof typeof USER_TYPE]>(USER_TYPE.SERVICE_PROVIDER);
+	const [userType, setUserType] = useState<(typeof USER_TYPE)[keyof typeof USER_TYPE]>(USER_TYPE.NORMAL);
 
 	const changeUserType = (type: (typeof USER_TYPE)[keyof typeof USER_TYPE]) => {
 		setUserType(type);

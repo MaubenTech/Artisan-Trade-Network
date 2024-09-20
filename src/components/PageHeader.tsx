@@ -53,9 +53,9 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 					style={
 						profile
 							? {
-									...styles.pageHeaderElementsContainer,
-									justifyContent: "space-between",
-							  }
+								...styles.pageHeaderElementsContainer,
+								justifyContent: "space-between",
+							}
 							: styles.pageHeaderElementsContainer
 					}
 				>
@@ -100,8 +100,8 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 								<Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
 							)
 						) : (
-							// <Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
-							<></>
+							<Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
+							// <></>
 						)}
 					</View>
 					<Text style={[profilePicture ? { marginTop: 80, ...styles.profileName } : styles.profileName]}>
