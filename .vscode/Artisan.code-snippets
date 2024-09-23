@@ -10,7 +10,8 @@
 		"scope": "javascript,javascriptreact,typescript,typescriptreact",
 		"prefix": "crnfes",
 		"body": [
-			"import { StyleSheet, View, Text } from \"react-native\";",
+			"import { StyleSheet, View } from \"react-native\";",
+			"import { Text, TextInput } from \"@components/Text\";",
 			"import React from \"react\";",
 			"import { compactStyles } from \"@helpers/styles\";",
 			"",
