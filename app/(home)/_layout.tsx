@@ -9,6 +9,7 @@ import { UserTypeContext } from "../../src/context/UserTypeProvider";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { compactStyles } from "@helpers/styles";
+import { moderateScale, verticalScale } from "react-native-size-matters";
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,7 +21,6 @@ type BottomTabProps = {
 
 //TODO: Add a mechanism on the tabBar, so Scrollable content don't plainly go under it. You can add a blur or break the page from where the tab bar starts, so content don't get to it
 export const CustomTabBar = (props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) => {
-	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const { onPress, accessibilityState, iconName, text } = props;
 	const focused = accessibilityState.selected;
 	const userType = useContext(UserTypeContext);
@@ -35,30 +35,16 @@ export const CustomTabBar = (props: Omit<BottomTabBarButtonProps & BottomTabProp
 			  };
 
 	return (
-		<TouchableOpacity
-			onPress={onPress}
-			style={[
-				conditionalButtonStyles,
-				{
-					// width,
-					alignItems: "center",
-					justifyContent: "center",
-					// backgroundColor: "#f0f",
-					borderRadius: 50,
-				},
-			]}
-			activeOpacity={1}
-		>
+		<TouchableOpacity onPress={onPress} style={[conditionalButtonStyles, styles.customTabBar]} activeOpacity={1}>
 			<View style={[styles.iconContainer, focused ? styles.activeContainer : styles.inactiveIconContainer]}>
-				<Ionicons name={iconName} color={colors.whiteShade} size={25} />
-				{focused ? <Text style={{ ...styles.iconText }}>{text}</Text> : <></>}
+				<Ionicons name={focused ? iconName : iconName + "-outline"} color={colors.whiteShade} size={moderateScale(18, 2)} />
+				{focused ? <Text style={styles.iconText}>{text}</Text> : <></>}
 			</View>
 		</TouchableOpacity>
 	);
 };
 
 export default function Layout() {
-	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const navigation = useNavigation();
 	const router = useRouter();
 	// const [activeIndex, setActiveIndex] = useState(0);
@@ -121,19 +107,19 @@ export default function Layout() {
 	);
 }
 
-const generalStyles = StyleSheet.create({});
-
-const androidStyles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	tabBarStyle: {
 		borderRadius: 50,
 		backgroundColor: colors.brownShade,
 		position: "absolute",
-		bottom: 30,
+		bottom: 20,
 		marginRight: 30,
 		marginLeft: 30,
 		paddingBottom: 0,
-		height: 80,
+		// height: 60,
+		height: verticalScale(70),
 	},
+
 	// tabBarItemStyle: {
 	// 	// flex: 1,
 	// 	// borderRadius: 50,
@@ -141,68 +127,52 @@ const androidStyles = StyleSheet.create({
 	// 	// paddingRight: 30,
 	// 	backgroundColor: "#0f0",
 	// },
+
+	customTabBar: {
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: 50,
+		// backgroundColor: "#f0f",
+	},
+
 	iconContainer: {
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 50,
 		padding: 12.5,
-		paddingVertical: 12.5,
+		// paddingVertical: 12.5,
 	},
+
 	activeContainer: {
 		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: "row",
 		gap: 10,
-		padding: 10,
+		// padding: 10,
 		width: width * 0.3,
 		backgroundColor: colors.mainColor,
 	},
+
 	inactiveIconContainer: {
 		backgroundColor: colors.greySecondaryShade,
 	},
+
 	iconText: {
 		color: colors.whiteShade,
+		// backgroundColor: "#f0f",
+	},
+});
+
+const androidStyles = StyleSheet.create({
+	iconText: {
+		top: 2,
 	},
 });
 
 const iosStyles = StyleSheet.create({
-	tabBarStyle: {
-		borderRadius: 50,
-		backgroundColor: colors.brownShade,
-		position: "absolute",
-		bottom: 30,
-		marginRight: 30,
-		marginLeft: 30,
-		paddingBottom: 0,
-		height: 80,
-	},
-	// tabBarItemStyle: {
-	// 	// flex: 1,
-	// 	// borderRadius: 50,
-	// 	// paddingLeft: 30,
-	// 	// paddingRight: 30,
-	// 	backgroundColor: "#0f0",
-	// },
-	iconContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-		borderRadius: 50,
-		padding: 12.5,
-		paddingVertical: 12.5,
-	},
-	activeContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-		flexDirection: "row",
-		gap: 10,
-		padding: 10,
-		width: width * 0.3,
-		backgroundColor: colors.mainColor,
-	},
-	inactiveIconContainer: {
-		backgroundColor: colors.greySecondaryShade,
-	},
 	iconText: {
-		color: colors.whiteShade,
+		top: 1,
 	},
 });
+
+const styles = compactStyles(generalStyles, androidStyles, iosStyles);
