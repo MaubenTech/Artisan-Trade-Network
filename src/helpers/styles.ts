@@ -84,14 +84,14 @@ const addFontScale = <T>(target: T): T => {
 };
 
 const scaleMetrics = <T>(target: T): T => {
-	if (target["cardTitle"]) {
-		console.log(Platform.constants.Model);
-		console.log("Before editing title: " + JSON.stringify(target["cardTitle"]));
-	}
-	if (target["cardSubtitle"]) {
-		console.log(Platform.constants.Model);
-		console.log("Before editing subtitle: " + JSON.stringify(target["cardSubtitle"]));
-	}
+	// if (target["cardTitle"]) {
+	// 	console.log(Platform.constants.Model);
+	// 	console.log("Before editing title: " + JSON.stringify(target["cardTitle"]));
+	// }
+	// if (target["cardSubtitle"]) {
+	// 	console.log(Platform.constants.Model);
+	// 	console.log("Before editing subtitle: " + JSON.stringify(target["cardSubtitle"]));
+	// }
 	const tempTarget = resolveMultipleAxisStyles(target);
 
 	const verticalScaleProperties: StyleKey[] = [
@@ -187,18 +187,18 @@ const scaleMetrics = <T>(target: T): T => {
 			}
 		}
 	}
-	if (tempTarget["cardTitle"]) {
-		console.log("After editing title: " + JSON.stringify(tempTarget["cardTitle"]));
-		console.log();
-		console.log();
-		console.log();
-	}
-	if (tempTarget["cardSubtitle"]) {
-		console.log("After editing subtitle: " + JSON.stringify(tempTarget["cardSubtitle"]));
-		console.log();
-		console.log();
-		console.log();
-	}
+	// if (tempTarget["cardTitle"]) {
+	// 	console.log("After editing title: " + JSON.stringify(tempTarget["cardTitle"]));
+	// 	console.log();
+	// 	console.log();
+	// 	console.log();
+	// }
+	// if (tempTarget["cardSubtitle"]) {
+	// 	console.log("After editing subtitle: " + JSON.stringify(tempTarget["cardSubtitle"]));
+	// 	console.log();
+	// 	console.log();
+	// 	console.log();
+	// }
 
 	return tempTarget;
 };
