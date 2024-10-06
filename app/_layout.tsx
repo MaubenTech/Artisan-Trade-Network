@@ -7,6 +7,8 @@ import { Slot, Stack } from "expo-router";
 import "react-native-reanimated";
 import FontsProvider from "@components/FontsProvider";
 import UserTypeProvider from "@context/UserTypeProvider";
+import { Provider } from "react-redux";
+import store from "@store";
 
 // export const unstable_settings = {
 // 	initialRouteName: "/(home)/Services",
@@ -20,12 +22,14 @@ export default function RootLayout() {
 
 	return (
 		// <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-		<UserTypeProvider>
+		// <UserTypeProvider> no more need for the UserType context as we now have a user type in the redux store
+		<Provider store={store}>
 			<FontsProvider>
 				<Slot />
 				{/* <Stack></Stack> */}
 			</FontsProvider>
-		</UserTypeProvider>
+		</Provider>
+		// </UserTypeProvider>
 		// </ThemeProvider>
 	);
 }
