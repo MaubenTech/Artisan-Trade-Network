@@ -5,8 +5,9 @@ import React, { useRef, useState } from "react";
 import Carousel from "react-native-snap-carousel";
 import { SwipeData } from "../../app/(home)/Home";
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { View, TouchableWithoutFeedback, Image, Dimensions, StyleSheet, TouchableOpacity, Pressable, InteractionManager, useWindowDimensions } from "react-native";
+import { View, TouchableWithoutFeedback, Image, Dimensions, StyleSheet, TouchableOpacity, Pressable, InteractionManager, useWindowDimensions, ImageBackground } from "react-native";
 import { compactStyles } from "@helpers/styles";
+import { moderateScale, moderateVerticalScale, verticalScale } from "react-native-size-matters";
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,94 +64,78 @@ export default function HomeCarousel({ data }: { data: SwipeData[] }) {
 
 const Card = ({ cardItem }: { cardItem: SwipeData }) => {
 	return (
-		<View style={{ width: width }}>
-			<TouchableWithoutFeedback>
-				<Image
-					// source=
-					source={cardItem.img}
-					style={{
-						width: width * 0.7,
-						height: height * 0.4,
-						borderRadius: 20,
-					}}
-				/>
-			</TouchableWithoutFeedback>
-			<View
+		<ImageBackground style={styles.card} imageStyle={styles.cardImage} source={cardItem.img}>
+			<View style={styles.cardContent}>
+				<Text style={styles.cardTitle}>{cardItem.title}</Text>
+				<Text style={styles.cardSubtitle}>{cardItem.subtitle}</Text>
+			</View>
+			<Link
+				href={cardItem.href}
+				asChild
 				style={{
-					position: "absolute",
-					top: 50,
-					justifyContent: "space-between",
-					alignItems: "center",
-					marginLeft: "5%",
-					height: height * 0.31,
+					...styles.cardButton,
+					backgroundColor: cardItem.buttonColor,
 				}}
 			>
-				<View style={{ gap: 10 }}>
-					<Text style={styles.cardTitle}>{cardItem.title}</Text>
-					<Text style={styles.cardSubtitle}>{cardItem.subtitle}</Text>
-				</View>
-				<View
-					style={{
-						width: width * 0.6,
-						alignItems: "center",
-						flexDirection: "row",
-						justifyContent: "center",
-					}}
-				>
-					<Link
-						href={cardItem.href}
-						asChild
-						style={{
-							alignItems: "center",
-							...styles.cardButton,
-							textAlign: "center",
-							backgroundColor: cardItem.buttonColor,
-						}}
-					>
-						<TouchableOpacity
-							style={{
-								padding: 15,
-								gap: 10,
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							{cardItem.secondIcon}
-							<Text style={styles.cardButtonTitle}>{cardItem.buttonTitle}</Text>
-							{cardItem.icon}
-						</TouchableOpacity>
-					</Link>
-				</View>
-			</View>
-		</View>
+				<TouchableOpacity>
+					{cardItem.secondIcon}
+					<Text style={styles.cardButtonTitle}>{cardItem.buttonTitle}</Text>
+					{cardItem.icon}
+				</TouchableOpacity>
+			</Link>
+		</ImageBackground>
 	);
 };
 
 const generalStyles = StyleSheet.create({
+	card: {
+		// paddingTop: 50,
+		paddingHorizontal: 25,
+		// paddingVertical: moderateVerticalScale(25, 3),
+		paddingVertical: 20,
+		justifyContent: "space-between",
+		alignItems: "center",
+		// rowGap: 70,
+		// rowGap: verticalScale(70),
+		// rowGap: moderateVerticalScale(70, 7),
+	},
+
+	cardImage: {
+		borderRadius: 20,
+	},
+
+	cardContent: {
+		width: "100%",
+	},
+
 	cardTitle: {
-		fontSize: 25,
-		fontWeight: "900",
+		// fontSize: moderateScale(21, 3),
+		fontSize: 22,
+		lineHeight: 25,
+		fontWeight: "600",
 		color: colors.white,
-		width: width * 0.5,
 		letterSpacing: 0.5,
+		// backgroundColor: "#f0f",
 	},
 
 	cardSubtitle: {
-		fontSize: 15,
 		color: colors.white,
-		width: width * 0.5,
+		// backgroundColor: "#f0f",
 	},
 
 	cardButton: {
-		width: "90%",
+		width: "100%",
 		flexDirection: "row",
-		alignItems: "center",
-		borderRadius: 15,
 		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 15,
+		paddingVertical: 12,
+		borderRadius: 15,
+		gap: 10,
 	},
 
 	cardButtonTitle: {
-		fontSize: 20,
+		fontSize: 16,
 		color: colors.white,
 		marginLeft: 5,
 	},
@@ -169,8 +154,34 @@ const generalStyles = StyleSheet.create({
 	},
 });
 
-const androidStyles = StyleSheet.create({});
+const androidStyles = StyleSheet.create({
+	card: {
+		rowGap: moderateVerticalScale(75, 5),
+	},
+	cardContent: { gap: 10 },
+	cardTitle: {
+		fontSize: 22,
+	},
+	cardSubtitle: {
+		// width: width * 0.45,
+		paddingRight: 45,
+		fontSize: 11,
+	},
+});
 
-const iosStyles = StyleSheet.create({});
+const iosStyles = StyleSheet.create({
+	card: {
+		rowGap: moderateVerticalScale(75, 2),
+	},
+	cardContent: { gap: 15 },
+	cardTitle: {
+		fontSize: 25,
+	},
+	cardSubtitle: {
+		// width: width * 0.43,
+		paddingRight: 40,
+		fontSize: 12,
+	},
+});
 
 const styles = compactStyles(generalStyles, androidStyles, iosStyles);
