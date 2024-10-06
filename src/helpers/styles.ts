@@ -1,6 +1,6 @@
 import { ImageStyle } from "expo-image";
 import { Dimensions, Platform, TextStyle, ViewStyle } from "react-native";
-import { horizontalScale, moderateScale, verticalScale } from "./metrics";
+import { scale as horizontalScale, moderateScale, moderateVerticalScale, verticalScale } from "react-native-size-matters";
 
 type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
 export type PlainNamedStyles = ViewStyle | TextStyle | ImageStyle;
@@ -84,7 +84,14 @@ const addFontScale = <T>(target: T): T => {
 };
 
 const scaleMetrics = <T>(target: T): T => {
-	// console.log("Before editing: " + JSON.stringify(target));
+	if (target["cardTitle"]) {
+		console.log(Platform.constants.Model);
+		console.log("Before editing title: " + JSON.stringify(target["cardTitle"]));
+	}
+	if (target["cardSubtitle"]) {
+		console.log(Platform.constants.Model);
+		console.log("Before editing subtitle: " + JSON.stringify(target["cardSubtitle"]));
+	}
 	const tempTarget = resolveMultipleAxisStyles(target);
 
 	const verticalScaleProperties: StyleKey[] = [
@@ -142,35 +149,56 @@ const scaleMetrics = <T>(target: T): T => {
 				if (verticalScaleProperties.includes(valueKey as StyleKey)) {
 					const reValue = tempTarget[key as keyof T]; // to get the updated value of value, which is tempTarget[key]
 					const tempValue = reValue[valueKey] as keyof typeof reValue;
-					if (typeof tempValue === "number")
-						tempTarget[key] = {
-							...reValue,
-							[valueKey]: verticalScale(tempValue),
-						};
+					if (tempValue && !Number.isNaN(tempValue) && typeof tempValue === "number") {
+						// console.log(tempValue.toString().split(".")[1].length);
+						if (Number.isInteger(tempValue) || (!Number.isInteger(tempValue) && tempValue.toString().split(".")[1].length <= 3))
+							// line above: if it has been scaled already, don't scale again
+							tempTarget[key] = {
+								...reValue,
+								// [valueKey]: verticalScale(tempValue),
+								[valueKey]: moderateVerticalScale(tempValue, 2),
+							};
+					}
 				} else if (horizontalScaleProperties.includes(valueKey as StyleKey)) {
 					const reValue = tempTarget[key as keyof T]; // to get the updated value of value, which is tempTarget[key]
 					const tempValue = reValue[valueKey] as keyof typeof reValue;
-					if (typeof tempValue === "number")
-						tempTarget[key] = {
-							...reValue,
-							[valueKey]: horizontalScale(tempValue),
-						};
+					if (tempValue && !Number.isNaN(tempValue) && typeof tempValue === "number") {
+						// console.log(tempValue.toString().split(".")[1].length);
+						if (Number.isInteger(tempValue) || (!Number.isInteger(tempValue) && tempValue.toString().split(".")[1].length <= 3))
+							// line above: if it has been scaled already, don't scale again
+							tempTarget[key] = {
+								...reValue,
+								[valueKey]: horizontalScale(tempValue),
+							};
+					}
 				} else if (moderateScaleProperties.includes(valueKey as StyleKey)) {
 					const reValue = tempTarget[key as keyof T]; // to get the updated value of value, which is tempTarget[key]
 					const tempValue = reValue[valueKey] as keyof typeof reValue;
-					if (typeof tempValue === "number")
-						tempTarget[key] = {
-							...reValue,
-							[valueKey]: moderateScale(tempValue),
-						};
+					if (tempValue && !Number.isNaN(tempValue) && typeof tempValue === "number") {
+						// console.log(tempValue.toString().split(".")[1].length);
+						if (Number.isInteger(tempValue) || (!Number.isInteger(tempValue) && tempValue.toString().split(".")[1].length <= 3))
+							// line above: if it has been scaled already, don't scale again
+							tempTarget[key] = {
+								...reValue,
+								[valueKey]: valueKey === "fontSize" ? moderateScale(tempValue, 1) : moderateScale(tempValue),
+							};
+					}
 				}
 			}
 		}
 	}
-	// console.log("After editing: " + JSON.stringify(tempTarget));
-	// console.log();
-	// console.log();
-	// console.log();
+	if (tempTarget["cardTitle"]) {
+		console.log("After editing title: " + JSON.stringify(tempTarget["cardTitle"]));
+		console.log();
+		console.log();
+		console.log();
+	}
+	if (tempTarget["cardSubtitle"]) {
+		console.log("After editing subtitle: " + JSON.stringify(tempTarget["cardSubtitle"]));
+		console.log();
+		console.log();
+		console.log();
+	}
 
 	return tempTarget;
 };
@@ -185,7 +213,7 @@ const resolveMultipleAxisStyles = <T>(target: T): T => {
 			const margin = value["margin"] as keyof typeof value;
 			const padding = value["padding"] as keyof typeof value;
 			const gap = value["gap"] as keyof typeof value;
-			if (margin) {
+			if (margin && typeof margin === "number") {
 				const { margin, ...newValue } = tempTarget[key];
 				tempTarget[key] = {
 					...newValue,
@@ -193,7 +221,7 @@ const resolveMultipleAxisStyles = <T>(target: T): T => {
 					marginVertical: verticalScale(margin),
 				};
 			}
-			if (padding) {
+			if (padding && typeof padding === "number") {
 				const { padding, ...newValue } = tempTarget[key];
 				tempTarget[key] = {
 					...newValue,
@@ -201,7 +229,7 @@ const resolveMultipleAxisStyles = <T>(target: T): T => {
 					paddingVertical: verticalScale(padding),
 				};
 			}
-			if (gap) {
+			if (gap && typeof gap === "number") {
 				const { gap, ...newValue } = tempTarget[key];
 				tempTarget[key] = {
 					...newValue,
