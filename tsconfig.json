@@ -9,6 +9,7 @@
 			"@context/*": ["src/context/*"],
 			"@store": ["src/store"],
 			"@store/*": ["src/store/*"],
+			"@hooks/*": ["src/hooks/*"],
 			"@assets/*": ["assets/*"]
 		}
 	},
