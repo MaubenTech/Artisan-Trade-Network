@@ -1,15 +1,14 @@
 import { Tabs, useNavigation, useRouter } from "expo-router";
-import colors from "../../src/helpers/colors";
-import { Text } from "../../src/components/Text";
-import TabBar from "../../src/components/TabBar";
+import colors from "@helpers/colors";
+import { Text } from "@components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useContext, useEffect, useState } from "react";
-import USER_TYPE from "../../src/constants/UserType";
-import { UserTypeContext } from "../../src/context/UserTypeProvider";
+import React, { useEffect } from "react";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { compactStyles } from "@helpers/styles";
 import { moderateScale, verticalScale } from "react-native-size-matters";
+import useAppSelector from "@hooks/useAppSelector";
+import { selectUserType } from "@store/userSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -23,10 +22,10 @@ type BottomTabProps = {
 export const CustomTabBar = (props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) => {
 	const { onPress, accessibilityState, iconName, text } = props;
 	const focused = accessibilityState.selected;
-	const userType = useContext(UserTypeContext);
+	const userType = useAppSelector(selectUserType);
 
 	const conditionalButtonStyles =
-		userType.type === USER_TYPE.NORMAL
+		userType === "NORMAL"
 			? {
 					flex: focused ? 1.1 : 0.6,
 			  }
@@ -48,10 +47,10 @@ export default function Layout() {
 	const navigation = useNavigation();
 	const router = useRouter();
 	// const [activeIndex, setActiveIndex] = useState(0);
-	const userType = useContext(UserTypeContext);
+	const userType = useAppSelector(selectUserType);
 
 	const conditionalTabBarStyles =
-		userType.type === USER_TYPE.NORMAL
+		userType === "NORMAL"
 			? {}
 			: {
 					paddingHorizontal: 10,
@@ -96,7 +95,7 @@ export default function Layout() {
 					tabBarButton: (props) => <CustomTabBar {...props} iconName="briefcase" text="Jobs" />,
 				}}
 			/>
-			<Tabs.Screen name="Bids" options={userType.type === USER_TYPE.NORMAL ? normalOptions : serviceProviderOptions} />
+			<Tabs.Screen name="Bids" options={userType === "NORMAL" ? normalOptions : serviceProviderOptions} />
 			<Tabs.Screen
 				name="Chat"
 				options={{

@@ -1,3 +1,4 @@
+//No need for this Provider anymore
 import { createContext, useState } from "react";
 import USER_TYPE from "../constants/UserType";
 
@@ -8,7 +9,7 @@ interface UserTypeContextType {
 
 export const UserTypeContext = createContext<UserTypeContextType>({
 	type: USER_TYPE.NORMAL,
-	changeUserType: () => { },
+	changeUserType: () => {},
 });
 
 const UserTypeProvider = ({ children }) => {

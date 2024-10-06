@@ -1,16 +1,16 @@
-import { StyleSheet, View, Text } from "react-native";
-import React, { useContext } from "react";
+import { StyleSheet } from "react-native";
+import React from "react";
 import { compactStyles } from "@helpers/styles";
 import ProgressBar from "@components/ProgressBar";
-import { UserTypeContext } from "@context/UserTypeProvider";
-import USER_TYPE from "@constants/UserType";
 import { JobStatus } from "app/(home)/Jobs";
 import { BidStatus } from "app/(home)/Bids";
+import useAppSelector from "@hooks/useAppSelector";
+import { selectUserType } from "@store/userSlice";
 
 const PostedJobProgressStatus = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const userType = useContext(UserTypeContext);
-	const isServiceProvider = userType.type === USER_TYPE.SERVICE_PROVIDER;
+	const userType = useAppSelector(selectUserType);
+	const isServiceProvider = userType === "SERVICE_PROVIDER";
 
 	const denominator = isServiceProvider ? 4 : 3;
 

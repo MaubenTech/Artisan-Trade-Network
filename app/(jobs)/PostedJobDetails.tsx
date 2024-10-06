@@ -1,19 +1,18 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
 import colors from "@helpers/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text } from "@components/Text";
 import PageHeader from "@components/PageHeader";
 import { View, StyleSheet, Dimensions, ScrollView, Platform } from "react-native";
-import { UserTypeContext } from "@context/UserTypeProvider";
-import USER_TYPE from "@constants/UserType";
 import { JobStatus } from "app/(home)/Jobs";
 import { BidStatus } from "app/(home)/Bids";
 import BottomModal from "@components/JobComponents/PostedJobBottomModal";
 import PostedJobProgressStatus from "@components/JobComponents/PostedJobProgressStatus";
 import LocationIcon from "@assets/icons/services/locationIcon.svg";
 import { compactStyles } from "@helpers/styles";
+import { selectUserType } from "@store/userSlice";
+import useAppSelector from "@hooks/useAppSelector";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,19 +21,14 @@ const PostedJobDetails = () => {
 	const { jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus } = useLocalSearchParams();
 	// console.log("Jobstage: " + jobStage);
 	// console.log("Bidstage: " + bidStage);
-	const userType = useContext(UserTypeContext);
+	const userType = useAppSelector(selectUserType);
 	return (
 		<>
 			<PageHeader pageName="Job" />
 			<PostedJobProgressStatus jobStage={jobStage} bidStage={bidStage} />
 			<View style={[styles.container]}>
 				<ScrollView contentContainerStyle={styles.contentContainer}>
-					<View
-						style={[
-							styles.summaryTitleContainer,
-							userType.type === USER_TYPE.SERVICE_PROVIDER && bidStage !== "Initial" && { paddingTop: 0 },
-						]}
-					>
+					<View style={[styles.summaryTitleContainer, userType === "SERVICE_PROVIDER" && bidStage !== "Initial" && { paddingTop: 0 }]}>
 						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Job Title</Text>
 							<Text style={styles.summarySubTitle}>Need to Repair my toilet</Text>
@@ -57,9 +51,8 @@ const PostedJobDetails = () => {
 						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Job Description</Text>
 							<Text style={styles.summarySubTitle}>
-								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate aspernatur facere at minus nobis!
-								Nisi, cumque eveniet facere repellat suscipit, voluptatum modi tempore laboriosam possimus harum
-								molestiae perspiciatis ipsam accusantium.
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate aspernatur facere at minus nobis! Nisi, cumque eveniet facere repellat suscipit, voluptatum modi tempore laboriosam
+								possimus harum molestiae perspiciatis ipsam accusantium.
 							</Text>
 						</View>
 					</View>
@@ -75,7 +68,7 @@ const PostedJobDetails = () => {
 					</View>
 
 					<View>
-						{userType.type === USER_TYPE.NORMAL ? (
+						{userType === "NORMAL" ? (
 							<View style={styles.summaryTitleContainer}>
 								<View style={styles.summaryTitleSubContainer}>
 									<Text style={styles.summaryTitle}>Address</Text>
@@ -83,9 +76,7 @@ const PostedJobDetails = () => {
 								</View>
 							</View>
 						) : (
-							<View
-								style={[styles.summaryTitleContainer, styles.twoInOneTitleContainer, styles.lastSummaryTitleContainer]}
-							>
+							<View style={[styles.summaryTitleContainer, styles.twoInOneTitleContainer, styles.lastSummaryTitleContainer]}>
 								<View style={styles.summaryTitleSubContainer}>
 									<Text style={styles.summaryTitle}>Budget</Text>
 									<Text style={styles.summarySubTitle}>

@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { LinkProps, useNavigation } from "expo-router";
 import colors from "../../src/helpers/colors";
 import { compactStyles } from "@helpers/styles";
@@ -7,12 +6,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import RewardIcon from "@assets/images/reward.svg";
 import MenuHeader from "@components/MenuHeader";
 import HomeCarousel from "@components/HomeCarousel";
-import React, { ReactElement, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, ImageBackground, ScrollView, Dimensions, FlatListProps, ImagePropsBase, ImageSourcePropType } from "react-native";
+import React, { ReactElement, useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
 
 import { Bid, PostedBid } from "./Bids";
-import { UserTypeContext } from "@context/UserTypeProvider";
-import USER_TYPE from "@constants/UserType";
+import { selectUserType } from "@store/userSlice";
+import useAppSelector from "@hooks/useAppSelector";
 
 const HomeCard1 = require("@assets/images/homeCard1.png");
 const HomeCard2 = require("@assets/images/homeCard2.png");
@@ -51,7 +50,7 @@ export default function Home() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [notificationPresent, setNotificationPresent] = useState(false);
 
-	const { type: userType } = useContext(UserTypeContext);
+	const userType = useAppSelector(selectUserType);
 
 	const navigation = useNavigation();
 
@@ -103,7 +102,7 @@ export default function Home() {
 						<HomeCarousel data={swipeData} />
 					</View>
 
-					{userType === USER_TYPE.SERVICE_PROVIDER && (
+					{userType === "SERVICE_PROVIDER" && (
 						<View style={styles.recommendedContainer}>
 							<View style={styles.recommendedHeader}>
 								<Text style={styles.recommendedTitle}>Recommended</Text>
