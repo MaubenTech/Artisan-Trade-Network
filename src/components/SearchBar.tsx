@@ -7,13 +7,14 @@ import { View, StyleSheet, TextInput, StyleProp, RegisteredStyle, ViewStyle } fr
 
 interface SearchBarProps {
     style?: StyleProp<ViewStyle>;
+    placeholder?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ style }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ style, placeholder }) => {
     return (
         <View style={[styles.searchBarContainer, style]}>
             <Ionicons name="search" size={20} color={colors.brownShade} />
-            <TextInput style={styles.searchBar} placeholder="Search your keyword"></TextInput>
+            <TextInput style={styles.searchBar} placeholder={placeholder ? placeholder : "Search your keyword"}></TextInput>
         </View>
     );
 };
