@@ -1,9 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice";
+import authReducer from "./authSlice";
+import userReducer from "./usersSlice";
+import jobReducer from "./jobsSlice";
+import bidReducer from "./bidsSlice";
+import reviewReducer from "./reviewsSlice";
+import serviceReducer from "./servicesSlice";
 
 const store = configureStore({
 	reducer: {
-		user: userReducer,
+		auth: authReducer,
+		users: userReducer,
+		jobs: jobReducer,
+		bids: bidReducer,
+		reviews: reviewReducer,
+		services: serviceReducer,
 	},
 });
 
