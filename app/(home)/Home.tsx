@@ -10,7 +10,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
 
 import { Bid, PostedBid } from "./Bids";
-import { selectUserType } from "@store/userSlice";
+import { selectCurrentUser } from "@store/usersSlice";
 import useAppSelector from "@hooks/useAppSelector";
 
 const HomeCard1 = require("@assets/images/homeCard1.png");
@@ -50,7 +50,7 @@ export default function Home() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [notificationPresent, setNotificationPresent] = useState(false);
 
-	const userType = useAppSelector(selectUserType);
+	const { nickName, type: userType } = useAppSelector(selectCurrentUser);
 
 	const navigation = useNavigation();
 
@@ -95,7 +95,7 @@ export default function Home() {
 				<View style={styles.contentSection}>
 					<View style={styles.salutationContainer}>
 						<Text style={styles.salutationText}>Hello</Text>
-						<Text style={styles.userName}>Nonso</Text>
+						<Text style={styles.userName}>{nickName ?? "Unknown"}</Text>
 					</View>
 
 					<View style={styles.cardSection}>
