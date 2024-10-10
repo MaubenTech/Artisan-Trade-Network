@@ -7,7 +7,7 @@ interface Review {
 	jobId: string;
 	rating: number;
 	comment: string;
-	createdAt: Date;
+	createdAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 }
 
 interface ArtisanReview {
@@ -29,7 +29,7 @@ const initialState: ArtisanReview = {
 			jobId: "1",
 			rating: 5,
 			comment: "Nice job!",
-			createdAt: new Date(),
+			createdAt: new Date().toString(),
 		},
 		{
 			_id: "1",
@@ -38,7 +38,7 @@ const initialState: ArtisanReview = {
 			jobId: "1",
 			rating: 3,
 			comment: "You wasted my time, hence the 3 stars.",
-			createdAt: new Date(),
+			createdAt: new Date().toString(),
 		},
 		{
 			_id: "1",
@@ -47,7 +47,7 @@ const initialState: ArtisanReview = {
 			jobId: "1",
 			rating: 1,
 			comment: "This was a total waste of money!!",
-			createdAt: new Date(),
+			createdAt: new Date().toString(),
 		},
 	],
 };
