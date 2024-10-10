@@ -17,8 +17,8 @@ interface Job {
 	];
 	userId: string;
 	status: JobStatus;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
+	updatedAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 }
 
 const initialState: Job = {
@@ -37,8 +37,8 @@ const initialState: Job = {
 	],
 	userId: "1",
 	status: "Posted",
-	createdAt: new Date(),
-	updatedAt: new Date(),
+	createdAt: new Date().toString(),
+	updatedAt: new Date().toString(),
 };
 
 const jobSlice = createSlice({
