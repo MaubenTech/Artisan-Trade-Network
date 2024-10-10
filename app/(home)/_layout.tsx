@@ -8,7 +8,7 @@ import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { compactStyles } from "@helpers/styles";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import useAppSelector from "@hooks/useAppSelector";
-import { selectUserType } from "@store/userSlice";
+import { selectCurrentUser } from "@store/usersSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,7 +22,7 @@ type BottomTabProps = {
 export const CustomTabBar = (props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) => {
 	const { onPress, accessibilityState, iconName, text } = props;
 	const focused = accessibilityState.selected;
-	const userType = useAppSelector(selectUserType);
+	const { type: userType } = useAppSelector(selectCurrentUser);
 
 	const conditionalButtonStyles =
 		userType === "NORMAL"
@@ -47,7 +47,7 @@ export default function Layout() {
 	const navigation = useNavigation();
 	const router = useRouter();
 	// const [activeIndex, setActiveIndex] = useState(0);
-	const userType = useAppSelector(selectUserType);
+	const { type: userType } = useAppSelector(selectCurrentUser);
 
 	const conditionalTabBarStyles =
 		userType === "NORMAL"

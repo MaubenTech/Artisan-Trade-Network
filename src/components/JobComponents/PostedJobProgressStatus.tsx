@@ -5,11 +5,11 @@ import ProgressBar from "@components/ProgressBar";
 import { JobStatus } from "app/(home)/Jobs";
 import { BidStatus } from "app/(home)/Bids";
 import useAppSelector from "@hooks/useAppSelector";
-import { selectUserType } from "@store/userSlice";
+import { selectCurrentUser } from "@store/usersSlice";
 
 const PostedJobProgressStatus = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const userType = useAppSelector(selectUserType);
+	const { type: userType } = useAppSelector(selectCurrentUser);
 	const isServiceProvider = userType === "SERVICE_PROVIDER";
 
 	const denominator = isServiceProvider ? 4 : 3;

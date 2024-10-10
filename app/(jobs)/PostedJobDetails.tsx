@@ -11,8 +11,8 @@ import BottomModal from "@components/JobComponents/PostedJobBottomModal";
 import PostedJobProgressStatus from "@components/JobComponents/PostedJobProgressStatus";
 import LocationIcon from "@assets/icons/services/locationIcon.svg";
 import { compactStyles } from "@helpers/styles";
-import { selectUserType } from "@store/userSlice";
 import useAppSelector from "@hooks/useAppSelector";
+import { selectCurrentUser } from "@store/usersSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -21,7 +21,7 @@ const PostedJobDetails = () => {
 	const { jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus } = useLocalSearchParams();
 	// console.log("Jobstage: " + jobStage);
 	// console.log("Bidstage: " + bidStage);
-	const userType = useAppSelector(selectUserType);
+	const { type: userType } = useAppSelector(selectCurrentUser);
 	return (
 		<>
 			<PageHeader pageName="Job" />

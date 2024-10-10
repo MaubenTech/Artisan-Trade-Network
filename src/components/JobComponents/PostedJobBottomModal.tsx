@@ -9,7 +9,7 @@ import colors from "@helpers/colors";
 import { compactStyles } from "@helpers/styles";
 import useKeyboardHeight from "@helpers/useKeyboardHeight";
 import useAppSelector from "@hooks/useAppSelector";
-import { selectUserType } from "@store/userSlice";
+import { selectCurrentUser } from "@store/usersSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -89,7 +89,7 @@ const SPActive = () => (
 const SPCompleted = () => {};
 
 const BottomModal = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus }) => {
-	const userType = useAppSelector(selectUserType);
+	const { type: userType } = useAppSelector(selectCurrentUser);
 
 	if (userType == "NORMAL") {
 		switch (jobStage) {

@@ -10,12 +10,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NotificationPresent from "@assets/images/notificationPresent.svg";
 import { View, StyleSheet, Platform, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import useAppSelector from "@hooks/useAppSelector";
-import { selectUserType } from "@store/userSlice";
+import { selectCurrentUser } from "@store/usersSlice";
 
 const ios = Platform.OS == "ios";
 const MenuHeader = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const userType = useAppSelector(selectUserType);
+	const { type: userType } = useAppSelector(selectCurrentUser);
 
 	const { top } = useSafeAreaInsets();
 	return (
