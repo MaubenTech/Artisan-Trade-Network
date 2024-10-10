@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import Checkbox from "expo-checkbox";
 import colors from "@helpers/colors";
 import { compactStyles } from "@helpers/styles";
@@ -13,6 +13,8 @@ import FacebookIcon from "@assets/images/facebook.svg";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet, View, TouchableWithoutFeedback, TouchableOpacity, Dimensions, ScrollView, SafeAreaView, Platform, StatusBar } from "react-native";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { userLoggedIn } from "@store/authSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,6 +27,9 @@ const index = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
+
+	const router = useRouter();
+	const dispatch = useAppDispatch();
 
 	return (
 		<SafeAreaView style={[styles.container, { paddingTop: android ? top : 0, paddingBottom: android ? bottom : 0 }]}>
@@ -43,7 +48,7 @@ const index = () => {
 					</View>
 					<View style={[styles.userInputSubContainer]}>
 						<Text style={[styles.userInputLabel]}>Password</Text>
-						<TextInput style={[styles.userInput]} />
+						<TextInput style={[styles.userInput]} value={password} onChangeText={setPassword} secureTextEntry />
 					</View>
 				</View>
 				<View style={[styles.optionsContainer]}>
@@ -55,7 +60,14 @@ const index = () => {
 						<Text style={[styles.infoText]}>Forgot Password</Text>
 					</TouchableOpacity>
 				</View>
-				<ButtonGroup positiveOption="Login" href={"/Home"} />
+				<ButtonGroup
+					positiveOption="Login"
+					href={"/Home"}
+					onPress={() => {
+						dispatch(userLoggedIn({ email, password }));
+						router.navigate("/Home");
+					}}
+				/>
 			</View>
 			<View style={[styles.componentContainer, styles.otherLoginContainer]}>
 				<Text style={[styles.infoText]}>Or Login with</Text>
