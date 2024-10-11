@@ -1,13 +1,17 @@
 import React from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import colors from "../../../src/helpers/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text } from "../../../src/components/Text";
 import MenuHeader from "../../../src/components/MenuHeader";
 import PageHeader from "../../../src/components/PageHeader";
 import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { userLoggedOut } from "@store/authSlice";
 
 const Profile = () => {
+    const router = useRouter();
+    const dispatch = useAppDispatch();
     return (
         <View style={styles.container}>
             <PageHeader pageName="Profile" profile />
@@ -52,7 +56,12 @@ const Profile = () => {
                         </TouchableOpacity>
                     </Link>
                     <Link style={styles.profileLinks} asChild href={"#"}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                dispatch(userLoggedOut());
+                                router.navigate("/");
+                            }}
+                        >
                             <View style={styles.profileLinksIconContainer}>
                                 <Ionicons name="log-out-outline" size={20} color={"white"} />
                             </View>
