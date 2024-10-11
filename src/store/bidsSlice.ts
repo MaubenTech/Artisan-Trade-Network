@@ -8,7 +8,7 @@ interface Bid {
 	bidPrice: number;
 	description: string;
 	status: BidStatus;
-	createdAt: Date;
+	createdAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 }
 
 const initialState: Bid[] = [
@@ -19,7 +19,7 @@ const initialState: Bid[] = [
 		bidPrice: 50000,
 		description: "A bid for a job",
 		status: "Pending",
-		createdAt: new Date(),
+		createdAt: new Date().toString(),
 	},
 	{
 		_id: "2",
@@ -28,7 +28,7 @@ const initialState: Bid[] = [
 		bidPrice: 50000,
 		description: "A bid for a second job",
 		status: "Pending",
-		createdAt: new Date(),
+		createdAt: new Date().toString(),
 	},
 ];
 
