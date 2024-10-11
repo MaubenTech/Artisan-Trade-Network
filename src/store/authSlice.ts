@@ -20,7 +20,10 @@ const authSlice = createSlice({
 			state.email = email;
 			state.password = password;
 		},
-		userLoggedOut() {},
+		userLoggedOut(state) {
+			state.email = "";
+			state.password = '';
+		},
 	},
 	selectors: {
 		selectUserEmail: (state: AuthState) => state.email,
