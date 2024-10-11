@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { getData } from "@helpers/APIFunction";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { JobStatus } from "app/(home)/Jobs";
 
 export interface Job {
@@ -20,6 +21,11 @@ export interface Job {
 	createdAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 	updatedAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 }
+
+const fetchJobs = createAsyncThunk('jobs/FetchJobs', async () => {
+	const jobs = await getData('/jobs');
+	return jobs;
+})
 
 const initialState: Job[] = [{
 	_id: "1",
