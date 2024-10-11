@@ -22,12 +22,21 @@ export interface Job {
 	updatedAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 }
 
-const fetchJobs = createAsyncThunk('jobs/FetchJobs', async () => {
-	const jobs = await getData('/jobs');
+export const fetchJobs = createAsyncThunk<Job[], void>('jobs/FetchJobs', async () => {
+	const jobs = await getData<Job[]>('/jobs');
 	return jobs;
 })
 
-const initialState: Job[] = [{
+const jobs = getData('/jobs');
+console.log('Jobs:', jobs);
+
+interface JobState{
+	jobs: Job[];
+	loading: boolean;
+	error: string | null;
+}
+
+const dummyJob: Job[] = [{
 	_id: "1",
 	title: "IDK",
 	type: "Mechanic",
@@ -47,10 +56,33 @@ const initialState: Job[] = [{
 	updatedAt: new Date().toString(),
 }];
 
+const initialState: JobState = {
+	jobs: [
+		...dummyJob
+	],
+	loading: false,
+	error: null,
+}
+
 const jobSlice = createSlice({
-	name: "job",
+	name: "jobs",
 	initialState,
 	reducers: {},
+	extraReducers(builder) {
+		builder
+			.addCase(fetchJobs.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchJobs.fulfilled, (state, action) => {
+				state.jobs = action.payload
+			})
+			.addCase(fetchJobs.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message || 'Failed to fetch Jobs'
+				console.error('Failed to fetch Jobs');
+			})
+	},
 });
 
 export const {} = jobSlice.actions;

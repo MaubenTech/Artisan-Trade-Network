@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "../../src/components/SearchBar";
 import MenuHeader from "../../src/components/MenuHeader";
 import { compactStyles } from "../../src/helpers/styles";
@@ -6,6 +6,11 @@ import FilterComponent from "../../src/components/FilterComponent";
 import PostedJob from "../../src/components/JobComponents/PostedJob";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
 import useAppSelector from "@hooks/useAppSelector";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { fetchJobs } from "@store/jobsSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@store";
+import { Text } from "@components/Text";
 
 const { width, height } = Dimensions.get("window");
 
@@ -42,7 +47,13 @@ const jobs: Job[] = [
 const Jobs = () => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const jobs = useAppSelector((state) => state.jobs);
+    const { jobs, loading, error } = useAppSelector((state) => state.jobs);
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        dispatch(fetchJobs());
+    }, [dispatch]);
 
     const [filterOption, setFilterOption] = useState<string | number>("All");
 
@@ -75,6 +86,8 @@ const Jobs = () => {
                 </View>
                 <View style={styles.jobContainer}>
                     {/* <PostedJobs /> */}
+                    {loading && <Text>Loading...</Text>}
+                    {error && <Text> Error Fetching Jobs: {error}</Text>}
                     {jobs.map((job, index) => (
                         <PostedJob job={job} key={index} />
                     ))}
