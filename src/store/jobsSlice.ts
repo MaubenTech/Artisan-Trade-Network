@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { JobStatus } from "app/(home)/Jobs";
 
-interface Job {
+export interface Job {
 	_id: string;
-	jobtitle: string;
-	jobtype: string;
-	jobdescription: string;
+	title: string;
+	type: string;
+	description: string;
 	budget: string;
 	address: string;
 	service: string;
@@ -21,11 +21,11 @@ interface Job {
 	updatedAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
 }
 
-const initialState: Job = {
+const initialState: Job[] = [{
 	_id: "1",
-	jobtitle: "IDK",
-	jobtype: "Mechanic",
-	jobdescription: "Well well well",
+	title: "IDK",
+	type: "Mechanic",
+	description: "Well well well",
 	budget: "50000",
 	address: "No 1 Two Street, Three City, Four State",
 	service: "A very good service",
@@ -39,7 +39,7 @@ const initialState: Job = {
 	status: "Posted",
 	createdAt: new Date().toString(),
 	updatedAt: new Date().toString(),
-};
+}];
 
 const jobSlice = createSlice({
 	name: "job",
