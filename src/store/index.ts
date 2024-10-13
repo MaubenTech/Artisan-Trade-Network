@@ -5,6 +5,7 @@ import jobReducer from "./jobsSlice";
 import bidReducer from "./bidsSlice";
 import reviewReducer from "./reviewsSlice";
 import serviceReducer from "./servicesSlice";
+import notificationReducer from "./notificationsSlice";
 
 const store = configureStore({
 	reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
 		bids: bidReducer,
 		reviews: reviewReducer,
 		services: serviceReducer,
+		notifications: notificationReducer,
 	},
 });
 
