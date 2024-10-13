@@ -5,75 +5,76 @@ import colors from "@helpers/colors";
 import PageHeader from "@components/PageHeader";
 import { Text } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
+import { BidNotificationState, MessageNotificationState } from "@store/notificationsSlice";
+import useAppSelector from "@hooks/useAppSelector";
 
 const { width, height } = Dimensions.get("window");
 
+const BidNotification = ({ fromName, bid, serviceCategory, time, isRead }: BidNotificationState) => {
+	return (
+		<TouchableOpacity style={styles.notification}>
+			<View style={styles.jobPicture}>
+				<ProfilePicture />
+			</View>
+			<View style={styles.applicationDetailContainer}>
+				<View style={styles.top}>
+					<View style={styles.notificationDetailHeader}>
+						<Text style={styles.fromName}>{fromName}</Text>
+						<Text style={styles.time}>{time}</Text>
+					</View>
+					<View style={styles.subTextContainer}>
+						<Text style={styles.jobDetailContent}>Bid: {bid}</Text>
+						<Text style={styles.jobServiceCategory}>{serviceCategory}</Text>
+					</View>
+				</View>
+				<View style={styles.bottom}>
+					<View style={styles.buttonContainer}>
+						<TouchableOpacity style={[styles.button, styles.declineButton]}>
+							<Text style={styles.buttonText}>Decline</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={[styles.button, styles.acceptButton]}>
+							<Text style={styles.buttonText}>Accept</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</View>
+		</TouchableOpacity>
+	);
+};
+
+const MessageNotification = ({ fromName, time, isRead }: MessageNotificationState) => {
+	return (
+		<TouchableOpacity style={styles.notification}>
+			<View style={styles.jobPicture}>
+				<ProfilePicture />
+			</View>
+			<View style={styles.applicationDetailContainer}>
+				<View style={styles.top}>
+					<View style={styles.notificationDetailHeader}>
+						<Text style={styles.fromName}>{fromName}</Text>
+						<Text style={styles.time}>{time}</Text>
+					</View>
+					<View style={styles.subTextContainer}>
+						<Text style={styles.jobDetailContent}>Messaged you</Text>
+					</View>
+				</View>
+			</View>
+		</TouchableOpacity>
+	);
+};
+
 const Notifications = () => {
-	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const notifications = useAppSelector((state) => state.notifications);
 	return (
 		<>
 			<PageHeader pageName="Notifications" />
 			<View style={styles.container}>
-				<View style={styles.notificationContainer}>
-					<TouchableOpacity style={styles.notification}>
-						<View style={styles.jobPicture}>
-							<ProfilePicture />
-						</View>
-						<View style={styles.applicationDetailContainer}>
-							<View style={styles.top}>
-								<View style={styles.notificationDetailHeader}>
-									<Text style={styles.fromName}>Drew Berry</Text>
-									<Text style={styles.time}>12:30 pm</Text>
-								</View>
-								<View style={styles.subTextContainer}>
-									<Text style={styles.jobDetailContent}>Bid: 50,000</Text>
-									<Text style={styles.jobServiceCategory}>Carpenter</Text>
-								</View>
-							</View>
-							<View style={styles.bottom}>
-								<View style={styles.buttonContainer}>
-									<TouchableOpacity style={[styles.button, styles.declineButton]}>
-										<Text style={styles.buttonText}>Decline</Text>
-									</TouchableOpacity>
-									<TouchableOpacity style={[styles.button, styles.acceptButton]}>
-										<Text style={styles.buttonText}>Accept</Text>
-									</TouchableOpacity>
-								</View>
-							</View>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.notification}>
-						<View style={styles.jobPicture}>
-							<ProfilePicture />
-						</View>
-						<View style={styles.applicationDetailContainer}>
-							<View style={styles.top}>
-								<View style={styles.notificationDetailHeader}>
-									<Text style={styles.fromName}>Drew Berry</Text>
-									<Text style={styles.time}>12:30 pm</Text>
-								</View>
-								<View style={styles.subTextContainer}>
-									<Text style={styles.jobDetailContent}>Messaged you</Text>
-									{/* <Text style={styles.jobServiceCategory}>Carpenter</Text> */}
-								</View>
-							</View>
-							{/* <View style={styles.bottom}>
-								<View style={styles.buttonContainer}>
-									<TouchableOpacity
-										style={[styles.button, styles.declineButton]}
-									>
-										<Text style={styles.buttonText}>Decline</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										style={[styles.button, styles.acceptButton]}
-									>
-										<Text style={styles.buttonText}>Accept</Text>
-									</TouchableOpacity>
-								</View>
-							</View> */}
-						</View>
-					</TouchableOpacity>
-				</View>
+				<View style={styles.notificationContainer}></View>
+				{notifications.map(
+					(notification, index) =>
+						(notification.type === "BID" && <BidNotification {...notification} key={index} />) || //
+						(notification.type === "MESSAGE" && <MessageNotification {...notification} key={index} />)
+				)}
 			</View>
 		</>
 	);
@@ -178,3 +179,5 @@ const androidStyles = StyleSheet.create({
 });
 
 const iosStyles = StyleSheet.create({});
+
+const styles = compactStyles(generalStyles, androidStyles, iosStyles);
