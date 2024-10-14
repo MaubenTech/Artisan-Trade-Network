@@ -9,7 +9,7 @@ import HomeCarousel from "@components/HomeCarousel";
 import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
 
-import { Bid, PostedBid } from "./Bids";
+import { BidJob, PostedBid } from "./Bids";
 import { selectCurrentUser } from "@store/usersSlice";
 import useAppSelector from "@hooks/useAppSelector";
 
@@ -29,20 +29,20 @@ export interface SwipeData extends LinkProps<string> {
 	secondIcon?: ReactElement<any, any>;
 }
 
-const recommendedJobs: Bid[] = [
+const recommendedJobs: BidJob[] = [
 	{
-		jobTitle: "Need to repair my toilet",
-		jobServiceCategory: "Maintenance",
-		jobDetail: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
-		jobPrice: "50,000 - 70,000",
-		jobDate: "Posted 2 hours ago",
+		title: "Need to repair my toilet",
+		service: "Maintenance",
+		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		createdAt: "Posted 2 hours ago",
 	},
 	{
-		jobTitle: "Need to repair my toilet again",
-		jobServiceCategory: "Maintenance",
-		jobDetail: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
-		jobPrice: "50,000 - 70,000",
-		jobDate: "Posted 2 hours ago",
+		title: "Need to repair my toilet again",
+		service: "Maintenance",
+		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		createdAt: "Posted 2 hours ago",
 	},
 ];
 
@@ -110,7 +110,7 @@ export default function Home() {
 							</View>
 							<View style={styles.recommendedJobContainer}>
 								{recommendedJobs.map((recommendedJob, index) => (
-									<PostedBid job={recommendedJob} key={index} containerStyle={styles.recommendedJob} />
+									<PostedBid bid={recommendedJob} key={index} containerStyle={styles.recommendedJob} />
 								))}
 							</View>
 						</View>
