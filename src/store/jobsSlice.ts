@@ -18,8 +18,8 @@ export interface Job {
 	];
 	userId: string;
 	status: JobStatus;
-	createdAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
-	updatedAt: string; //TODO: Check if this property can use the Date type instead of string, to keep formatting, etc.
+	createdAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
+	updatedAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
 }
 
 // export const fetchJobs = createAsyncThunk<Job[], void>("jobs/FetchJobs", async () => {
@@ -39,12 +39,12 @@ interface JobState {
 const dummyJob: Job[] = [
 	{
 		_id: "1",
-		title: "IDK",
-		type: "Mechanic",
-		description: "Well well well",
-		budget: "50000",
+		title: "Need to repair my toilet",
+		type: "Maintenance",
+		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
 		address: "No 1 Two Street, Three City, Four State",
-		service: "A very good service",
+		service: "Plumbering",
 		media: [
 			{
 				url: "nothing_yet",
@@ -53,8 +53,46 @@ const dummyJob: Job[] = [
 		],
 		userId: "1",
 		status: "Posted",
-		createdAt: new Date().toString(),
-		updatedAt: new Date().toString(),
+		createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "2",
+		title: "Need to repair my toilet again",
+		type: "Maintenance",
+		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "3",
+		title: "A new job for anyone",
+		type: "Maintenance",
+		description: "My car is refusing to start. Can someone help me please?",
+		budget: "100,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Mechanic",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "2",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
 	},
 ];
 
@@ -68,6 +106,9 @@ const jobSlice = createSlice({
 	name: "jobs",
 	initialState,
 	reducers: {},
+	selectors: {
+		selectJobById: (state, jobId) => state.jobs.find((job) => job._id === jobId),
+	},
 	// extraReducers: (builder) => {
 	// 	builder
 	// 		.addCase(fetchJobs.pending, (state) => {
@@ -89,5 +130,7 @@ const jobSlice = createSlice({
 });
 
 export const {} = jobSlice.actions;
+
+export const { selectJobById } = jobSlice.selectors;
 
 export default jobSlice.reducer;
