@@ -8,7 +8,7 @@ interface UserState {
 	name: string;
 	nickName: string;
 	email: string;
-	type: "NORMAL" | "SERVICE_PROVIDER";
+	type: "NORMAL" | "ARTISAN";
 }
 
 const initialState: UserState[] = [
@@ -17,7 +17,7 @@ const initialState: UserState[] = [
 		name: "John Doe",
 		nickName: "John",
 		email: "johndoe@gmail.com",
-		type: "SERVICE_PROVIDER",
+		type: "ARTISAN",
 	},
 	{
 		id: 2,
