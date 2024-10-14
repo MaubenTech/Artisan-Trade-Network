@@ -25,25 +25,6 @@ export type Job = {
 	jobDate: string;
 };
 
-const jobs: Job[] = [
-	{
-		jobTitle: "Need to repair my toilet",
-		jobServiceCategory: "Maintenance",
-		jobDetail: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
-		jobStatus: "Posted",
-		jobPrice: "500 - 70,000",
-		jobDate: "11/04/2023",
-	},
-	{
-		jobTitle: "Need to repair my toilet again",
-		jobServiceCategory: "Maintenance",
-		jobDetail: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
-		jobStatus: "Active",
-		jobPrice: "500 - 70,000",
-		jobDate: "11/04/2023",
-	},
-];
-
 const Jobs = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
