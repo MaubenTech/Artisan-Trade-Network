@@ -88,7 +88,7 @@ export default function Home() {
 						<HomeCarousel data={swipeData} />
 					</View>
 
-					{userType === "SERVICE_PROVIDER" && (
+					{userType === "ARTISAN" && (
 						<View style={styles.recommendedContainer}>
 							<View style={styles.recommendedHeader}>
 								<Text style={styles.recommendedTitle}>Recommended</Text>
