@@ -96,7 +96,7 @@ export default function Home() {
 							</View>
 							<View style={styles.recommendedJobContainer}>
 								{recommendedJobs.map((recommendedJob, index) => (
-									<PostedBid bid={recommendedJob} key={index} containerStyle={styles.recommendedJob} />
+									<PostedBid bidJob={recommendedJob} key={index} containerStyle={styles.recommendedJob} />
 								))}
 							</View>
 						</View>

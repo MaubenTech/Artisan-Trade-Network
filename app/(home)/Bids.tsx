@@ -14,7 +14,7 @@ import { compactStyles } from "@helpers/styles";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectJobById } from "@store/jobsSlice";
 import { formatDistance, formatDistanceToNow, sub } from "date-fns";
-import { selectBidJobByBidId } from "@store/bidsSlice";
+import { selectBidJobByBidId, selectBidJobs } from "@store/bidsSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,36 +30,36 @@ export type BidJob = {
 
 export type BidStatus = "Initial" | "Bid" | "Pending" | "Active" | "Completed";
 
-export const PostedBid = ({ bid, containerStyle }: { bid: BidJob; containerStyle?: StyleProp<ViewStyle> }) => {
-	const timeAgo = formatDistanceToNow(bid.createdAt, { addSuffix: true });
+export const PostedBid = ({ bidJob, containerStyle }: { bidJob: BidJob; containerStyle?: StyleProp<ViewStyle> }) => {
+	const timeAgo = formatDistanceToNow(bidJob.createdAt, { addSuffix: true });
 
 	return (
 		<Link href={"/PostedJobDetails"} style={[styles.job, containerStyle]} asChild>
-			<TouchableOpacity key={bid.title}>
+			<TouchableOpacity key={bidJob.title}>
 				<View style={styles.jobPicture}>
 					<JobPicture />
 				</View>
 				<View style={styles.jobDetailContainer}>
 					<View style={[styles.jobDetailHeader]}>
 						<Text style={styles.jobDetailText} numberOfLines={1}>
-							{bid.title}
+							{bidJob.title}
 						</Text>
 						<MoreIcon color={"#000"} style={styles.moreIcon} />
 					</View>
 					<View style={styles.jobDetailMiddle}>
 						<View style={styles.jobServiceCategory}>
-							<Text style={styles.jobServiceCategoryText}>{bid.type}</Text>
+							<Text style={styles.jobServiceCategoryText}>{bidJob.type}</Text>
 							<View style={styles.location}>
 								<LocationIcon style={styles.locationIcon} />
 								<Text style={styles.locationText}>20 km</Text>
 							</View>
 						</View>
 						<Text style={styles.jobDetailContent} numberOfLines={2}>
-							{bid.description}
+							{bidJob.description}
 						</Text>
 					</View>
 					<View style={[styles.jobDetailFooter]}>
-						<Text style={styles.jobPriceDetail}>₦ {bid.bidPrice}</Text>
+						<Text style={styles.jobPriceDetail}>₦ {bidJob.bidPrice}</Text>
 						<Text style={styles.jobDate}>Posted {timeAgo}</Text>
 					</View>
 				</View>
@@ -70,7 +70,7 @@ export const PostedBid = ({ bid, containerStyle }: { bid: BidJob; containerStyle
 
 export default function Bids() {
 	const [filterOption, setFilterOption] = useState<string | number>("All");
-	const bids = useAppSelector((state) => state.bids);
+	const bidJobs = useAppSelector(selectBidJobs);
 
 	const filterOptions = [
 		{
@@ -100,11 +100,8 @@ export default function Bids() {
 					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
 				</View>
 				<ScrollView style={styles.componentContainer} contentContainerStyle={styles.componentContentContainer}>
-					{bids.map((bid, index) => {
-						const job = useAppSelector((state) => selectBidJobByBidId(state, bid._id));
-						const bidJob: BidJob = { ...job, ...bid };
-						// const bidJob = useAppSelector((state) => selectBidJobByBidId(state, bid._id));
-						return <PostedBid key={index} bid={bidJob} />;
+					{bidJobs.map((bidJob, index) => {
+						return <PostedBid key={index} bidJob={bidJob} />;
 					})}
 				</ScrollView>
 			</View>
