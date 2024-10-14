@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { selectUserEmail } from "./authSlice";
+import { selectCurrentUserEmail } from "./authSlice";
 import { RootState } from "@store";
 import createAppSelector from "@hooks/createAppSelector";
 
@@ -40,31 +40,32 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {},
 	selectors: {
+		selectUsers: (users: UserState[]) => users,
 		selectUserById: (users: UserState[], userId: number) => users.find((user) => user.id === userId),
-		selectUserByEmail: (users: UserState[], userEmail: string) => users.find((user) => user.email === userEmail),
 	},
 });
 
 export const {} = userSlice.actions;
 
-export const { selectUserById, selectUserByEmail } = userSlice.selectors;
+export const { selectUsers, selectUserById } = userSlice.selectors;
 
-export const selectAllUsers = (state: RootState) => state.users;
+// export const selectUserByEmail = (users: UserState[], userEmail: string) => users.find((user) => user.email === userEmail);
 
-// export const selectUserByEmail = (state: RootState, userEmail: string) => state.users.find((user) => user.email === userEmail);
+// export const selectUserByEmail = createAppSelector([selectUsers, (_, userEmail: string) => userEmail], (users, userEmail) => users.find((user) => user.email === userEmail));
 
-// export const selectCurrentUser = (state: RootState): Partial<UserState> => {
-// 	const email = selectUserEmail(state);
-// 	// const password = selectUserPassword(state);
+export const selectUserByEmail = (stateOrUsers: RootState | UserState[], email: string): UserState | null => {
+	// Check if the first argument is the full RootState
+	if ("users" in stateOrUsers) {
+		return stateOrUsers.users.find((user) => user.email === email) || null;
+	} else {
+		// If it's just the users slice (UserState[])
+		return stateOrUsers.find((user) => user.email === email) || null;
+	}
+};
 
-// 	return (
-// 		selectUserByEmail(state, email) ?? {
-// 			type: "NORMAL",
-// 		}
-// 	);
-// };\
+export const selectCurrentUser = createAppSelector([selectUsers, selectCurrentUserEmail], (users, userEmail) => selectUserByEmail(users, userEmail) || { nickName: "Unknown", type: "NORMAL" });
+//FIXME: Input selectors should never use state => state as said by redux! https://redux.js.org/usage/deriving-data-selectors#optimizing-selectors-with-memoization:~:text=Similarly%2C%20a%20memoized%20selector%20should%20never%20use%20state%20%3D%3E%20state%20as%20an%20input!%20That%20will%20force%20the%20selector%20to%20always%20recalculate.
 
-export const selectCurrentUser = createAppSelector([(state: RootState) => state, selectUserEmail], (state, email) => selectUserByEmail(state, email) ?? { type: "NORMAL" });
 //TODO: When you actually start getting the current user, the selector should no longer be memoized as it will return a consistent reference. I'm memoizing just because of the new object returned if selectUserByEmail returns null or undefined
 
 export default userSlice.reducer;
