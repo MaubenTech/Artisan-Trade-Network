@@ -14,6 +14,7 @@ import { compactStyles } from "@helpers/styles";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectJobById } from "@store/jobsSlice";
 import { formatDistance, formatDistanceToNow, sub } from "date-fns";
+import { selectBidJobByBidId } from "@store/bidsSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -40,7 +41,9 @@ export const PostedBid = ({ bid, containerStyle }: { bid: BidJob; containerStyle
 				</View>
 				<View style={styles.jobDetailContainer}>
 					<View style={[styles.jobDetailHeader]}>
-						<Text style={styles.jobDetailText}>{bid.title}</Text>
+						<Text style={styles.jobDetailText} numberOfLines={1}>
+							{bid.title}
+						</Text>
 						<MoreIcon color={"#000"} style={styles.moreIcon} />
 					</View>
 					<View style={styles.jobDetailMiddle}>
@@ -96,13 +99,14 @@ export default function Bids() {
 				<View style={styles.filterComponentContainer}>
 					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
 				</View>
-				<View style={styles.componentContainer}>
+				<ScrollView style={styles.componentContainer} contentContainerStyle={styles.componentContentContainer}>
 					{bids.map((bid, index) => {
-						const job = useAppSelector((state) => selectJobById(state, bid.jobId));
+						const job = useAppSelector((state) => selectBidJobByBidId(state, bid._id));
 						const bidJob: BidJob = { ...job, ...bid };
+						// const bidJob = useAppSelector((state) => selectBidJobByBidId(state, bid._id));
 						return <PostedBid key={index} bid={bidJob} />;
 					})}
-				</View>
+				</ScrollView>
 			</View>
 		</>
 	);
@@ -115,7 +119,13 @@ const generalStyles = StyleSheet.create({
 		backgroundColor: colors.white,
 	},
 
-	componentContainer: {},
+	componentContainer: {
+		marginTop: 20,
+	},
+
+	componentContentContainer: {
+		marginTop: -20,
+	},
 
 	searchBarContainer: {
 		paddingHorizontal: 20,

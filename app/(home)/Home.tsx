@@ -12,6 +12,7 @@ import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "r
 import { BidJob, PostedBid } from "./Bids";
 import { selectCurrentUser } from "@store/usersSlice";
 import useAppSelector from "@hooks/useAppSelector";
+import { selectRecommendedBidJobs } from "@store/bidsSlice";
 
 const HomeCard1 = require("@assets/images/homeCard1.png");
 const HomeCard2 = require("@assets/images/homeCard2.png");
@@ -29,23 +30,6 @@ export interface SwipeData extends LinkProps<string> {
 	secondIcon?: ReactElement<any, any>;
 }
 
-const recommendedJobs: BidJob[] = [
-	{
-		title: "Need to repair my toilet",
-		service: "Maintenance",
-		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
-		budget: "50,000 - 70,000",
-		createdAt: "Posted 2 hours ago",
-	},
-	{
-		title: "Need to repair my toilet again",
-		service: "Maintenance",
-		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
-		budget: "50,000 - 70,000",
-		createdAt: "Posted 2 hours ago",
-	},
-];
-
 export default function Home() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [notificationPresent, setNotificationPresent] = useState(false);
@@ -53,6 +37,8 @@ export default function Home() {
 	const { nickName, type: userType } = useAppSelector(selectCurrentUser);
 
 	const navigation = useNavigation();
+
+	const recommendedJobs = useAppSelector(selectRecommendedBidJobs);
 
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (event) => {
@@ -95,7 +81,7 @@ export default function Home() {
 				<View style={styles.contentSection}>
 					<View style={styles.salutationContainer}>
 						<Text style={styles.salutationText}>Hello</Text>
-						<Text style={styles.userName}>{nickName ?? "Unknown"}</Text>
+						<Text style={styles.userName}>{nickName}</Text>
 					</View>
 
 					<View style={styles.cardSection}>

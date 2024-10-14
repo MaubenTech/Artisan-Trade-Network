@@ -4,7 +4,7 @@ import MenuHeader from "../../src/components/MenuHeader";
 import { compactStyles } from "../../src/helpers/styles";
 import FilterComponent from "../../src/components/FilterComponent";
 import PostedJob from "../../src/components/JobComponents/PostedJob";
-import { View, StyleSheet, Dimensions, Platform } from "react-native";
+import { View, StyleSheet, Dimensions, Platform, ScrollView } from "react-native";
 import useAppSelector from "@hooks/useAppSelector";
 import useAppDispatch from "@hooks/useAppDispatch";
 // import { fetchJobs } from "@store/jobsSlice";
@@ -28,7 +28,7 @@ export type Job = {
 const Jobs = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-	const { jobs, loading, error } = useAppSelector((state) => state.jobs);
+	const { jobList: jobs, loading, error } = useAppSelector((state) => state.jobs);
 
 	const dispatch = useDispatch<AppDispatch>();
 
@@ -65,14 +65,14 @@ const Jobs = () => {
 				<View style={[styles.componentContainer, styles.filterContainer]}>
 					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
 				</View>
-				<View style={styles.jobContainer}>
+				<ScrollView style={styles.jobContainer} contentContainerStyle={styles.jobContentContainer}>
 					{/* <PostedJobs /> */}
 					{/* {loading && <Text>Loading...</Text>}
                     {error && <Text> Error Fetching Jobs: {error}</Text>} */}
 					{jobs.map((job, index) => (
 						<PostedJob job={job} key={index} />
 					))}
-				</View>
+				</ScrollView>
 			</View>
 		</>
 	);
@@ -99,7 +99,13 @@ const generalStyles = StyleSheet.create({
 		marginTop: 20,
 	},
 
-	jobContainer: {},
+	jobContainer: {
+		marginTop: 20,
+	},
+
+	jobContentContainer: {
+		marginTop: -20,
+	},
 });
 
 const androidStyles = StyleSheet.create({});

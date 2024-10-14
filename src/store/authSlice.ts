@@ -22,16 +22,16 @@ const authSlice = createSlice({
 		},
 		userLoggedOut(state) {
 			state.email = "";
-			state.password = '';
+			state.password = "";
 		},
 	},
 	selectors: {
-		selectUserEmail: (state: AuthState) => state.email,
+		selectCurrentUserEmail: (state: AuthState) => state.email,
 	},
 });
 
 export const { userLoggedIn, userLoggedOut } = authSlice.actions;
 
-export const { selectUserEmail } = authSlice.selectors;
+export const { selectCurrentUserEmail } = authSlice.selectors;
 
 export default authSlice.reducer;
