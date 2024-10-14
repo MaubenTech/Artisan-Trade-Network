@@ -1,5 +1,6 @@
 import { getData } from "@helpers/APIFunction";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "@store";
 import { JobStatus } from "app/(home)/Jobs";
 
 export interface Job {
@@ -31,7 +32,7 @@ export interface Job {
 // console.log("Jobs:", jobs);
 
 interface JobState {
-	jobs: Job[];
+	jobList: Job[];
 	loading: boolean;
 	error: string | null;
 }
@@ -77,7 +78,178 @@ const dummyJob: Job[] = [
 	},
 	{
 		_id: "3",
-		title: "A new job for anyone",
+		title: "A new job for anyone! My car is acting up!",
+		type: "Maintenance",
+		description: "My car is refusing to start. Can someone help me please?",
+		budget: "100,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Mechanic",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "2",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "1",
+		title: "Need to repair my toilet",
+		type: "Maintenance",
+		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "2",
+		title: "Need to repair my toilet again",
+		type: "Maintenance",
+		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "3",
+		title: "A new job for anyone! My car is acting up!",
+		type: "Maintenance",
+		description: "My car is refusing to start. Can someone help me please?",
+		budget: "100,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Mechanic",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "2",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "1",
+		title: "Need to repair my toilet",
+		type: "Maintenance",
+		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "2",
+		title: "Need to repair my toilet again",
+		type: "Maintenance",
+		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "3",
+		title: "A new job for anyone! My car is acting up!",
+		type: "Maintenance",
+		description: "My car is refusing to start. Can someone help me please?",
+		budget: "100,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Mechanic",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "2",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "1",
+		title: "Need to repair my toilet",
+		type: "Maintenance",
+		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "2",
+		title: "Need to repair my toilet again",
+		type: "Maintenance",
+		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		budget: "50,000 - 70,000",
+		address: "No 1 Two Street, Three City, Four State",
+		service: "Plumbering",
+		media: [
+			{
+				url: "nothing_yet",
+				type: "image",
+			},
+		],
+		userId: "1",
+		status: "Posted",
+		createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+		updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+	},
+	{
+		_id: "3",
+		title: "A new job for anyone! My car is acting up!",
 		type: "Maintenance",
 		description: "My car is refusing to start. Can someone help me please?",
 		budget: "100,000",
@@ -97,7 +269,7 @@ const dummyJob: Job[] = [
 ];
 
 const initialState: JobState = {
-	jobs: [...dummyJob],
+	jobList: [...dummyJob],
 	loading: false,
 	error: null,
 };
@@ -107,7 +279,7 @@ const jobSlice = createSlice({
 	initialState,
 	reducers: {},
 	selectors: {
-		selectJobById: (state, jobId) => state.jobs.find((job) => job._id === jobId),
+		selectJobsState: (jobs: JobState) => jobs,
 	},
 	// extraReducers: (builder) => {
 	// 	builder
@@ -131,6 +303,12 @@ const jobSlice = createSlice({
 
 export const {} = jobSlice.actions;
 
-export const { selectJobById } = jobSlice.selectors;
+export const { selectJobsState } = jobSlice.selectors;
+
+export const selectJobById = (stateOrJobs: RootState | JobState, jobId: string): Job => {
+	if ("jobs" in stateOrJobs) {
+		return stateOrJobs.jobs.jobList.find((job) => job._id === jobId);
+	} else return stateOrJobs.jobList.find((job) => job._id === jobId);
+};
 
 export default jobSlice.reducer;
