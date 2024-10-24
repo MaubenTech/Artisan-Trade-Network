@@ -9,12 +9,6 @@ import { selectCurrentUser } from "@store/usersSlice";
 import { selectJobById, selectJobsState } from "@store/jobsSlice";
 
 const PostedJobProgressStatus = ({ jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus }) => {
-    const job = useAppSelector((state) => selectJobById(state, "3"));
-
-    const jobStatus = job.status;
-
-    console.log("User's Job Stage in PostedJobProgressStatus is: " + jobStatus);
-
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
     const { type: userType } = useAppSelector(selectCurrentUser);
     const isServiceProvider = userType === "SERVICE_PROVIDER";
@@ -24,11 +18,11 @@ const PostedJobProgressStatus = ({ jobStage, bidStage }: { jobStage?: JobStatus;
     if (!isServiceProvider) {
         switch (jobStage) {
             case "Posted":
-                return <ProgressBar status={jobStatus} numerator={1} denominator={denominator} showCompleteLevel />;
+                return <ProgressBar status={jobStage} numerator={1} denominator={denominator} showCompleteLevel />;
             case "Active":
-                return <ProgressBar status={jobStatus} numerator={2} denominator={denominator} showCompleteLevel />;
+                return <ProgressBar status={jobStage} numerator={2} denominator={denominator} showCompleteLevel />;
             case "Completed":
-                return <ProgressBar status={jobStatus} numerator={3} denominator={denominator} showCompleteLevel />;
+                return <ProgressBar status={jobStage} numerator={3} denominator={denominator} showCompleteLevel />;
             default:
                 return <></>;
         }
