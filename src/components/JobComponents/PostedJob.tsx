@@ -30,15 +30,14 @@ const setStatusBackgroundColor = (status: JobStatus) => {
 const PostedJob = ({ job }: { job: Job }) => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const jobById = useAppSelector((state) => selectJobById(state, "3"));
-    const jobStage = jobById.status;
+    const jobStage = job.status;
 
-    console.log("User's Job Stage in Posted Job Component is: " + jobStage);
+    console.log("User's Job Stage in Posted Job Component is: " + jobStage + "\n" + "-----------------------------------------");
 
     const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 
     return (
-        <Link style={styles.job} asChild href={{ pathname: "/PostedJobDetails", params: { jobStage, bidStage } }} key={job.title}>
+        <Link style={styles.job} asChild href={{ pathname: "/PostedJobDetails", params: { jobStage, bidStage } }} key={job._id}>
             <TouchableOpacity key={job.title}>
                 <View style={styles.jobPicture}>
                     <JobPicture />

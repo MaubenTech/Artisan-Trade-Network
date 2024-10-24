@@ -91,7 +91,7 @@ const dummyJob: Job[] = [
             },
         ],
         userId: "2",
-        status: "Posted",
+        status: "Active",
         createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
         updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
@@ -110,7 +110,7 @@ const dummyJob: Job[] = [
             },
         ],
         userId: "1",
-        status: "Posted",
+        status: "Completed",
         createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
         updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
