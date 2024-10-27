@@ -5,10 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Text, TextInput } from "@components/Text";
 import PageHeader from "../../src/components/PageHeader";
 import ButtonGroup from "../../src/components/ButtonGroup";
-import { useGlobalSearchParams, useRouter } from "expo-router";
+import { useGlobalSearchParams, useLocalSearchParams, useRouter } from "expo-router";
 import { View, StyleSheet, Image, ScrollView, Dimensions } from "react-native";
 import MapView, { LatLng, Marker, Region } from "react-native-maps";
 import SearchBar from "@components/SearchBar";
+import CustomKeyboardView from "@components/CustomKeyboardView";
 
 type Location = Region & {
     longitude: number;
@@ -22,7 +23,15 @@ const { width, height } = Dimensions.get("window");
 const JobLocation = () => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const { images } = useGlobalSearchParams<{ images: string }>();
+    const { jobParam } = useLocalSearchParams();
+    const newJob = JSON.parse(decodeURIComponent(jobParam as string));
+
+    const router = useRouter();
+
+    // console.log(newJob);
+
+    // const { images } = useGlobalSearchParams<{ images: string }>();
+
     // const decodedImages: ImagePickerAsset[] = images
     // 	? JSON.parse(decodeURIComponent(images))
     // 	: [];
@@ -37,6 +46,8 @@ const JobLocation = () => {
     });
 
     const [currentAddress, setCurrentAddress] = useState<string>("");
+
+    const [currentPosition, setCurrentPosition] = useState<string>("");
 
     const getUserLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -66,7 +77,8 @@ const JobLocation = () => {
             console.log(`${item.postalCode}`);
             let address = `${item.city} ${item.region}`;
             // console.log(address);
-            setCurrentAddress(address);
+            // setCurrentAddress(address);
+            setCurrentPosition(address);
         }
     };
 
@@ -74,13 +86,36 @@ const JobLocation = () => {
         getUserLocation();
     }, []);
 
+    const handleProceed = () => {
+        // Add the location and address to newJob
+        const updatedJob = {
+            ...newJob,
+            address: currentAddress,
+            // address: currentAddress, // You can also add any additional fields if needed
+        };
+
+        // Navigate to JobSummary with the updated job
+        router.push({
+            pathname: "/JobSummary",
+            params: { jobParam: encodeURIComponent(JSON.stringify(updatedJob)) },
+        });
+    };
+
     return (
-        <>
+        <CustomKeyboardView>
             <PageHeader pageName="Location" />
             <View style={styles.contentContainer}>
                 <View style={styles.mapContainer}>
                     <SearchBar style={styles.searchBar} placeholder="Input your address" />
-                    <MapView style={styles.map} region={location} initialRegion={location} loadingEnabled userInterfaceStyle="dark" showsUserLocation followsUserLocation>
+                    <MapView
+                        style={styles.map}
+                        region={location}
+                        initialRegion={location}
+                        loadingEnabled
+                        userInterfaceStyle="dark"
+                        showsUserLocation
+                        followsUserLocation
+                    >
                         <Marker
                             draggable
                             coordinate={location}
@@ -99,17 +134,29 @@ const JobLocation = () => {
                     <View style={styles.modalTitleContainer}>
                         <Text style={styles.modalTitle}>Address</Text>
                         <View style={styles.fullAddress}>
-                            <Text>{currentAddress}</Text>
+                            <Text>{currentPosition}</Text>
                         </View>
                     </View>
                     <View style={styles.addedInformationContainer}>
                         <Text style={styles.addedInfoTitle}>Added Information</Text>
-                        <TextInput style={styles.addedInformation} multiline numberOfLines={10} />
+                        <TextInput
+                            style={styles.addedInformation}
+                            multiline
+                            numberOfLines={10}
+                            value={currentAddress}
+                            onChangeText={setCurrentAddress}
+                        />
                     </View>
-                    <ButtonGroup negativeOption="Cancel" positiveOption="Proceed" href={`/(customerPages)/JobSummary?images=${images}`} reverse />
+                    <ButtonGroup
+                        negativeOption="Cancel"
+                        positiveOption="Proceed"
+                        // href={{ pathname: "/JobSummary", params: newJob }}
+                        onPress={handleProceed}
+                        reverse
+                    />
                 </ScrollView>
             </View>
-        </>
+        </CustomKeyboardView>
     );
 };
 

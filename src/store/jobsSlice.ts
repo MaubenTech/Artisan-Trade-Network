@@ -1,7 +1,10 @@
 import { getData } from "@helpers/APIFunction";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@store";
 import { JobStatus } from "app/(home)/Jobs";
+import * as ImagePicker from "expo-image-picker";
+
+type PartialPickerAsset = Partial<ImagePicker.ImagePickerAsset>;
 
 export interface Job {
     _id: string;
@@ -11,12 +14,7 @@ export interface Job {
     budget: string;
     address: string;
     service: string;
-    media: [
-        {
-            url: string;
-            type: "image" | "video";
-        }
-    ];
+    media: PartialPickerAsset[];
     userId: string;
     status: JobStatus;
     createdAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
@@ -48,12 +46,12 @@ const dummyJob: Job[] = [
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
         userId: "1",
-        status: "Posted",
+        status: "Active",
         createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
         updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
@@ -61,18 +59,19 @@ const dummyJob: Job[] = [
         _id: "2",
         title: "Need to repair my toilet again",
         type: "Maintenance",
-        description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+        description:
+            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
         budget: "50,000 - 70,000",
         address: "No 1 Two Street, Three City, Four State",
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
         userId: "1",
-        status: "Posted",
+        status: "Active",
         createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
         updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
@@ -86,7 +85,7 @@ const dummyJob: Job[] = [
         service: "Mechanic",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -105,7 +104,7 @@ const dummyJob: Job[] = [
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -118,13 +117,14 @@ const dummyJob: Job[] = [
         _id: "5",
         title: "Need to repair my toilet again",
         type: "Maintenance",
-        description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+        description:
+            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
         budget: "50,000 - 70,000",
         address: "No 1 Two Street, Three City, Four State",
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -143,7 +143,7 @@ const dummyJob: Job[] = [
         service: "Mechanic",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -162,7 +162,7 @@ const dummyJob: Job[] = [
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -175,13 +175,14 @@ const dummyJob: Job[] = [
         _id: "8",
         title: "Need to repair my toilet again",
         type: "Maintenance",
-        description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+        description:
+            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
         budget: "50,000 - 70,000",
         address: "No 1 Two Street, Three City, Four State",
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -200,7 +201,7 @@ const dummyJob: Job[] = [
         service: "Mechanic",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -219,7 +220,7 @@ const dummyJob: Job[] = [
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -232,13 +233,14 @@ const dummyJob: Job[] = [
         _id: "11",
         title: "Need to repair my toilet again",
         type: "Maintenance",
-        description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+        description:
+            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
         budget: "50,000 - 70,000",
         address: "No 1 Two Street, Three City, Four State",
         service: "Plumbering",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -257,7 +259,7 @@ const dummyJob: Job[] = [
         service: "Mechanic",
         media: [
             {
-                url: "nothing_yet",
+                uri: "nothing_yet",
                 type: "image",
             },
         ],
@@ -277,7 +279,23 @@ const initialState: JobState = {
 const jobSlice = createSlice({
     name: "jobs",
     initialState,
-    reducers: {},
+    reducers: {
+        addNewJob: (state, action: PayloadAction<Job>) => {
+            state.jobList.push(action.payload);
+            console.log("Updated Job List" + state.jobList);
+        },
+        updateJobStatus: (state, action: PayloadAction<{ jobId: string; jobStatus: JobStatus }>) => {
+            const job = state.jobList.find((job) => job._id === action.payload.jobId);
+            if (job) job.status = action.payload.jobStatus;
+        },
+        markJobCompleted: (state, action: PayloadAction<string>) => {
+            const jobId = action.payload;
+            const job = state.jobList.find((job) => job._id === jobId);
+            if (job) job.status = "Completed";
+            console.info(job.status);
+            // state.jobList[0].status = "Completed";
+        },
+    },
     selectors: {
         selectJobsState: (jobs: JobState) => jobs,
     },
@@ -301,7 +319,7 @@ const jobSlice = createSlice({
     // TODO: When we start connecting to the api, this becomes useful
 });
 
-export const {} = jobSlice.actions;
+export const { markJobCompleted, addNewJob, updateJobStatus } = jobSlice.actions;
 
 export const { selectJobsState } = jobSlice.selectors;
 

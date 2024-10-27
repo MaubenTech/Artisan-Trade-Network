@@ -13,21 +13,28 @@ import LocationIcon from "@assets/icons/services/locationIcon.svg";
 import { compactStyles } from "@helpers/styles";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectCurrentUser } from "@store/usersSlice";
+import { Job, selectJobById } from "@store/jobsSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
+import { selectBidById } from "@store/bidsSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const PostedJobDetails = () => {
+const PostedJobDetails = ({ job }: { job: Job }) => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const { jobStage, bidStage }: { jobStage?: JobStatus; bidStage?: BidStatus } = useLocalSearchParams();
+    const { jobId, bidStage }: { jobId?: string; bidStage?: BidStatus } = useLocalSearchParams();
 
-    console.log("User's Job Stage in the Posted Job Details is: " + jobStage);
+    const selectedJob = useAppSelector((state: RootState) => selectJobById(state, jobId));
+
+    console.log("Posted Job Id:" + jobId);
+    console.log("User's Job Stage in the Posted Job Details is: " + selectedJob.status);
 
     const { type: userType } = useAppSelector(selectCurrentUser);
     return (
         <>
             <PageHeader pageName="Job" />
-            <PostedJobProgressStatus jobStage={jobStage} bidStage={bidStage} />
+            <PostedJobProgressStatus jobStage={selectedJob.status} bidStage={bidStage} />
             <View style={[styles.container]}>
                 <ScrollView contentContainerStyle={styles.contentContainer}>
                     <View style={[styles.summaryTitleContainer, userType === "SERVICE_PROVIDER" && bidStage !== "Initial" && { paddingTop: 0 }]}>
@@ -98,10 +105,10 @@ const PostedJobDetails = () => {
                     </View>
                 </ScrollView>
                 {Platform.OS === "ios" ? (
-                    <BottomModal jobStage={jobStage} bidStage={bidStage} />
+                    <BottomModal jobStage={selectedJob.status} bidStage={bidStage} jobId={jobId} />
                 ) : (
                     <Shadow startColor="#00000030" distance={2} style={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
-                        <BottomModal jobStage={jobStage} bidStage={bidStage} />
+                        <BottomModal jobStage={selectedJob.status} bidStage={bidStage} jobId={jobId} />
                     </Shadow>
                 )}
             </View>

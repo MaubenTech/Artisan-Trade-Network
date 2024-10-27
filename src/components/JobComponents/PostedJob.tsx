@@ -37,8 +37,8 @@ const PostedJob = ({ job }: { job: Job }) => {
     const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 
     return (
-        <Link style={styles.job} asChild href={{ pathname: "/PostedJobDetails", params: { jobStage, bidStage } }} key={job._id}>
-            <TouchableOpacity key={job.title}>
+        <Link style={styles.job} asChild href={{ pathname: "/PostedJobDetails", params: { bidStage, jobId: job._id } }} key={job._id}>
+            <TouchableOpacity>
                 <View style={styles.jobPicture}>
                     <JobPicture />
                 </View>
