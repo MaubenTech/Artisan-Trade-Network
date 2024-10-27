@@ -44,7 +44,6 @@ const NewJob = () => {
 
         if (!result.canceled) {
             setSelectedImages(result.assets);
-            // console.log("selected Images: \n", result.assets);
         }
     };
 

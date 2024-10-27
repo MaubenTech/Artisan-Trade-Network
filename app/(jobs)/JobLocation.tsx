@@ -74,7 +74,6 @@ const JobLocation = () => {
         });
 
         for (let item of generateAddress) {
-            console.log(`${item.postalCode}`);
             let address = `${item.city} ${item.region}`;
             // console.log(address);
             // setCurrentAddress(address);

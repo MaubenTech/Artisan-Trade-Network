@@ -34,7 +34,6 @@ const JobSummary = () => {
         return (
             <>
                 {media.map((imageUri: ImagePickerAsset, index: number) => {
-                    console.log("Images:", imageUri.uri, index);
                     return <Image source={{ uri: imageUri.uri }} style={styles.uploadedImage} key={index} />;
                 })}
             </>
