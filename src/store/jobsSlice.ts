@@ -282,7 +282,7 @@ const jobSlice = createSlice({
     reducers: {
         addNewJob: (state, action: PayloadAction<Job>) => {
             state.jobList.push(action.payload);
-            console.log("Updated Job List" + state.jobList);
+            state.jobList.forEach((job) => console.log("Update Job List : " + JSON.stringify(job)));
         },
         updateJobStatus: (state, action: PayloadAction<{ jobId: string; jobStatus: JobStatus }>) => {
             const job = state.jobList.find((job) => job._id === action.payload.jobId);

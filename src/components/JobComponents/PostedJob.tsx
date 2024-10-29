@@ -12,6 +12,8 @@ import { Job, selectJobById } from "@store/jobsSlice";
 import { compactStyles } from "@helpers/styles";
 import { BidStatus } from "app/(home)/Bids";
 import useAppSelector from "@hooks/useAppSelector";
+import { Image } from "expo-image";
+import * as FileSystem from "expo-file-system";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,16 +33,37 @@ const PostedJob = ({ job }: { job: Job }) => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
     const jobStage = job.status;
+    const jobImage = job.media;
 
-    console.log("User's Job Stage in Posted Job Component is: " + jobStage + "\n" + "-----------------------------------------");
+    const stringifiedJobImage = JSON.stringify(jobImage[0].uri);
+
+    console.log("Job Images");
+
+    console.log(JSON.stringify(jobImage[0].uri));
+
+    console.log(
+        "User's Job Stage in Posted Job Component is: " + jobStage + "\n" + "-----------------------------------------"
+    );
 
     const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 
+    FileSystem.getInfoAsync(jobImage[0].uri).then(({ exists }) => {
+        if (!exists) {
+            console.warn("Image file does not exist at path:", jobImage[0].uri);
+        }
+    });
+
     return (
-        <Link style={styles.job} asChild href={{ pathname: "/PostedJobDetails", params: { bidStage, jobId: job._id } }} key={job._id}>
+        <Link
+            style={styles.job}
+            asChild
+            href={{ pathname: "/PostedJobDetails", params: { bidStage, jobId: job._id } }}
+            key={job._id}
+        >
             <TouchableOpacity>
                 <View style={styles.jobPicture}>
-                    <JobPicture />
+                    {/* <JobPicture /> */}
+                    <Image source={{ uri: jobImage[0].uri }} style={styles.jobPicture} />
                 </View>
                 <View style={styles.jobDetailContainer}>
                     <View style={[styles.jobDetailHeader]}>

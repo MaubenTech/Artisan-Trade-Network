@@ -2,24 +2,12 @@ import React from "react";
 import colors from "../../src/helpers/colors";
 import { Text } from "../../src/components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { View, StyleSheet, Image, ScrollView } from "react-native";
 import PageHeader from "../../src/components/PageHeader";
 import ButtonGroup from "../../src/components/ButtonGroup";
 import { ImagePickerAsset } from "expo-image-picker";
 import { Job } from "@store/jobsSlice";
-
-const JobDetails = [
-    {
-        jobTitle: "Need to Repair my toilet",
-        jobType: "Maintenance",
-        jobDescription:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit neque temporibus ducimus culpa ea vero deserunt placeat quod tempora minima architecto illo quaerat voluptate, voluptatibus aperiam tempore dolores excepturi. Minima.",
-        media: [],
-        budget: "50,000 - 70,000",
-        address: "",
-    },
-];
 
 const JobSummary = () => {
     const { jobParam } = useLocalSearchParams();
@@ -38,6 +26,13 @@ const JobSummary = () => {
                 })}
             </>
         );
+    };
+
+    const handleJobSubmission = () => {
+        router.push({
+            pathname: "/JobPosted",
+            params: { jobParam: encodeURIComponent(JSON.stringify(newJob)) },
+        });
     };
 
     return (
@@ -105,7 +100,8 @@ const JobSummary = () => {
                         paddingHorizontal={20}
                         positiveOption="Post Job"
                         positiveOptionBg={colors.greenShade}
-                        href={"/(customerPages)/JobPosted"}
+                        // href={"/(customerPages)/JobPosted"}
+                        onPress={handleJobSubmission}
                     />
                 </View>
             </ScrollView>

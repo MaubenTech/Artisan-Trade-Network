@@ -86,14 +86,13 @@ const JobLocation = () => {
     }, []);
 
     const handleProceed = () => {
-        // Add the location and address to newJob
+        const combinedAddress = `${currentAddress} ${currentPosition}`;
+
         const updatedJob = {
             ...newJob,
-            address: currentAddress,
-            // address: currentAddress, // You can also add any additional fields if needed
+            address: combinedAddress,
         };
 
-        // Navigate to JobSummary with the updated job
         router.push({
             pathname: "/JobSummary",
             params: { jobParam: encodeURIComponent(JSON.stringify(updatedJob)) },
