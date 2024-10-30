@@ -19,234 +19,234 @@ import { selectBidJobByBidId, selectBidJobs } from "@store/bidsSlice";
 const { width, height } = Dimensions.get("window");
 
 export type BidJob = {
-	title: string;
-	type: string;
-	service: string;
-	description: string;
-	bidPrice: string;
-	createdAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
-	updatedAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
+    title: string;
+    type: string;
+    service: string;
+    description: string;
+    bidPrice: string;
+    createdAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
+    updatedAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
 };
 
 export type BidStatus = "Initial" | "Bid" | "Pending" | "Active" | "Completed";
 
 export const PostedBid = ({ bidJob, containerStyle }: { bidJob: BidJob; containerStyle?: StyleProp<ViewStyle> }) => {
-	const timeAgo = formatDistanceToNow(bidJob.createdAt, { addSuffix: true });
+    const timeAgo = formatDistanceToNow(bidJob.createdAt, { addSuffix: true });
 
-	return (
-		<Link href={"/PostedJobDetails"} style={[styles.job, containerStyle]} asChild>
-			<TouchableOpacity key={bidJob.title}>
-				<View style={styles.jobPicture}>
-					<JobPicture />
-				</View>
-				<View style={styles.jobDetailContainer}>
-					<View style={[styles.jobDetailHeader]}>
-						<Text style={styles.jobDetailText} numberOfLines={1}>
-							{bidJob.title}
-						</Text>
-						<MoreIcon color={"#000"} style={styles.moreIcon} />
-					</View>
-					<View style={styles.jobDetailMiddle}>
-						<View style={styles.jobServiceCategory}>
-							<Text style={styles.jobServiceCategoryText}>{bidJob.type}</Text>
-							<View style={styles.location}>
-								<LocationIcon style={styles.locationIcon} />
-								<Text style={styles.locationText}>20 km</Text>
-							</View>
-						</View>
-						<Text style={styles.jobDetailContent} numberOfLines={2}>
-							{bidJob.description}
-						</Text>
-					</View>
-					<View style={[styles.jobDetailFooter]}>
-						<Text style={styles.jobPriceDetail}>₦ {bidJob.bidPrice}</Text>
-						<Text style={styles.jobDate}>Posted {timeAgo}</Text>
-					</View>
-				</View>
-			</TouchableOpacity>
-		</Link>
-	);
+    return (
+        <Link href={"/PostedJobDetails"} style={[styles.job, containerStyle]} asChild>
+            <TouchableOpacity key={bidJob.title}>
+                <View style={styles.jobPicture}>
+                    <JobPicture />
+                </View>
+                <View style={styles.jobDetailContainer}>
+                    <View style={[styles.jobDetailHeader]}>
+                        <Text style={styles.jobDetailText} numberOfLines={1}>
+                            {bidJob.title}
+                        </Text>
+                        <MoreIcon color={"#000"} style={styles.moreIcon} />
+                    </View>
+                    <View style={styles.jobDetailMiddle}>
+                        <View style={styles.jobServiceCategory}>
+                            <Text style={styles.jobServiceCategoryText}>{bidJob.type}</Text>
+                            <View style={styles.location}>
+                                <LocationIcon style={styles.locationIcon} />
+                                <Text style={styles.locationText}>20 km</Text>
+                            </View>
+                        </View>
+                        <Text style={styles.jobDetailContent} numberOfLines={2}>
+                            {bidJob.description}
+                        </Text>
+                    </View>
+                    <View style={[styles.jobDetailFooter]}>
+                        <Text style={styles.jobPriceDetail}>₦ {bidJob.bidPrice}</Text>
+                        <Text style={styles.jobDate}>Posted {timeAgo}</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        </Link>
+    );
 };
 
 export default function Bids() {
-	const [filterOption, setFilterOption] = useState<string | number>("All");
-	const bidJobs = useAppSelector(selectBidJobs);
+    const [filterOption, setFilterOption] = useState<string | number>("All");
+    const bidJobs = useAppSelector(selectBidJobs);
 
-	const filterOptions = [
-		{
-			optionTitle: "All",
-		},
-		{
-			optionTitle: "Posted",
-		},
-		{
-			optionTitle: "Active",
-		},
-		{
-			optionTitle: "Completed",
-		},
-	];
+    const filterOptions = [
+        {
+            optionTitle: "All",
+        },
+        {
+            optionTitle: "Posted",
+        },
+        {
+            optionTitle: "Active",
+        },
+        {
+            optionTitle: "Completed",
+        },
+    ];
 
-	return (
-		<>
-			<View style={{ paddingHorizontal: 20, backgroundColor: "white" }}>
-				<MenuHeader />
-			</View>
-			<View style={styles.container}>
-				<View style={styles.searchBarContainer}>
-					<SearchBar />
-				</View>
-				<View style={styles.filterComponentContainer}>
-					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
-				</View>
-				<ScrollView style={styles.componentContainer} contentContainerStyle={styles.componentContentContainer}>
-					{bidJobs.map((bidJob, index) => {
-						return <PostedBid key={index} bidJob={bidJob} />;
-					})}
-				</ScrollView>
-			</View>
-		</>
-	);
+    return (
+        <>
+            <View style={{ paddingHorizontal: 20, backgroundColor: "white" }}>
+                <MenuHeader />
+            </View>
+            <View style={styles.container}>
+                <View style={styles.searchBarContainer}>
+                    <SearchBar />
+                </View>
+                <View style={styles.filterComponentContainer}>
+                    <FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
+                </View>
+                <ScrollView style={styles.componentContainer} contentContainerStyle={styles.componentContentContainer}>
+                    {bidJobs.map((bidJob, index) => {
+                        return <PostedBid key={index} bidJob={bidJob} />;
+                    })}
+                </ScrollView>
+            </View>
+        </>
+    );
 }
 
 const generalStyles = StyleSheet.create({
-	container: {
-		paddingTop: 40,
-		flex: 1,
-		backgroundColor: colors.white,
-	},
+    container: {
+        paddingTop: 40,
+        flex: 1,
+        backgroundColor: colors.white,
+    },
 
-	componentContainer: {
-		marginTop: 20,
-	},
+    componentContainer: {
+        marginTop: 20,
+    },
 
-	componentContentContainer: {
-		marginTop: -20,
-	},
+    componentContentContainer: {
+        marginTop: -20,
+    },
 
-	searchBarContainer: {
-		paddingHorizontal: 20,
-	},
+    searchBarContainer: {
+        paddingHorizontal: 20,
+    },
 
-	filterComponentContainer: {
-		marginTop: 20,
-		paddingHorizontal: 20,
-	},
+    filterComponentContainer: {
+        marginTop: 20,
+        paddingHorizontal: 20,
+    },
 
-	job: {
-		flexDirection: "row",
-		gap: 15,
-		paddingVertical: 20,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.greyBorder,
-		paddingHorizontal: 20,
-	},
+    job: {
+        flexDirection: "row",
+        gap: 15,
+        paddingVertical: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.greyBorder,
+        paddingHorizontal: 20,
+    },
 
-	jobPicture: {},
+    jobPicture: {},
 
-	jobDetailContainer: {
-		flex: 1,
-		justifyContent: "space-between",
-	},
+    jobDetailContainer: {
+        flex: 1,
+        justifyContent: "space-between",
+    },
 
-	jobDetailHeader: {
-		marginTop: -3,
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
+    jobDetailHeader: {
+        marginTop: -3,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
 
-	jobDetailText: {
-		fontWeight: "600",
-	},
+    jobDetailText: {
+        fontWeight: "600",
+    },
 
-	jobServiceCategory: {
-		flexDirection: "row",
-		gap: 8,
-	},
+    jobServiceCategory: {
+        flexDirection: "row",
+        gap: 8,
+    },
 
-	location: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 2,
-	},
+    location: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 2,
+    },
 
-	jobDetailContent: {
-		fontWeight: "300",
-		paddingRight: 15,
-	},
+    jobDetailContent: {
+        fontWeight: "300",
+        paddingRight: 15,
+    },
 
-	jobDetailFooter: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginTop: 5,
-	},
+    jobDetailFooter: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 5,
+    },
 
-	jobPriceDetail: {
-		fontWeight: "500",
-		fontSize: 10,
-	},
+    jobPriceDetail: {
+        fontWeight: "500",
+        fontSize: 10,
+    },
 
-	jobDate: {
-		fontWeight: "500",
-		fontSize: 10,
-	},
+    jobDate: {
+        fontWeight: "500",
+        fontSize: 10,
+    },
 });
 
 const androidStyles = StyleSheet.create({
-	jobDetailHeader: {
-		alignItems: "flex-end",
-	},
+    jobDetailHeader: {
+        alignItems: "flex-end",
+    },
 
-	jobServiceCategory: {
-		marginTop: -5,
-	},
+    jobServiceCategory: {
+        marginTop: -5,
+    },
 
-	jobServiceCategoryText: {
-		fontSize: 10,
-	},
+    jobServiceCategoryText: {
+        fontSize: 10,
+    },
 
-	locationIcon: {
-		marginTop: -4,
-	},
+    locationIcon: {
+        marginTop: -4,
+    },
 
-	locationText: {
-		fontSize: 10,
-	},
+    locationText: {
+        fontSize: 10,
+    },
 
-	jobDetailContent: {
-		fontSize: 10,
-	},
+    jobDetailContent: {
+        fontSize: 10,
+    },
 });
 
 const iosStyles = StyleSheet.create({
-	jobDetailHeader: {
-		alignItems: "flex-start",
-	},
+    jobDetailHeader: {
+        alignItems: "flex-start",
+    },
 
-	moreIcon: {
-		marginTop: 7,
-	},
+    moreIcon: {
+        marginTop: 7,
+    },
 
-	jobDetailMiddle: {
-		gap: 5,
-	},
+    jobDetailMiddle: {
+        gap: 5,
+    },
 
-	jobServiceCategory: {
-		marginTop: -12,
-	},
+    jobServiceCategory: {
+        marginTop: -12,
+    },
 
-	jobServiceCategoryText: {
-		fontSize: 11,
-	},
+    jobServiceCategoryText: {
+        fontSize: 11,
+    },
 
-	locationText: {
-		fontSize: 11,
-	},
+    locationText: {
+        fontSize: 11,
+    },
 
-	jobDetailContent: {
-		fontSize: 11,
-	},
+    jobDetailContent: {
+        fontSize: 11,
+    },
 });
 
 const styles = compactStyles(generalStyles, androidStyles, iosStyles);

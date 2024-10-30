@@ -1,9 +1,21 @@
-import { View, StyleSheet, TouchableOpacity, ViewStyle, TextStyle, ColorValue, DimensionValue, StyleProp, Dimensions, GestureResponderEvent } from "react-native";
+import {
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    ViewStyle,
+    TextStyle,
+    ColorValue,
+    DimensionValue,
+    StyleProp,
+    Dimensions,
+    GestureResponderEvent,
+    TextProps,
+} from "react-native";
 import React from "react";
 import { Text } from "./Text";
 import colors from "../helpers/colors";
-import { Link } from "expo-router";
-import { ExpoRouter } from "expo-router/types/expo-router";
+import { Href, Link, LinkProps } from "expo-router";
+import { WebAnchorProps } from "expo-router/build/link/Link";
 
 interface ButtonGroupParams {
     containerStyle?: StyleProp<ViewStyle>;
@@ -15,8 +27,9 @@ interface ButtonGroupParams {
     negativeOptionStyle?: StyleProp<ViewStyle>;
     negativeOptionTextStyle?: StyleProp<TextStyle>;
     negativeOptionBg?: ColorValue;
-    href?: ExpoRouter.Href;
-    negativeHref?: ExpoRouter.Href;
+    // href?: Href;
+    href?: Href;
+    negativeHref?: Href;
     negativeOnPress?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent) => void;
     paddingHorizontal?: DimensionValue;
     paddingVertical?: DimensionValue;
@@ -47,7 +60,14 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 }) => {
     const isNop = negativeOption ? true : false;
 
-    const negativeStyle = isNop ? [styles.option, styles.negativeOption, negativeOptionStyle, negativeOptionBg && { backgroundColor: negativeOptionBg }] : { width: 0 };
+    const negativeStyle = isNop
+        ? [
+              styles.option,
+              styles.negativeOption,
+              negativeOptionStyle,
+              negativeOptionBg && { backgroundColor: negativeOptionBg },
+          ]
+        : { width: 0 };
 
     const NegativeOption = ({ addStyle }: { addStyle?: boolean }) => (
         <TouchableOpacity style={addStyle && [negativeStyle, vertical && { width: "100%" }]} onPress={negativeOnPress}>
@@ -67,7 +87,11 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
         );
     };
 
-    const PositiveOption = ({ onPress }: { onPress?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent) => void }) => {
+    const PositiveOption = ({
+        onPress,
+    }: {
+        onPress?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent) => void;
+    }) => {
         const positiveStyle: StyleProp<ViewStyle> = [
             styles.option,
             styles.positiveOption,
@@ -96,7 +120,14 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
     };
 
     return (
-        <View style={[styles.container, vertical && { flexDirection: "column", gap: 20 }, { paddingHorizontal }, containerStyle]}>
+        <View
+            style={[
+                styles.container,
+                vertical && { flexDirection: "column", gap: 20 },
+                { paddingHorizontal },
+                containerStyle,
+            ]}
+        >
             {reverse ? (
                 <>
                     <CompleteNegativeOption />
