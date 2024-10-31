@@ -10,7 +10,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
 
 import { BidJob, PostedBid } from "./Bids";
-import { selectCurrentUser } from "@store/usersSlice";
+import { selectCurrentUser } from "@store/authSlice";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectRecommendedBidJobs } from "@store/bidsSlice";
 

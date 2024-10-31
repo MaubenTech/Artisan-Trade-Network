@@ -8,7 +8,7 @@ import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { compactStyles } from "@helpers/styles";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import useAppSelector from "@hooks/useAppSelector";
-import { selectCurrentUser } from "@store/usersSlice";
+import { selectCurrentUser } from "@store/authSlice";
 
 const { width, height } = Dimensions.get("window");
 
