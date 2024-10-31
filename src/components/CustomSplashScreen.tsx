@@ -1,5 +1,4 @@
-import { Text } from "./Text";
-import { Animated } from "react-native";
+import { Animated, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, Dimensions } from "react-native";
 
