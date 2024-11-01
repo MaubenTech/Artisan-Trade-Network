@@ -10,6 +10,9 @@ import { View, StyleSheet, Image, ScrollView, Dimensions } from "react-native";
 import MapView, { LatLng, Marker, Region } from "react-native-maps";
 import SearchBar from "@components/SearchBar";
 import CustomKeyboardView from "@components/CustomKeyboardView";
+import useAppDispatch from "@hooks/useAppDispatch";
+import useAppSelector from "@hooks/useAppSelector";
+import { setJobAddress } from "@store/jobsSlice";
 
 type Location = Region & {
     longitude: number;
@@ -26,17 +29,9 @@ const JobLocation = () => {
     const { jobParam } = useLocalSearchParams();
     const newJob = JSON.parse(decodeURIComponent(jobParam as string));
 
+    const dispatch = useAppDispatch();
+
     const router = useRouter();
-
-    // console.log(newJob);
-
-    // const { images } = useGlobalSearchParams<{ images: string }>();
-
-    // const decodedImages: ImagePickerAsset[] = images
-    // 	? JSON.parse(decodeURIComponent(images))
-    // 	: [];
-
-    // const encodedImages = encodeURIComponent(JSON.stringify(decodedImages));
 
     const [location, setLocation] = useState<Location>({
         longitude: 0,
@@ -45,9 +40,13 @@ const JobLocation = () => {
         latitudeDelta: 0.0421,
     });
 
-    const [currentAddress, setCurrentAddress] = useState<string>("");
+    const job = useAppSelector((state) => state.jobs.currentJob);
 
-    const [currentPosition, setCurrentPosition] = useState<string>("");
+    const { address } = job;
+
+    const [currentAddress, setCurrentAddress] = useState(address);
+
+    const [currentPosition, setCurrentPosition] = useState<string | undefined>("");
 
     const getUserLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -86,7 +85,7 @@ const JobLocation = () => {
     }, []);
 
     const handleProceed = () => {
-        const combinedAddress = `${currentAddress} ${currentPosition}`;
+        const combinedAddress = `${currentAddress} ${currentPosition || ""}`;
 
         const updatedJob = {
             ...newJob,
@@ -141,17 +140,11 @@ const JobLocation = () => {
                             style={styles.addedInformation}
                             multiline
                             numberOfLines={10}
-                            value={currentAddress}
-                            onChangeText={setCurrentAddress}
+                            value={address}
+                            onChangeText={(text: string) => dispatch(setJobAddress(text))}
                         />
                     </View>
-                    <ButtonGroup
-                        negativeOption="Cancel"
-                        positiveOption="Proceed"
-                        // href={{ pathname: "/JobSummary", params: newJob }}
-                        onPress={handleProceed}
-                        reverse
-                    />
+                    <ButtonGroup negativeOption="Cancel" positiveOption="Proceed" onPress={handleProceed} reverse />
                 </ScrollView>
             </View>
         </CustomKeyboardView>

@@ -5,19 +5,26 @@ import colors from "@helpers/colors";
 import { Text } from "@components/Text";
 import ButtonGroup from "@components/ButtonGroup";
 import JobPostedSuccessfully from "@assets/images/JobPostedSuccessfully.svg";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { addNewJob, Job } from "@store/jobsSlice";
+import { addNewJob, Job, resetCurrentJob, submitJob } from "@store/jobsSlice";
 
 const JobPosted = () => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const { jobParam } = useLocalSearchParams();
-    const newJob: Job = JSON.parse(decodeURIComponent(jobParam as string));
+    // const { jobParam } = useLocalSearchParams();
+    // const newJob: Job = JSON.parse(decodeURIComponent(jobParam as string));
 
     const dispatch = useAppDispatch();
 
-    dispatch(addNewJob(newJob));
+    const router = useRouter();
+
+    const handleResetJob = () => {
+        dispatch(submitJob());
+        router.push({
+            pathname: "/(home)/Home",
+        });
+    };
 
     return (
         <View style={styles.container}>
@@ -31,7 +38,7 @@ const JobPosted = () => {
                         </Text>
                     </View>
                 </View>
-                <ButtonGroup positiveOption="Go Back Home" paddingHorizontal={40} href={"/(home)/Home"} />
+                <ButtonGroup positiveOption="Go Back Home" paddingHorizontal={40} onPress={handleResetJob} />
             </View>
         </View>
     );

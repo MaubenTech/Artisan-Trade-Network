@@ -7,16 +7,14 @@ import { View, StyleSheet, Image, ScrollView } from "react-native";
 import PageHeader from "../../src/components/PageHeader";
 import ButtonGroup from "../../src/components/ButtonGroup";
 import { ImagePickerAsset } from "expo-image-picker";
-import { Job } from "@store/jobsSlice";
+import { addNewJob, Job, resetCurrentJob } from "@store/jobsSlice";
+import useAppDispatch from "@hooks/useAppDispatch";
 
 const JobSummary = () => {
     const { jobParam } = useLocalSearchParams();
 
     const newJob: Job = JSON.parse(decodeURIComponent(jobParam as string));
     const { media } = newJob;
-    // const { images } = useGlobalSearchParams<{ images: string }>();
-    // const decodedImages: ImagePickerAsset[] = images ? JSON.parse(decodeURIComponent(images)) : [];
-    // console.log("Received Images: ", decodedImages);
 
     const DecodedImagesComponent = () => {
         return (
