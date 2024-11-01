@@ -1,5 +1,5 @@
 import { getData } from "@helpers/APIFunction";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@store";
 import { JobStatus } from "app/(home)/Jobs";
 import * as ImagePicker from "expo-image-picker";
@@ -21,6 +21,8 @@ export interface Job {
     updatedAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
 }
 
+export type JobType = "Installation" | "Maintainence";
+
 // export const fetchJobs = createAsyncThunk<Job[], void>("jobs/FetchJobs", async () => {
 // 	const jobs = await getData<Job[]>("/jobs");
 // 	return jobs;
@@ -31,6 +33,7 @@ export interface Job {
 
 interface JobState {
     jobList: Job[];
+    currentJob: Partial<Job>;
     loading: boolean;
     error: string | null;
 }
@@ -272,6 +275,7 @@ const dummyJob: Job[] = [
 
 const initialState: JobState = {
     jobList: [...dummyJob],
+    currentJob: {},
     loading: false,
     error: null,
 };
@@ -294,6 +298,44 @@ const jobSlice = createSlice({
             if (job) job.status = "Completed";
             console.info(job.status);
             // state.jobList[0].status = "Completed";
+        },
+        setJobTitle: (state, action: PayloadAction<string>) => {
+            state.currentJob.title = action.payload;
+        },
+        setJobType: (state, action: PayloadAction<string>) => {
+            state.currentJob.type = action.payload;
+        },
+        setJobDescription: (state, action: PayloadAction<string>) => {
+            state.currentJob.description = action.payload;
+        },
+        setJobBudget: (state, action: PayloadAction<string>) => {
+            state.currentJob.budget = action.payload;
+        },
+        setJobAddress: (state, action: PayloadAction<string>) => {
+            state.currentJob.address = action.payload;
+        },
+        setJobService: (state, action: PayloadAction<string>) => {
+            state.currentJob.service = action.payload;
+        },
+        setJobMedia: (state, action: PayloadAction<PartialPickerAsset[]>) => {
+            state.currentJob.media = action.payload;
+        },
+        submitJob: (state) => {
+            if (state.currentJob.title) {
+                const newJob = {
+                    ...state.currentJob,
+                    _id: String(state.jobList.length + 1),
+                    userId: "current_user_id",
+                    status: "Posted",
+                    createdAt: new Date().toString(),
+                    updatedAt: new Date().toString(),
+                } as Job;
+                state.jobList.push(newJob);
+                state.currentJob = {};
+            }
+        },
+        resetCurrentJob: (state) => {
+            state.currentJob = {};
         },
     },
     selectors: {
@@ -319,7 +361,25 @@ const jobSlice = createSlice({
     // TODO: When we start connecting to the api, this becomes useful
 });
 
-export const { markJobCompleted, addNewJob, updateJobStatus } = jobSlice.actions;
+export const selectJobTitles = createSelector(
+    (state: RootState) => state.jobs.jobList,
+    (jobList) => jobList.map((job) => job.title)
+);
+
+export const {
+    markJobCompleted,
+    addNewJob,
+    updateJobStatus,
+    setJobTitle,
+    setJobType,
+    setJobDescription,
+    setJobBudget,
+    setJobAddress,
+    setJobService,
+    setJobMedia,
+    submitJob,
+    resetCurrentJob,
+} = jobSlice.actions;
 
 export const { selectJobsState } = jobSlice.selectors;
 

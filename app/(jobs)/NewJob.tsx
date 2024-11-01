@@ -11,41 +11,31 @@ import ButtonGroup from "@components/ButtonGroup";
 import UploadImages from "@assets/images/uploadImages.svg";
 import ButtonOptions from "@components/ButtonOptions";
 import { View, StyleSheet, TextInput, Dimensions, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
-import { addNewJob, Job } from "@store/jobsSlice";
+import {
+    addNewJob,
+    Job,
+    setJobBudget,
+    setJobDescription,
+    setJobMedia,
+    setJobTitle,
+    setJobType,
+} from "@store/jobsSlice";
 import { JobStatus } from "app/(home)/Jobs";
 import useAppDispatch from "@hooks/useAppDispatch";
+import useAppSelector from "@hooks/useAppSelector";
 
 const { width, height } = Dimensions.get("window");
 
 const NewJob = () => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-    const [jobTitle, setJobTitle] = useState<string>("");
-    const [jobDescription, setJobDescription] = useState<string>("");
-    const [jobType, setJobType] = useState<string>("Installation");
     const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
-    const [selectedBudget, setSelectedBudet] = useState<string>("5000");
-    const [jobAddress, setJobAddress] = useState<string>("");
+    // const [selectedBudget, setSelectedBudet] = useState<string>("5000");
     const [jobService, setJobService] = useState<string>("");
     const [jobStatus, setJobStatus] = useState<JobStatus>();
 
+    const dispatch = useAppDispatch();
+
     const encodedImages = encodeURIComponent(JSON.stringify(selectedImages));
-
-    const uploadMedia = async () => {
-        let options: ImagePicker.ImagePickerOptions = {
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            // allowsEditing: true,
-            allowsMultipleSelection: true,
-            selectionLimit: 3,
-            aspect: [1, 1],
-            quality: 1,
-        };
-
-        let result = await ImagePicker.launchImageLibraryAsync(options);
-
-        if (!result.canceled) {
-            setSelectedImages(result.assets);
-        }
-    };
 
     const budgetOptions = [
         {
@@ -66,29 +56,49 @@ const NewJob = () => {
         },
     ];
 
+    const job = useAppSelector((state) => state.jobs.currentJob);
+
+    const { title, type, description, budget, media } = job;
+
     const handleForm = () => {
-        if (!jobTitle || !jobDescription || !selectedBudget) {
+        if (!title || !description || !budget) {
             alert("Fill all required fields before proceeding");
         }
 
         // dispatch(addNewJob(newJob));
     };
 
-    const newJob: Partial<Job> = {
+    const uploadMedia = async () => {
+        let options: ImagePicker.ImagePickerOptions = {
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            // allowsEditing: true,
+            allowsMultipleSelection: true,
+            selectionLimit: 3,
+            aspect: [1, 1],
+            quality: 1,
+        };
+
+        let result = await ImagePicker.launchImageLibraryAsync(options);
+
+        if (!result.canceled) {
+            setSelectedImages(result.assets);
+            dispatch(setJobMedia(result.assets));
+        }
+    };
+
+    const newCurrentJob: Partial<Job> = {
         _id: "13",
-        title: jobTitle,
-        type: jobType,
-        description: jobDescription,
-        budget: selectedBudget,
-        service: jobService,
-        media: selectedImages,
+        title: title,
+        type: type,
+        description: description,
+        budget: budget,
+        media: media,
         userId: "4",
-        status: "Posted",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
 
-    const jobParam = encodeURIComponent(JSON.stringify(newJob));
+    const jobParam = encodeURIComponent(JSON.stringify(newCurrentJob));
 
     return (
         <View style={styles.container}>
@@ -99,8 +109,8 @@ const NewJob = () => {
                         <Text>Job Title</Text>
                         <TextInput
                             style={styles.jobFormInput}
-                            value={jobTitle}
-                            onChangeText={setJobTitle}
+                            value={job.title}
+                            onChangeText={(text: string) => dispatch(setJobTitle(text))}
                             placeholder="Enter Job Title"
                         />
                     </View>
@@ -111,8 +121,8 @@ const NewJob = () => {
                                 { label: "Installation", value: "Installation" },
                                 { label: "Maintenance", value: "Maintenance" },
                             ]}
-                            selectedOption={jobType}
-                            onChanged={setJobType}
+                            selectedOption={type}
+                            onChanged={(text: string) => dispatch(setJobType(text))}
                         />
                     </View>
                     <View style={styles.jobFormContainer}>
@@ -121,8 +131,8 @@ const NewJob = () => {
                             style={[styles.jobFormInput, { textAlignVertical: "top", height: 150 }]}
                             multiline
                             numberOfLines={10}
-                            value={jobDescription}
-                            onChangeText={setJobDescription}
+                            value={job.description}
+                            onChangeText={(text: string) => dispatch(setJobDescription(text))}
                         />
                     </View>
                     <View style={styles.jobFormContainer}>
@@ -188,8 +198,8 @@ const NewJob = () => {
                         <Text>Budget</Text>
                         <ButtonOptions
                             buttonOptions={budgetOptions}
-                            selectedOption={selectedBudget}
-                            onOptionChanged={setSelectedBudet}
+                            selectedOption={budget}
+                            onOptionChanged={(text: string) => dispatch(setJobBudget(text))}
                         />
                     </View>
                     <ButtonGroup
