@@ -10,6 +10,10 @@ import colors from "@helpers/colors";
 
 export default function SignUp() {
     const [gender, setGender] = useState<string>("Male");
+
+    // userLoggedIn();
+    // userLoggedOut()
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.logo}>

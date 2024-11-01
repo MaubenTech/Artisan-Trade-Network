@@ -52,7 +52,7 @@ const initialState: AuthState = {
 
 const authSlice = createSlice({
 	name: "auth",
-	initialState,
+	initialState: initialState,
 	reducers: {
 		userLoggedIn(state, action: PayloadAction<Login>) {
 			const { email, password } = action.payload;
@@ -126,6 +126,7 @@ const authSlice = createSlice({
 		selectCurrentUser: (state: AuthState) => state.user,
 	},
 });
+ 
 
 export const { userLoggedIn, userLoggedOut } = authSlice.actions;
 
