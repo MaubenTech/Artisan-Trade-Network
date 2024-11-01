@@ -20,15 +20,15 @@ import { selectBidById } from "@store/bidsSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const PostedJobDetails = ({ job }: { job: Job }) => {
+const PostedJobDetails = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const { jobId, bidStage }: { jobId?: string; bidStage?: BidStatus } = useLocalSearchParams();
 
 	const selectedJob = useAppSelector((state: RootState) => selectJobById(state, jobId));
 
-	console.log("Posted Job Id:" + jobId);
-	console.log("User's Job Stage in the Posted Job Details is: " + selectedJob.status);
+	// console.log("Posted Job Id:" + jobId);
+	// console.log("User's Job Stage in the Posted Job Details is: " + selectedJob.status);
 
 	const { type: userType } = useAppSelector(selectCurrentUser);
 	return (

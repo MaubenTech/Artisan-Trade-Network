@@ -37,13 +37,13 @@ const PostedJob = ({ job }: { job: Job }) => {
 
     const stringifiedJobImage = JSON.stringify(jobImage[0].uri);
 
-    console.log("Job Images");
+    // console.log("Job Images");
 
-    console.log(JSON.stringify(jobImage[0].uri));
+    // console.log(JSON.stringify(jobImage[0].uri));
 
-    console.log(
-        "User's Job Stage in Posted Job Component is: " + jobStage + "\n" + "-----------------------------------------"
-    );
+    // console.log(
+    //     "User's Job Stage in Posted Job Component is: " + jobStage + "\n" + "-----------------------------------------"
+    // );
 
     const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 

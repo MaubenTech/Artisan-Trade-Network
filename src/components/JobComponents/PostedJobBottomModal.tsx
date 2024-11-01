@@ -26,14 +26,14 @@ const Posted = () => (
 const Active = ({ jobId, jobStage }: { jobId: string; jobStage: JobStatus }) => {
 	const [jobStatus, setJobStatus] = useState<JobStatus>(jobStage);
 	const dispatch = useAppDispatch();
-	console.log('Job Id in active component is ": ' + jobId);
+	// console.log('Job Id in active component is ": ' + jobId);
 
 	const handleJobCompleted = () => {
 		dispatch(markJobCompleted(jobId));
 	};
 
 	useEffect(() => {
-		console.log(jobStatus + " Job Status in Active");
+		// console.log(jobStatus + " Job Status in Active");
 	}, [jobStatus]);
 
 	return jobStatus === "Completed" ? (
@@ -109,8 +109,8 @@ const SPCompleted = () => {};
 const BottomModal = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidStage?: BidStatus; jobId: string }) => {
 	const { type: userType } = useAppSelector(selectCurrentUser);
 
-	console.log("Job Id in BOttom modal is: " + jobId);
-	console.log("Job Stage in BotomModal is: " + jobStage);
+	// console.log("Job Id in BOttom modal is: " + jobId);
+	// console.log("Job Stage in BotomModal is: " + jobStage);
 
 	useEffect(() => {
 		console.log("Job Stage Updated");
