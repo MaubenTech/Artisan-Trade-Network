@@ -5,7 +5,7 @@
 // } from "@react-navigation/native";
 import { Slot, Stack } from "expo-router";
 import "react-native-reanimated";
-import FontsProvider from "@components/FontsProvider";
+import ResourceProvider from "@components/ResourceProvider";
 import UserTypeProvider from "@context/UserTypeProvider";
 import { Provider } from "react-redux";
 import store from "@store";
@@ -24,10 +24,10 @@ export default function RootLayout() {
 		// <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
 		// <UserTypeProvider> no more need for the UserType context as we now have a user type in the redux store
 		<Provider store={store}>
-			<FontsProvider>
+			<ResourceProvider>
 				<Slot />
 				{/* <Stack></Stack> */}
-			</FontsProvider>
+			</ResourceProvider>
 		</Provider>
 		// </UserTypeProvider>
 		// </ThemeProvider>
