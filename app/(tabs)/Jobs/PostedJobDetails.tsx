@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
 import colors from "@helpers/colors";
 import { Text } from "@components/Text";
 import PageHeader from "@components/PageHeader";
-import { View, StyleSheet, Dimensions, ScrollView, Platform } from "react-native";
+import { View, StyleSheet, Dimensions, ScrollView, Platform, Animated } from "react-native";
 import { JobStatus } from "app/(tabs)/Jobs";
 import { BidStatus } from "app/(tabs)/Bids";
 import BottomModal from "@components/jobComponents/PostedJobBottomModal";
@@ -17,9 +17,12 @@ import { Job, selectJobById } from "@store/jobsSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
 import { selectBidById } from "@store/bidsSlice";
-import { Image } from "expo-image";
+// import { Image } from "expo-image";
+import { Image as RNImage } from "react-native-expo-image-cache";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
+import { useSharedValue } from "react-native-reanimated";
+import SmartImage from "@components/SmartImage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,6 +30,7 @@ const PostedJobDetails = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const { jobId, bidStage }: { jobId?: string; bidStage?: BidStatus } = useLocalSearchParams();
+	const [hasPreview, setHasPreview] = useState(true);
 
 	const selectedJob = useAppSelector((state: RootState) => selectJobById(state, jobId));
 
@@ -83,7 +87,9 @@ const PostedJobDetails = () => {
 								{media.map((medium, index) => {
 									// console.log("URI for image in PostedJobDetails:");
 									// console.log(medium.uri);
-									return <Image source={medium.uri} key={medium.assetId + index + ""} style={styles.uploadedImage} />;
+									return <SmartImage uri={medium.uri} key={index} style={styles.uploadedImage} />;
+
+									// <Image source={{ uri: medium.uri }} key={medium.assetId + index + ""} style={styles.uploadedImage} recyclingKey={medium.uri} />
 								})}
 							</View>
 						</View>

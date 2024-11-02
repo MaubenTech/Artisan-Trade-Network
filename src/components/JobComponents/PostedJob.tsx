@@ -15,6 +15,7 @@ import useAppSelector from "@hooks/useAppSelector";
 import { Image } from "expo-image";
 import * as FileSystem from "expo-file-system";
 import { RootState } from "@store";
+import SmartImage from "@components/SmartImage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -42,7 +43,7 @@ const PostedJob = ({ job }: { job: Job }) => {
 			<TouchableOpacity>
 				<View style={styles.jobPicture}>
 					{/* <JobPicture /> */}
-					<Image source={selectedJob.media[0].uri} style={styles.jobThumbnail} />
+					<SmartImage uri={selectedJob.media[0].uri} style={styles.jobThumbnail} />
 				</View>
 				<View style={styles.jobDetailContainer}>
 					<View style={[styles.jobDetailHeader]}>
