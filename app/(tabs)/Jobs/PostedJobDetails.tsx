@@ -80,9 +80,11 @@ const PostedJobDetails = () => {
 						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Media</Text>
 							<View style={styles.jobImages}>
-								{media.map((medium, index) => (
-									<Image source={medium.uri} key={medium.assetId + index + ""} style={styles.uploadedImage} />
-								))}
+								{media.map((medium, index) => {
+									// console.log("URI for image in PostedJobDetails:");
+									// console.log(medium.uri);
+									return <Image source={medium.uri} key={medium.assetId + index + ""} style={styles.uploadedImage} />;
+								})}
 							</View>
 						</View>
 					</View>

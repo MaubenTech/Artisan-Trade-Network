@@ -10,74 +10,72 @@ import useAppDispatch from "@hooks/useAppDispatch";
 import { addNewJob, Job, resetCurrentJob, submitJob } from "@store/jobsSlice";
 
 const JobPosted = () => {
-    const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    // const { jobParam } = useLocalSearchParams();
-    // const newJob: Job = JSON.parse(decodeURIComponent(jobParam as string));
+	// const { jobParam } = useLocalSearchParams();
+	// const newJob: Job = JSON.parse(decodeURIComponent(jobParam as string));
 
-    const dispatch = useAppDispatch();
+	const dispatch = useAppDispatch();
 
-    const router = useRouter();
+	const router = useRouter();
 
-    const handleResetJob = () => {
-        dispatch(submitJob());
-        router.push({
-            pathname: "/(home)/Home",
-        });
-    };
+	const handleResetJob = () => {
+		dispatch(submitJob());
+		router.push({
+			pathname: "/(tabs)/Home",
+		});
+	};
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.contentContainer}>
-                <JobPostedSuccessfully />
-                <View style={styles.successContainer}>
-                    <Text style={styles.successTitle}>Job Posted Successfully</Text>
-                    <View style={styles.successSubTitleContainer}>
-                        <Text style={styles.successSubTitle}>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat, dolore tempore?
-                        </Text>
-                    </View>
-                </View>
-                <ButtonGroup positiveOption="Go Back Home" paddingHorizontal={40} onPress={handleResetJob} />
-            </View>
-        </View>
-    );
+	return (
+		<View style={styles.container}>
+			<View style={styles.contentContainer}>
+				<JobPostedSuccessfully />
+				<View style={styles.successContainer}>
+					<Text style={styles.successTitle}>Job Posted Successfully</Text>
+					<View style={styles.successSubTitleContainer}>
+						<Text style={styles.successSubTitle}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat, dolore tempore?</Text>
+					</View>
+				</View>
+				<ButtonGroup positiveOption="Go Back Home" paddingHorizontal={40} onPress={handleResetJob} />
+			</View>
+		</View>
+	);
 };
 
 const generalStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-        // gap: 5,
-        // paddingTop: 70,
-    },
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+		// gap: 5,
+		// paddingTop: 70,
+	},
 
-    contentContainer: {
-        paddingHorizontal: 30,
-    },
+	contentContainer: {
+		paddingHorizontal: 30,
+	},
 
-    successContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: 30,
-        gap: 10,
-    },
+	successContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 30,
+		gap: 10,
+	},
 
-    successTitle: {
-        fontSize: 30,
-        fontWeight: "700",
-        textAlign: "center",
-        width: "60%",
-    },
+	successTitle: {
+		fontSize: 30,
+		fontWeight: "700",
+		textAlign: "center",
+		width: "60%",
+	},
 
-    successSubTitleContainer: {},
+	successSubTitleContainer: {},
 
-    successSubTitle: {
-        textAlign: "center",
-        color: colors.greySecondaryShade,
-    },
+	successSubTitle: {
+		textAlign: "center",
+		color: colors.greySecondaryShade,
+	},
 });
 
 const androidStyles = StyleSheet.create({});
