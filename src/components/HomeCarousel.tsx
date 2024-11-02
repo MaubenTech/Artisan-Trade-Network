@@ -1,9 +1,9 @@
-import { Text } from "./Text";
+import { Text } from "@components/Text";
 import { Link } from "expo-router";
-import colors from "../helpers/colors";
+import colors from "@helpers/colors";
 import React, { useRef, useState } from "react";
 import Carousel from "react-native-snap-carousel";
-import { SwipeData } from "../../app/(home)/Home";
+import { SwipeData } from "app/(tabs)/Home";
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { View, TouchableWithoutFeedback, Image, Dimensions, StyleSheet, TouchableOpacity, Pressable, InteractionManager, useWindowDimensions, ImageBackground } from "react-native";
 import { compactStyles } from "@helpers/styles";

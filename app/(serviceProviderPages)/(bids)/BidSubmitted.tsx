@@ -12,12 +12,10 @@ const BidSubmitted = () => {
 			<View style={styles.successContainer}>
 				<Text style={styles.successTitle}>Bid Submitted Successfully</Text>
 				<View style={styles.successSubTitleContainer}>
-					<Text style={styles.successSubTitle}>
-						Lorem ipsum dolor sit amet, consecteturelit. Etiam sed metus at est iaculis
-					</Text>
+					<Text style={styles.successSubTitle}>Lorem ipsum dolor sit amet, consecteturelit. Etiam sed metus at est iaculis</Text>
 				</View>
 			</View>
-			<ButtonGroup positiveOptionStyle={{}} positiveOption="Go back to home" href={"/(home)/Home"} />
+			<ButtonGroup positiveOptionStyle={{}} positiveOption="Go back to home" href={"/Home"} />
 		</View>
 	);
 };
