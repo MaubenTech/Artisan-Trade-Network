@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
 import colors from "@helpers/colors";
 import { Text } from "@components/Text";
@@ -38,7 +38,7 @@ const PostedJobDetails = () => {
 
 	const dispatch = useAppDispatch();
 
-	useEffect(() => {
+	useFocusEffect(() => {
 		dispatch(hideTabBar());
 
 		return () => {

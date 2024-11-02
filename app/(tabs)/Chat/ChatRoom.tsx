@@ -8,6 +8,7 @@ import { Text, TextInput } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
+import { useFocusEffect } from "expo-router";
 
 const ChatRoom = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
@@ -17,7 +18,7 @@ const ChatRoom = () => {
 
 	const dispatch = useAppDispatch();
 
-	useEffect(() => {
+	useFocusEffect(() => {
 		dispatch(hideTabBar());
 
 		return () => {
