@@ -64,7 +64,11 @@ const Jobs = () => {
                     <SearchBar />
                 </View>
                 <View style={[styles.componentContainer, styles.filterContainer]}>
-                    <FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
+                    <FilterComponent
+                        filterOptions={filterOptions}
+                        selectedOption={filterOption}
+                        onOptionChanged={setFilterOption}
+                    />
                 </View>
                 <ScrollView style={styles.jobContainer} contentContainerStyle={styles.jobContentContainer}>
                     {/* <PostedJobs /> */}

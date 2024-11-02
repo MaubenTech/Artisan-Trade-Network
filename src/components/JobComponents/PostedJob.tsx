@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text } from "../Text";
 import { Link } from "expo-router";
 import colors from "@helpers/colors";
@@ -14,6 +14,7 @@ import { BidStatus } from "app/(home)/Bids";
 import useAppSelector from "@hooks/useAppSelector";
 import { Image } from "expo-image";
 import * as FileSystem from "expo-file-system";
+import { RootState } from "@store";
 
 const { width, height } = Dimensions.get("window");
 
@@ -32,26 +33,9 @@ const setStatusBackgroundColor = (status: JobStatus) => {
 const PostedJob = ({ job }: { job: Job }) => {
     const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-    const jobStage = job.status;
-    const jobImage = job.media;
-
-    const stringifiedJobImage = JSON.stringify(jobImage[0].uri);
-
-    // console.log("Job Images");
-
-    // console.log(JSON.stringify(jobImage[0].uri));
-
-    // console.log(
-    //     "User's Job Stage in Posted Job Component is: " + jobStage + "\n" + "-----------------------------------------"
-    // );
-
     const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 
-    FileSystem.getInfoAsync(jobImage[0].uri).then(({ exists }) => {
-        if (!exists) {
-            console.warn("Image file does not exist at path:", jobImage[0].uri);
-        }
-    });
+    const selectedJob = useAppSelector((state: RootState) => selectJobById(state, job._id));
 
     return (
         <Link
@@ -63,7 +47,7 @@ const PostedJob = ({ job }: { job: Job }) => {
             <TouchableOpacity>
                 <View style={styles.jobPicture}>
                     {/* <JobPicture /> */}
-                    <Image source={{ uri: jobImage[0].uri }} style={styles.jobPicture} />
+                    <Image source={selectedJob.media[0].uri} style={styles.jobThumbnail} />
                 </View>
                 <View style={styles.jobDetailContainer}>
                     <View style={[styles.jobDetailHeader]}>
@@ -91,7 +75,7 @@ const PostedJob = ({ job }: { job: Job }) => {
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
                             <Clock style={styles.clock} />
-                            <Text style={styles.jobDate}>11/04/2023</Text>
+                            <Text style={styles.jobDate}>{job.createdAt}</Text>
                         </View>
                     </View>
                 </View>
@@ -112,7 +96,12 @@ const generalStyles = StyleSheet.create({
     },
 
     jobPicture: {
-        backgroundColor: "green",
+        borderRadius: 10,
+    },
+
+    jobThumbnail: {
+        width: 100,
+        height: 60,
         borderRadius: 10,
     },
 

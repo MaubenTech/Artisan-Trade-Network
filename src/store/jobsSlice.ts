@@ -55,8 +55,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Active",
-        createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "2",
@@ -75,8 +75,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Active",
-        createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "3",
@@ -94,8 +94,8 @@ const dummyJob: Job[] = [
         ],
         userId: "2",
         status: "Active",
-        createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "4",
@@ -113,8 +113,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Completed",
-        createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "5",
@@ -133,8 +133,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "6",
@@ -152,8 +152,8 @@ const dummyJob: Job[] = [
         ],
         userId: "2",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "7",
@@ -171,8 +171,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "8",
@@ -191,8 +191,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "9",
@@ -210,8 +210,8 @@ const dummyJob: Job[] = [
         ],
         userId: "2",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "10",
@@ -229,8 +229,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 7, 31).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "11",
@@ -249,8 +249,8 @@ const dummyJob: Job[] = [
         ],
         userId: "1",
         status: "Posted",
-        createdAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 8, 20).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
     {
         _id: "12",
@@ -268,8 +268,8 @@ const dummyJob: Job[] = [
         ],
         userId: "2",
         status: "Completed",
-        createdAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
-        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toString(), //NOTE: The month param uses index, so January is 0, not 1.
+        createdAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
+        updatedAt: new Date(2024, 9, 14, 4, 9, 44).toLocaleDateString(), //NOTE: The month param uses index, so January is 0, not 1.
     },
 ];
 
@@ -329,8 +329,8 @@ const jobSlice = createSlice({
                     _id: String(state.jobList.length + 1),
                     userId: "current_user_id",
                     status: "Posted",
-                    createdAt: new Date().toString(),
-                    updatedAt: new Date().toString(),
+                    createdAt: new Date().toLocaleDateString(),
+                    updatedAt: new Date().toLocaleDateString(),
                 } as Job;
                 state.jobList.push(newJob);
                 state.currentJob = {
