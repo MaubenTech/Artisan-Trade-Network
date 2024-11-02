@@ -8,12 +8,12 @@ import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
-const ChatList = ({ item }: { item: number }) => {
+const ChatPreview = ({ item }: { item: number }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const openChatRoom = () => {
 		// router.navigate({ pathname: "/ChatRoom" });
-		router.push("/ChatRoom");
+		router.push("/Chat/ChatRoom");
 		// router.push({ pathname: "/ChatRoom" });
 	};
 
@@ -87,4 +87,4 @@ const iosStyles = StyleSheet.create({
 	},
 });
 
-export default ChatList;
+export default ChatPreview;

@@ -1,7 +1,7 @@
 import { LinkProps, useNavigation } from "expo-router";
-import colors from "../../src/helpers/colors";
+import colors from "../../../src/helpers/colors";
 import { compactStyles } from "@helpers/styles";
-import { Text } from "../../src/components/Text";
+import { Text } from "../../../src/components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RewardIcon from "@assets/images/reward.svg";
 import MenuHeader from "@components/MenuHeader";
@@ -9,7 +9,7 @@ import HomeCarousel from "@components/HomeCarousel";
 import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
 
-import { BidJob, PostedBid } from "./Bids";
+import { BidJob, PostedBid } from "../Bids";
 import { selectCurrentUser } from "@store/authSlice";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectRecommendedBidJobs } from "@store/bidsSlice";
@@ -30,7 +30,7 @@ export interface SwipeData extends LinkProps<string> {
 	secondIcon?: ReactElement<any, any>;
 }
 
-export default function Home() {
+export default function HomePage() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [notificationPresent, setNotificationPresent] = useState(false);
 

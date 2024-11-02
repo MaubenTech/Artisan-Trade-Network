@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import colors from "../../src/helpers/colors";
-import ChatHeader from "../../src/components/ChatHeader";
+import colors from "../../../src/helpers/colors";
+import ChatHeader from "../../../src/components/ChatHeader";
 import { View, StyleSheet, Platform } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import CustomKeyboardView from "../../src/components/CustomKeyboardView";
-import { Text, TextInput } from "../../src/components/Text";
+import CustomKeyboardView from "../../../src/components/CustomKeyboardView";
+import { Text, TextInput } from "../../../src/components/Text";
 import { compactStyles } from "@helpers/styles";
 
 const ChatRoom = () => {
@@ -36,9 +36,7 @@ const ChatRoom = () => {
 						</View>
 						<View style={styles.messageReceivedBubble}>
 							<View style={styles.messageReceived}>
-								<Text style={styles.messageSentReceived}>
-									Yes I will, I am currently finishing up a job but will head to your axis in an hour time.
-								</Text>
+								<Text style={styles.messageSentReceived}>Yes I will, I am currently finishing up a job but will head to your axis in an hour time.</Text>
 							</View>
 							<Text style={styles.receivedMessageTime}>12:20</Text>
 						</View>
@@ -64,9 +62,7 @@ const ChatRoom = () => {
 					<View style={styles.chatActionIcon}>
 						<Ionicons name="camera-outline" size={20} />
 					</View>
-					<View style={styles.chatActionIcon}>
-						{inputStart ? <Ionicons name="send" size={20} /> : <Ionicons name="mic-outline" size={20} />}
-					</View>
+					<View style={styles.chatActionIcon}>{inputStart ? <Ionicons name="send" size={20} /> : <Ionicons name="mic-outline" size={20} />}</View>
 				</View>
 			</View>
 		</CustomKeyboardView>

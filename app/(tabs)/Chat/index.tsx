@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import ChatList from "../(chatPage)/ChatList";
+import ChatPreview from "../../../src/components/chatComponents/ChatPreview";
 import { useNavigation, useRouter } from "expo-router";
-import SearchBar from "../../src/components/SearchBar";
-import MenuHeader from "../../src/components/MenuHeader";
-import FilterComponent from "../../src/components/FilterComponent";
+import SearchBar from "../../../src/components/SearchBar";
+import MenuHeader from "../../../src/components/MenuHeader";
+import FilterComponent from "../../../src/components/FilterComponent";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { compactStyles } from "@helpers/styles";
 import colors from "@helpers/colors";
-
+//TODO: Optimize imports and use @components
 const filterOptions = [
 	{
 		optionTitle: "All",
@@ -34,17 +34,13 @@ export default function Chat() {
 					<SearchBar />
 				</View>
 				<View style={styles.searchFilterContainer}>
-					<FilterComponent
-						filterOptions={filterOptions}
-						selectedOption={filterOption}
-						onOptionChanged={setFilterOption}
-					/>
+					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
 				</View>
 				<View>
 					<FlatList
 						data={users}
 						contentContainerStyle={styles.chatListContainer}
-						renderItem={({ item, index }) => <ChatList item={item} />}
+						renderItem={({ item, index }) => <ChatPreview item={item} />}
 						// keyExtractor={(item) => Math.random()}
 						showsVerticalScrollIndicator={false}
 					/>
