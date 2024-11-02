@@ -8,6 +8,7 @@ import serviceReducer from "./servicesSlice";
 import notificationReducer from "./notificationsSlice";
 import registrationReducer from "./registrationSlice";
 import profilePageReducer from "./profilePageSlice";
+import miscellaneousReducer from "./miscellaneousSlice";
 
 const store = configureStore({
 	reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
 		notifications: notificationReducer,
 		registration: registrationReducer,
 		profilePage: profilePageReducer,
+		miscellaneous: miscellaneousReducer,
 	},
 });
 
