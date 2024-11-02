@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import React from "react";
 import { Text } from "./Text";
-import colors from "../helpers/colors";
+import colors from "@helpers/colors";
 import { Href, Link, LinkProps } from "expo-router";
 import { WebAnchorProps } from "expo-router/build/link/Link";
 

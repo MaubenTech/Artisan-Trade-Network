@@ -1,6 +1,6 @@
 import React from "react";
-import { Text } from "./Text";
-import colors from "../helpers/colors";
+import { Text } from "@components/Text";
+import colors from "@helpers/colors";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 
 // type ButtonOptions = {

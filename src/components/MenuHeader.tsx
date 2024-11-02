@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
-import colors from "../helpers/colors";
+import colors from "@helpers/colors";
 import { compactStyles } from "@helpers/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MenuIcon from "@assets/images/menuIcon.svg";

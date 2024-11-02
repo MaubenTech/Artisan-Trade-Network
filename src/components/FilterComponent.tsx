@@ -1,7 +1,7 @@
-import colors from "../helpers/colors";
+import colors from "@helpers/colors";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
-import { Text } from "./Text";
+import { Text } from "@components/Text";
 import { router } from "expo-router";
 import { compactStyles } from "@helpers/styles";
 

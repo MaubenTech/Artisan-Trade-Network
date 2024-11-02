@@ -1,5 +1,5 @@
 import { Dimensions } from "react-native";
-import { PlainNamedStyles, StyleKey } from "./styles";
+import { PlainNamedStyles, StyleKey } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
