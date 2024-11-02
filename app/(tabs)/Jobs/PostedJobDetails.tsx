@@ -18,8 +18,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@store";
 import { selectBidById } from "@store/bidsSlice";
 import { Image } from "expo-image";
-import useAppDispatch from "@hooks/useAppDispatch";
-import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,16 +33,6 @@ const PostedJobDetails = () => {
 	media.forEach((medium) => console.log("Current Media: " + medium.uri));
 
 	const { type: userType } = useAppSelector(selectCurrentUser);
-
-	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		dispatch(hideTabBar());
-
-		return () => {
-			dispatch(showTabBar());
-		};
-	});
 	return (
 		<>
 			<PageHeader pageName="Job" />
