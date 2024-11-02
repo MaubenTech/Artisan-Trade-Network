@@ -1,17 +1,29 @@
-import React, { useState } from "react";
-import colors from "../../../src/helpers/colors";
-import ChatHeader from "../../../src/components/ChatHeader";
+import React, { useEffect, useState } from "react";
+import colors from "@helpers/colors";
+import ChatHeader from "@components/ChatHeader";
 import { View, StyleSheet, Platform } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import CustomKeyboardView from "../../../src/components/CustomKeyboardView";
-import { Text, TextInput } from "../../../src/components/Text";
+import CustomKeyboardView from "@components/CustomKeyboardView";
+import { Text, TextInput } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 
 const ChatRoom = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [inputStart, setInputStart] = useState(false);
 
 	const [message, setMessage] = useState<string>("");
+
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		dispatch(hideTabBar());
+
+		return () => {
+			dispatch(showTabBar());
+		};
+	});
 
 	//FIXME: When user attempts going back from the chatroom, the page navigates back to Home, instead of Chat. Fix it!
 	return (
