@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import ChatPreview from "../../../src/components/chatComponents/ChatPreview";
-import { useNavigation, useRouter } from "expo-router";
-import SearchBar from "../../../src/components/SearchBar";
-import MenuHeader from "../../../src/components/MenuHeader";
-import FilterComponent from "../../../src/components/FilterComponent";
+import ChatPreview from "@components/chatComponents/ChatPreview";
+import SearchBar from "@components/SearchBar";
+import MenuHeader from "@components/MenuHeader";
+import FilterComponent from "@components/FilterComponent";
 import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { compactStyles } from "@helpers/styles";
 import colors from "@helpers/colors";
-//TODO: Optimize imports and use @components
+
 const filterOptions = [
 	{
 		optionTitle: "All",
