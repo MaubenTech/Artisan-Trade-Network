@@ -26,7 +26,6 @@ const ChatRoom = () => {
 		};
 	});
 
-	//FIXME: When user attempts going back from the chatroom, the page navigates back to Home, instead of Chat. Fix it!
 	return (
 		<CustomKeyboardView>
 			<View style={styles.parentContainer}>
