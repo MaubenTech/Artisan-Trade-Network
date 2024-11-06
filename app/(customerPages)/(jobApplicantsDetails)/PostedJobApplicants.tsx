@@ -1,30 +1,56 @@
 import React from "react";
-import colors from "../../../src/helpers/colors";
+import colors from "@helpers/colors";
 import { View, StyleSheet, Dimensions } from "react-native";
-import PageHeader from "../../../src/components/PageHeader";
-import JobApplications from "../../../src/components/JobComponents/JobApplications";
+import PageHeader from "@components/PageHeader";
+import JobApplication from "@components/jobComponents/JobApplication";
 
 const { width } = Dimensions.get("window");
 
+export interface ApplicationPreview {
+	applier: string;
+	applicationServiceCategory: string;
+	applicationBid: string;
+	applierDistance: string;
+}
+
+const applications: ApplicationPreview[] = [
+	{
+		applier: "Drew Berry",
+		applicationServiceCategory: "Maintenance",
+		applicationBid: "5,000",
+		applierDistance: "20km",
+	},
+	{
+		applier: "Drew Again",
+		applicationServiceCategory: "Maintenance",
+		applicationBid: "50,000",
+		applierDistance: "20km",
+	},
+];
+
 const PostedJobApplicants = () => {
-    return (
-        <>
-            <PageHeader pageName="Applicants" />
-            <View style={[styles.container]}>
-                <View style={{ flexDirection: "column" }}>
-                    <JobApplications />
-                </View>
-            </View>
-        </>
-    );
+	return (
+		<>
+			<PageHeader pageName="Applicants" />
+			<View style={[styles.container]}>
+				<View style={{ flexDirection: "column" }}>
+					<View style={{ gap: 20 }}>
+						{applications.map((application, index) => {
+							return <JobApplication key={index} application={application} />;
+						})}
+					</View>
+				</View>
+			</View>
+		</>
+	);
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "white",
-        paddingTop: 40,
-    },
+	container: {
+		flex: 1,
+		backgroundColor: "white",
+		paddingTop: 40,
+	},
 });
 
 export default PostedJobApplicants;
