@@ -6,7 +6,7 @@ import React, { Component, ReactElement } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MoreIcon from "@assets/icons/services/moreIcon.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, StyleSheet, ViewStyle, TextStyle, ColorValue, Platform, ImageSourcePropType } from "react-native";
+import { View, StyleSheet, ViewStyle, TextStyle, ColorValue, Platform, ImageSourcePropType, TouchableOpacity } from "react-native";
 import { SvgProps } from "react-native-svg";
 
 const ios = Platform.OS == "ios";
@@ -53,9 +53,9 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 					style={
 						profile
 							? {
-								...styles.pageHeaderElementsContainer,
-								justifyContent: "space-between",
-							}
+									...styles.pageHeaderElementsContainer,
+									justifyContent: "space-between",
+							  }
 							: styles.pageHeaderElementsContainer
 					}
 				>
@@ -77,11 +77,15 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 					{profile ? (
 						isApplicantPage ? (
 							<Link style={styles.settingsContainer} asChild href={"/Settings"}>
-								<MoreIcon color={"black"} />
+								<TouchableOpacity>
+									<MoreIcon color={"black"} />
+								</TouchableOpacity>
 							</Link>
 						) : (
 							<Link style={[styles.settingsContainer]} asChild href={"/Settings"}>
-								<Ionicons name="settings-outline" size={20} />
+								<TouchableOpacity>
+									<Ionicons name="settings-outline" size={20} />
+								</TouchableOpacity>
 							</Link>
 						)
 					) : (
