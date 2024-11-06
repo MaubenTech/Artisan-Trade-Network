@@ -19,7 +19,7 @@ const Posted = () => (
 	<View style={styles.applicantContainer}>
 		<Text style={styles.headerText}>10 Applicants</Text>
 		<Text style={styles.subText}>Click to view all applicants.</Text>
-		<ButtonGroup positiveOption="View All Applicants" href={"/PostedJobApplicants"} />
+		<ButtonGroup positiveOption="View All Applicants" href={"/Jobs/PostedJobApplicants"} />
 	</View>
 );
 
@@ -129,7 +129,7 @@ const BottomModal = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidS
 
 	if (userType === "ARTISAN") {
 		switch (bidStage) {
-			case "Initial":
+			case "Posted":
 				return <SPInitial />;
 			case "Bid":
 				return <></>;
