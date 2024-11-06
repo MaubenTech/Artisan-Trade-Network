@@ -3,6 +3,9 @@ import colors from "@helpers/colors";
 import { View, StyleSheet, Dimensions } from "react-native";
 import PageHeader from "@components/PageHeader";
 import JobApplication from "@components/jobComponents/JobApplication";
+import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
+import { useFocusEffect } from "expo-router";
+import useAppDispatch from "@hooks/useAppDispatch";
 
 const { width } = Dimensions.get("window");
 
@@ -29,6 +32,16 @@ const applications: ApplicationPreview[] = [
 ];
 
 const PostedJobApplicants = () => {
+	const dispatch = useAppDispatch();
+
+	useFocusEffect(() => {
+		dispatch(hideTabBar());
+
+		return () => {
+			dispatch(showTabBar());
+		};
+	});
+
 	return (
 		<>
 			<PageHeader pageName="Applicants" />
