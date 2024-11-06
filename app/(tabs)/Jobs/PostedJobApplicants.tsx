@@ -47,7 +47,7 @@ const PostedJobApplicants = () => {
 			<PageHeader pageName="Applicants" />
 			<View style={[styles.container]}>
 				<View style={{ flexDirection: "column" }}>
-					<View style={{ gap: 20 }}>
+					<View>
 						{applications.map((application, index) => {
 							return <JobApplication key={index} application={application} />;
 						})}
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
-		paddingTop: 40,
 	},
 });
 
