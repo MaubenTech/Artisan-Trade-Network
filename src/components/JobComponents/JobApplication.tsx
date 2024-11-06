@@ -7,7 +7,7 @@ import JobRating from "@assets/images/JobRating.svg";
 import MoreIcon from "@assets/icons/services/moreIcon.svg";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
-import { ApplicationPreview } from "app/(customerPages)/(jobApplicantsDetails)/PostedJobApplicants";
+import { ApplicationPreview } from "app/(tabs)/Jobs/PostedJobApplicants";
 
 const { width, height } = Dimensions.get("window");
 
