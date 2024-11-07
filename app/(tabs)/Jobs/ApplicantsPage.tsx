@@ -1,6 +1,6 @@
 import colors from "@helpers/colors";
 import { Text } from "@components/Text";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
 import PageHeader from "@components/PageHeader";
 import { compactStyles } from "@helpers/styles";
@@ -10,6 +10,8 @@ import JobRating from "@assets/images/JobRating.svg";
 import React, { useCallback, useEffect, useState } from "react";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import { StyleSheet, View, Platform, Dimensions, TouchableOpacity, ScrollView } from "react-native";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 
 const { width } = Dimensions.get("window");
 
@@ -20,6 +22,7 @@ const ApplicantsPage = () => {
 
 	const [isBidApproved, setIsBidApproved] = useState<boolean>(false);
 	const [pendingState, setPendingState] = useState<boolean>(false);
+	const dispatch = useAppDispatch();
 
 	const toggleBidApproval = () => {
 		setIsBidApproved(!isBidApproved);
@@ -32,6 +35,14 @@ const ApplicantsPage = () => {
 	const togglePendingState = () => {
 		setPendingState(!pendingState);
 	};
+
+	useFocusEffect(() => {
+		dispatch(hideTabBar());
+
+		return () => {
+			dispatch(showTabBar());
+		};
+	});
 
 	return (
 		<>
