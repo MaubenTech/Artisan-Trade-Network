@@ -13,7 +13,7 @@ const { width, height } = Dimensions.get("window");
 
 const JobApplication = ({ application }: { application: ApplicationPreview }) => {
 	return (
-		<Link style={styles.application} asChild href={"/ApplicantsPage"}>
+		<Link style={styles.application} asChild href={"/Jobs/ApplicantsPage"}>
 			<TouchableOpacity>
 				<View style={styles.jobPicture}>
 					<ProfilePicture />
