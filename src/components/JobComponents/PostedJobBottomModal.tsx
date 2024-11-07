@@ -15,11 +15,11 @@ import useAppDispatch from "@hooks/useAppDispatch";
 
 const { width, height } = Dimensions.get("window");
 
-const Posted = () => (
+const Posted = ({ jobId }: { jobId: string }) => (
 	<View style={styles.applicantContainer}>
 		<Text style={styles.headerText}>10 Applicants</Text>
 		<Text style={styles.subText}>Click to view all applicants.</Text>
-		<ButtonGroup positiveOption="View All Applicants" href={"/Jobs/PostedJobApplicants"} />
+		<ButtonGroup positiveOption="View All Applicants" href={{ pathname: "/Jobs/PostedJobApplicants", params: { jobId } }} />
 	</View>
 );
 
@@ -119,7 +119,7 @@ const BottomModal = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidS
 	if (userType == "NORMAL") {
 		switch (jobStage) {
 			case "Posted":
-				return <Posted />;
+				return <Posted jobId={jobId} />;
 			case "Active":
 				return <Active jobId={jobId} jobStage={jobStage} />;
 			case "Completed":
