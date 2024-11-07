@@ -1,6 +1,6 @@
 import colors from "@helpers/colors";
 import { Text } from "@components/Text";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { Shadow } from "react-native-shadow-2";
 import PageHeader from "@components/PageHeader";
 import { compactStyles } from "@helpers/styles";
@@ -12,6 +12,9 @@ import ProfilePicture from "@assets/components/chatList/images/profilePicture.sv
 import { StyleSheet, View, Platform, Dimensions, TouchableOpacity, ScrollView } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
+import useAppSelector from "@hooks/useAppSelector";
+import { selectBidById } from "@store/bidsSlice";
+import { selectUserById } from "@store/usersSlice";
 
 const { width } = Dimensions.get("window");
 
@@ -19,6 +22,10 @@ const ApplicantsPage = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const router = useRouter();
+
+	const { bidId }: { bidId: string } = useLocalSearchParams();
+	const bid = useAppSelector((state) => selectBidById(state, bidId));
+	const user = useAppSelector((state) => selectUserById(state, bid.artisanId));
 
 	const [isBidApproved, setIsBidApproved] = useState<boolean>(false);
 	const [pendingState, setPendingState] = useState<boolean>(false);
@@ -46,7 +53,7 @@ const ApplicantsPage = () => {
 
 	return (
 		<>
-			<PageHeader profile profileName="Drew Berry" isApplicantPage pageName="" />
+			<PageHeader profile profileName={user.name} isApplicantPage pageName="" />
 			<ScrollView contentContainerStyle={styles.container}>
 				<View style={styles.componentContainer}>
 					<Text style={styles.componentContainerHeader}>Bio</Text>
@@ -58,7 +65,7 @@ const ApplicantsPage = () => {
 				<View style={[styles.componentContainer, { flexDirection: "row", gap: 50 }]}>
 					<View>
 						<Text style={styles.componentContainerHeader}>Bid</Text>
-						<Text>₦ 50,000</Text>
+						<Text>₦ {bid.bidPrice}</Text>
 					</View>
 					<View>
 						<Text style={styles.componentContainerHeader}>Distance</Text>
@@ -75,7 +82,7 @@ const ApplicantsPage = () => {
 					</View>
 				</View>
 				<View style={[styles.componentContainer]}>
-					<Text style={styles.componentContainerHeader}>Review</Text>
+					<Text style={styles.componentContainerHeader}>Reviews</Text>
 					<Text style={styles.componentContainerContent}>
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed metus at est iaculis mattis.
 					</Text>
