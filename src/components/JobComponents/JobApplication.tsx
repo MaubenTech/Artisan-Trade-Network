@@ -8,26 +8,32 @@ import MoreIcon from "@assets/icons/services/moreIcon.svg";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import { ApplicationPreview } from "app/(tabs)/Jobs/PostedJobApplicants";
+import { Bid } from "@store/bidsSlice";
+import useAppSelector from "@hooks/useAppSelector";
+import { selectUserById } from "@store/usersSlice";
+import { selectJobById } from "@store/jobsSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const JobApplication = ({ application }: { application: ApplicationPreview }) => {
+const JobApplication = ({ bid }: { bid?: Bid }) => {
+	const user = useAppSelector((state) => selectUserById(state, bid.artisanId));
+	const job = useAppSelector((state) => selectJobById(state, bid.jobId));
 	return (
-		<Link style={styles.application} asChild href={"/Jobs/ApplicantsPage"}>
+		<Link style={styles.application} asChild href={{ pathname: "/Jobs/ApplicantsPage", params: { bidId: bid._id } }}>
 			<TouchableOpacity>
 				<View style={styles.jobPicture}>
 					<ProfilePicture />
 				</View>
 				<View style={styles.applicationDetailContainer}>
 					<View style={styles.applicationDetailHeader}>
-						<Text style={styles.applicationDetailText}>{application.applier}</Text>
+						<Text style={styles.applicationDetailText}>{user.name}</Text>
 						<MoreIcon color={"black"} />
 					</View>
 					<View style={{ flexDirection: "row", gap: 10 }}>
 						<Text style={styles.jobDetailContent} lineBreakMode="middle" numberOfLines={2}>
-							₦ {application.applicationBid}
+							₦ {bid.bidPrice}
 						</Text>
-						<Text style={styles.jobServiceCategory}>{application.applicationServiceCategory}</Text>
+						<Text style={styles.jobServiceCategory}>{job.type}</Text>
 					</View>
 					<View style={styles.jobDetailFooter}>
 						<View
@@ -42,7 +48,7 @@ const JobApplication = ({ application }: { application: ApplicationPreview }) =>
 						</View>
 						<Text style={styles.jobDate}>
 							<Ionicons name="pin-outline" color={colors.mainColor} />
-							{application.applierDistance}
+							{"20km"}
 						</Text>
 					</View>
 				</View>

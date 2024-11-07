@@ -4,8 +4,10 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import PageHeader from "@components/PageHeader";
 import JobApplication from "@components/jobComponents/JobApplication";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import useAppDispatch from "@hooks/useAppDispatch";
+import useAppSelector from "@hooks/useAppSelector";
+import { selectBidsByJobId } from "@store/bidsSlice";
 
 const { width } = Dimensions.get("window");
 
@@ -32,6 +34,8 @@ const applications: ApplicationPreview[] = [
 ];
 
 const PostedJobApplicants = () => {
+	const { jobId }: { jobId: string } = useLocalSearchParams();
+	const bids = useAppSelector((state) => selectBidsByJobId(state, jobId));
 	const dispatch = useAppDispatch();
 
 	useFocusEffect(() => {
@@ -48,8 +52,8 @@ const PostedJobApplicants = () => {
 			<View style={[styles.container]}>
 				<View style={{ flexDirection: "column" }}>
 					<View>
-						{applications.map((application, index) => {
-							return <JobApplication key={index} application={application} />;
+						{bids.map((bid, index) => {
+							return <JobApplication key={index} bid={bid} />;
 						})}
 					</View>
 				</View>
