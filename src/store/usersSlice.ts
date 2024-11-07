@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@store";
 
 interface UserState {
-	id: number;
+	_id: string;
 	name: string;
 	nickName: string;
 	email: string;
@@ -11,25 +11,32 @@ interface UserState {
 
 const initialState: UserState[] = [
 	{
-		id: 1,
+		_id: "1",
 		name: "John Doe",
 		nickName: "John",
 		email: "johndoe@gmail.com",
 		type: "ARTISAN",
 	},
 	{
-		id: 2,
+		_id: "2",
 		name: "Janet Stones",
 		nickName: "Janet",
 		email: "janetstones@gmail.com",
 		type: "NORMAL",
 	},
 	{
-		id: 3,
+		_id: "3",
 		name: "Nonso Ali",
 		nickName: "Nonso",
 		email: "nonsoali@gmail.com",
 		type: "NORMAL",
+	},
+	{
+		_id: "4",
+		name: "Drew Berry",
+		nickName: "Drew",
+		email: "drewberry@gmail.com",
+		type: "ARTISAN",
 	},
 ];
 
@@ -39,7 +46,7 @@ const userSlice = createSlice({
 	reducers: {},
 	selectors: {
 		selectUsers: (users: UserState[]) => users,
-		selectUserById: (users: UserState[], userId: number) => users.find((user) => user.id === userId),
+		selectUserById: (users: UserState[], userId: string) => users.find((user) => user._id === userId),
 		selectUserByEmail: (users: UserState[], email: string) => users.find((user) => user.email === email),
 	},
 });
