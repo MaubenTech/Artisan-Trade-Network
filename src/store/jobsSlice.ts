@@ -342,6 +342,7 @@ const jobSlice = createSlice({
 	},
 	selectors: {
 		selectJobsState: (jobs: JobState) => jobs,
+		selectAllJobs: (jobs: JobState) => jobs.jobList,
 	},
 	// extraReducers: (builder) => {
 	// 	builder
@@ -360,7 +361,7 @@ const jobSlice = createSlice({
 	// 			console.error("Failed to fetch Jobs");
 	// 		});
 	// },
-	// TODO: When we start connecting to the api, this becomes useful
+	// NOTE: When we start connecting to the api, this becomes useful
 });
 
 export const selectJobTitles = createSelector(
@@ -371,12 +372,17 @@ export const selectJobTitles = createSelector(
 export const { markJobCompleted, addNewJob, updateJobStatus, setJobTitle, setJobType, setJobDescription, setJobBudget, setJobAddress, setJobService, setJobMedia, submitJob, resetCurrentJob } =
 	jobSlice.actions;
 
-export const { selectJobsState } = jobSlice.selectors;
+export const { selectJobsState, selectAllJobs } = jobSlice.selectors;
 
-export const selectJobById = (stateOrJobs: RootState | JobState, jobId: string): Job => {
-	if ("jobs" in stateOrJobs) {
-		return stateOrJobs.jobs.jobList.find((job) => job._id === jobId);
-	} else return stateOrJobs.jobList.find((job) => job._id === jobId);
+export const selectJobById = (stateOrJobsOrJobList: RootState | JobState | Job[], jobId: string): Job => {
+	if ("jobs" in stateOrJobsOrJobList) {
+		return stateOrJobsOrJobList.jobs.jobList.find((job) => job._id === jobId);
+	} else if ("jobList" in stateOrJobsOrJobList) {
+		return stateOrJobsOrJobList.jobList.find((job) => job._id === jobId);
+	} else if (Array.isArray(stateOrJobsOrJobList)) {
+		console.log("Job list is array");
+		return stateOrJobsOrJobList.find((job) => job._id === jobId);
+	}
 };
 
 export default jobSlice.reducer;
