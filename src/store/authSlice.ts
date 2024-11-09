@@ -80,6 +80,13 @@ const authSlice = createSlice({
 				email: "nonsoali@gmail.com",
 				type: "NORMAL",
 			};
+			const DREW_BERRY: User = {
+				_id: "4",
+				name: "Drew Berry",
+				nickName: "Drew",
+				email: "drewberry@gmail.com",
+				type: "ARTISAN",
+			};
 			const DEFAULT: User = {
 				_id: "-1",
 				name: "Unknown",
@@ -97,6 +104,9 @@ const authSlice = createSlice({
 					break;
 				case "nonsoali@gmail.com":
 					state.user = NONSO_ALI;
+					break;
+				case "drewberry@gmail.com":
+					state.user = DREW_BERRY;
 					break;
 				default:
 					state.user = DEFAULT;
