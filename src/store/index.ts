@@ -9,6 +9,7 @@ import notificationReducer from "./notificationsSlice";
 import registrationReducer from "./registrationSlice";
 import profilePageReducer from "./profilePageSlice";
 import miscellaneousReducer from "./miscellaneousSlice";
+import approveAcceptedBidMiddleware from "./middlewares/approveAcceptedBidMiddleware";
 
 const store = configureStore({
 	reducer: {
@@ -23,6 +24,7 @@ const store = configureStore({
 		profilePage: profilePageReducer,
 		miscellaneous: miscellaneousReducer,
 	},
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(approveAcceptedBidMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
