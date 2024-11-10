@@ -37,7 +37,12 @@ const PostedJob = ({ job, isLastIndex }: { job: Job; isLastIndex: boolean }) => 
 	const selectedJob = useAppSelector((state: RootState) => selectJobById(state, job._id));
 
 	return (
-		<Link style={{ ...styles.job, borderBottomWidth: isLastIndex ? 0 : 1 }} asChild href={{ pathname: "/Jobs/PostedJobDetails", params: { jobId: job._id } }} key={job._id}>
+		<Link
+			style={{ ...styles.job, borderBottomWidth: isLastIndex ? 0 : 1 }}
+			asChild
+			href={{ pathname: "/Jobs/PostedJobDetails", params: { jobId: job._id } }}
+			key={job._id}
+		>
 			<TouchableOpacity>
 				<View style={styles.jobPicture}>
 					{/* <JobPicture /> */}
