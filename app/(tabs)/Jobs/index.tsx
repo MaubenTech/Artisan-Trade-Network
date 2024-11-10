@@ -16,7 +16,7 @@ import { selectJobsState } from "@store/jobsSlice";
 
 const { width, height } = Dimensions.get("window");
 
-export type JobStatus = "Posted" | "Active" | "Completed";
+export type JobStatus = "Posted" | "Active" | "Completed" | "Cancelled";
 
 export type Job = {
 	jobTitle: string;
