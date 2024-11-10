@@ -10,14 +10,10 @@ import { selectJobById, selectJobsState } from "@store/jobsSlice";
 import { RootState } from "@store";
 import { selectFirstBidByJobId } from "@store/bidsSlice";
 
-const PostedJobProgressStatus = ({ jobId }: { jobId?: string }) => {
+const PostedJobProgressStatus = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidStage?: BidStatus | JobStatus; jobId: string }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const { type: userType } = useAppSelector(selectCurrentUser);
 	const isServiceProvider = userType === "ARTISAN";
-
-	const { status: jobStage } = useAppSelector((state: RootState) => selectJobById(state, jobId));
-	//TODO: You're not meant to be using selectFirstBidByJobId here, find an alternative!
-	const { status: bidStage } = useAppSelector((state) => selectFirstBidByJobId(state, jobId)) ?? { status: jobStage };
 
 	let numerator = -1;
 
