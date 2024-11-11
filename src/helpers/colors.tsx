@@ -14,6 +14,7 @@ const colors = {
 	grey2: "#F8F8F8",
 	subTitlesColor: "#4D4D4D",
 	inputBorderColor: "#EBEBEB",
+	darkInputBorderColor: "#D2D2D2",
 	buttonBorderColor: "#2B2B2B",
 	listItemBorderColor: "#94A3B1",
 	white: "#FFFFFF",
