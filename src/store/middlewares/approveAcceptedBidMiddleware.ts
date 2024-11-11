@@ -2,7 +2,6 @@ import { approveAcceptedBid, selectBidById } from "@store/bidsSlice";
 import { selectJobById, updateJobStatus } from "@store/jobsSlice";
 
 const approveAcceptedBidMiddleware = (store) => (next) => (action) => {
-	console.log("In the middleware function!");
 	const result = next(action);
 	//TODO: Make sure approval for accepted bid is the first for the job, ie. Job is not yet active already! - Done!
 
