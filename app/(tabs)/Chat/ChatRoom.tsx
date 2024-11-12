@@ -23,6 +23,7 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, timestamp, isCurrentUser }) => {
+	console.log("Message Received: ", message);
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	return (
 		<>
@@ -45,8 +46,6 @@ const ChatRoom = () => {
 
 	const { chatPartnerID, item }: { chatPartnerID: string; item: string } = useLocalSearchParams();
 
-	console.log("Partner ID: " + chatPartnerID);
-
 	// const convertedChatPartnerID = Array.isArray(chatPartnerID) ? Number(chatPartnerID[0]) : Number(chatPartnerID);
 
 	const chatPartnerDetails = item && !Array.isArray(item) ? (JSON.parse(item) as UserState) : null;
@@ -59,9 +58,8 @@ const ChatRoom = () => {
 			(msg.senderId === chatPartnerID && msg.chatPartnerID === currentUser._id)
 	);
 
-	console.log("Messages : \n", filteredMessages);
-
-	console.log("The logged in user Id: " + currentUser._id);
+	// console.log("Filtered Messages: ", filteredMessages);
+	// console.log("Raw Messages: ", messages);
 
 	const dispatch = useAppDispatch();
 
@@ -91,7 +89,10 @@ const ChatRoom = () => {
 
 	useEffect(() => {
 		// messages.forEach((message) => console.log("UPDATED mESSAGES: " + message.message));
-		console.log("Updated Messages: ", filteredMessages);
+		// console.log("Updated Messages: ", filteredMessages);
+
+		console.log("Partner ID: " + chatPartnerID);
+		console.log("The logged in user Id: " + currentUser._id);
 	}, [messages]);
 
 	return (
