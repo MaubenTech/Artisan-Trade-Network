@@ -24,6 +24,7 @@ const store = configureStore({
 		registration: registrationReducer,
 		profilePage: profilePageReducer,
 		miscellaneous: miscellaneousReducer,
+		messages: chatReducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(approveAcceptedBidMiddleware),
 });

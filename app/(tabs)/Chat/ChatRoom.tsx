@@ -43,11 +43,11 @@ const ChatRoom = () => {
 
 	const messages = useAppSelector(selectMessages);
 
-	const { chatPartnerID, item } = useLocalSearchParams();
+	const { chatPartnerID, item }: { chatPartnerID: string; item: string } = useLocalSearchParams();
 
 	console.log("Partner ID: " + chatPartnerID);
 
-	const convertedChatPartnerID = Array.isArray(chatPartnerID) ? Number(chatPartnerID[0]) : Number(chatPartnerID);
+	// const convertedChatPartnerID = Array.isArray(chatPartnerID) ? Number(chatPartnerID[0]) : Number(chatPartnerID);
 
 	const chatPartnerDetails = item && !Array.isArray(item) ? (JSON.parse(item) as UserState) : null;
 
@@ -55,13 +55,13 @@ const ChatRoom = () => {
 
 	const filteredMessages = messages.filter(
 		(msg) =>
-			(msg.senderId === currentUser.id && msg.chatPartnerID === convertedChatPartnerID) ||
-			(msg.senderId === convertedChatPartnerID && msg.chatPartnerID === currentUser.id)
+			(msg.senderId === currentUser._id && msg.chatPartnerID === chatPartnerID) ||
+			(msg.senderId === chatPartnerID && msg.chatPartnerID === currentUser._id)
 	);
 
 	console.log("Messages : \n", filteredMessages);
 
-	console.log("The logged in user Id: " + currentUser.id);
+	console.log("The logged in user Id: " + currentUser._id);
 
 	const dispatch = useAppDispatch();
 
@@ -79,9 +79,9 @@ const ChatRoom = () => {
 				addChat({
 					id: uuidv4(),
 					message: message.trim(),
-					senderId: currentUser.id,
+					senderId: currentUser._id,
 					timestamp: new Date().toLocaleDateString(),
-					chatPartnerID: convertedChatPartnerID,
+					chatPartnerID: chatPartnerID,
 				})
 			);
 		}
@@ -131,7 +131,7 @@ const ChatRoom = () => {
 								key={message.id}
 								message={message.message}
 								timestamp={message.timestamp}
-								isCurrentUser={message.senderId === currentUser.id}
+								isCurrentUser={message.senderId === currentUser._id}
 							/>
 						))}
 					</View>

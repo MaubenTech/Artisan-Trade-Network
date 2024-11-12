@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@store";
 
-interface UserState {
+export interface UserState {
 	_id: string;
 	name: string;
 	nickName: string;

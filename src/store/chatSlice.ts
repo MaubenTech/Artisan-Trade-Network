@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserState } from "./usersSlice";
 import { RootState } from "@store";
 import { v4 as uuidv4 } from "uuid";
+import { UserState } from "./usersSlice";
 
 interface Message {
 	id: string;
-	chatPartnerID?: number;
-	senderId: number;
+	chatPartnerID?: string;
+	senderId: string;
 	message: string;
 	userName?: string;
 	timestamp: string;
@@ -20,22 +20,22 @@ interface ChatState {
 
 const initialState: ChatState = {
 	currentUser: {
-		id: 2,
+		_id: "2",
 		name: "Janet Stones",
 		nickName: "Janet",
 		email: "janetstones@gmail.com",
 		type: "NORMAL",
 	},
 	receiver: {
-		id: 1,
+		_id: "1",
 		name: "John Doe",
 		nickName: "John",
 		email: "johndoe@gmail.com",
 		type: "ARTISAN",
 	},
 	messages: [
-		{ id: uuidv4(), senderId: 2, message: "Please abeg", timestamp: new Date().toLocaleDateString(), chatPartnerID: 1 },
-		{ id: uuidv4(), senderId: 1, message: "Sike", timestamp: new Date().toLocaleDateString(), chatPartnerID: 2 },
+		{ id: uuidv4(), senderId: "2", message: "Please abeg", timestamp: new Date().toLocaleDateString(), chatPartnerID: "1" },
+		{ id: uuidv4(), senderId: "1", message: "Sike", timestamp: new Date().toLocaleDateString(), chatPartnerID: "2" },
 	],
 };
 

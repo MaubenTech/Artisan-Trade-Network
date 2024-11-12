@@ -12,7 +12,7 @@ import { selectMessages } from "@store/chatSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const ChatPreview = ({ item, chatPartnerID }: { item: UserState; chatPartnerID: number }) => {
+const ChatPreview = ({ item, chatPartnerID }: { item: UserState; chatPartnerID: string }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const openChatRoom = () => {

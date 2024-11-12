@@ -29,7 +29,7 @@ export default function Chat() {
 	const [filterOption, setFilterOption] = useState<string | number>("All");
 	const [users, setUsers] = useState([]);
 
-	const filteredUsers = allUsers.filter((user) => user.id !== currentUser.id);
+	const filteredUsers = allUsers.filter((user) => user._id !== currentUser._id);
 	return (
 		<View style={styles.container}>
 			<View style={styles.menuContainer}>
@@ -46,7 +46,7 @@ export default function Chat() {
 					<FlatList
 						data={filteredUsers}
 						contentContainerStyle={styles.chatListContainer}
-						renderItem={({ item, index }) => <ChatPreview item={item} chatPartnerID={item.id} />}
+						renderItem={({ item, index }) => <ChatPreview item={item} chatPartnerID={item._id} />}
 						// keyExtractor={(item) => Math.random()}
 						showsVerticalScrollIndicator={false}
 					/>
