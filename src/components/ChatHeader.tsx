@@ -11,51 +11,9 @@ import { StatusBar } from "expo-status-bar";
 
 const ProfilePic = require("@assets/images/profilePic.png");
 
-const ChatHeader = () => {
+const ChatHeader = ({ chatPartnerName }: { chatPartnerName: string }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const router = useRouter();
-	// return (
-	// 	<Stack.Screen
-	// 		options={{
-	// 			title: "",
-	// 			headerShown: true,
-	// 			headerShadowVisible: false,
-	// 			headerLeft: () => (
-	// 				<View style={styles.container}>
-	// 					<Pressable style={styles.backButton} onPress={() => router.back()}>
-	// 						<Ionicons name="chevron-back" size={20} />
-	// 					</Pressable>
-	// 					<View style={styles.recipientDetailContainer}>
-	// 						<View style={styles.recipientProfilePicture}>
-	// 							<Image
-	// 								source={ProfilePic}
-	// 								style={styles.profilePic}
-	// 								contentFit="contain"
-	// 							/>
-	// 						</View>
-	// 						<View style={styles.recipientDetail}>
-	// 							<Text style={styles.recipientName}>Daniel Victor</Text>
-	// 							<Text style={styles.recipientActiveStatus}>
-	// 								Last Seen today 10:23pm
-	// 							</Text>
-	// 						</View>
-	// 					</View>
-	// 				</View>
-	// 			),
-
-	// 			headerRight: () => (
-	// 				<View style={styles.contactRecipient}>
-	// 					<View style={styles.contactIcon}>
-	// 						<Ionicons name="videocam-outline" size={20} />
-	// 					</View>
-	// 					<View style={styles.contactIcon}>
-	// 						<Ionicons name="call-outline" size={20} />
-	// 					</View>
-	// 				</View>
-	// 			),
-	// 		}}
-	// 	/>
-	// );
 
 	return (
 		<>
@@ -80,7 +38,7 @@ const ChatHeader = () => {
 								<Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
 							</View>
 							<View style={styles.recipientDetail}>
-								<Text style={styles.recipientName}>Daniel Victor</Text>
+								<Text style={styles.recipientName}>{chatPartnerName}</Text>
 								<Text style={styles.recipientActiveStatus}>Last Seen today 10:23pm</Text>
 							</View>
 						</View>

@@ -1,20 +1,67 @@
 import React, { useEffect, useState } from "react";
 import colors from "@helpers/colors";
 import ChatHeader from "@components/ChatHeader";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform, FlatList, ScrollView, KeyboardAvoidingView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { Text, TextInput } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import useAppSelector from "@hooks/useAppSelector";
+import { RootState } from "@store";
+import { addChat, selectMessages } from "@store/chatSlice";
+import { selectCurrentUser } from "@store/authSlice";
+import { v4 as uuidv4 } from "uuid";
+import { UserState } from "@store/usersSlice";
+
+interface MessageBubbleProps {
+	message: string;
+	timestamp: string;
+	isCurrentUser: boolean;
+}
+
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, timestamp, isCurrentUser }) => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	return (
+		<>
+			<View style={isCurrentUser ? styles.messageSentBubble : styles.messageReceivedBubble}>
+				<Text style={isCurrentUser ? styles.messageSentText : styles.messageReceived}>{message}</Text>
+				<Text style={isCurrentUser ? styles.messageTime : styles.receivedMessageTime}>{timestamp}</Text>
+			</View>
+		</>
+	);
+};
 
 const ChatRoom = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+
 	const [inputStart, setInputStart] = useState(false);
 
 	const [message, setMessage] = useState<string>("");
+
+	const messages = useAppSelector(selectMessages);
+
+	const { chatPartnerID, item } = useLocalSearchParams();
+
+	console.log("Partner ID: " + chatPartnerID);
+
+	const convertedChatPartnerID = Array.isArray(chatPartnerID) ? Number(chatPartnerID[0]) : Number(chatPartnerID);
+
+	const chatPartnerDetails = item && !Array.isArray(item) ? (JSON.parse(item) as UserState) : null;
+
+	const currentUser = useAppSelector(selectCurrentUser);
+
+	const filteredMessages = messages.filter(
+		(msg) =>
+			(msg.senderId === currentUser.id && msg.chatPartnerID === convertedChatPartnerID) ||
+			(msg.senderId === convertedChatPartnerID && msg.chatPartnerID === currentUser.id)
+	);
+
+	console.log("Messages : \n", filteredMessages);
+
+	console.log("The logged in user Id: " + currentUser.id);
 
 	const dispatch = useAppDispatch();
 
@@ -26,12 +73,37 @@ const ChatRoom = () => {
 		};
 	});
 
+	const sendMessage = () => {
+		if (message.trim()) {
+			dispatch(
+				addChat({
+					id: uuidv4(),
+					message: message.trim(),
+					senderId: currentUser.id,
+					timestamp: new Date().toLocaleDateString(),
+					chatPartnerID: convertedChatPartnerID,
+				})
+			);
+		}
+
+		setMessage("");
+	};
+
+	useEffect(() => {
+		// messages.forEach((message) => console.log("UPDATED mESSAGES: " + message.message));
+		console.log("Updated Messages: ", filteredMessages);
+	}, [messages]);
+
 	return (
-		<CustomKeyboardView>
+		<KeyboardAvoidingView
+			style={styles.parentContainer}
+			behavior={Platform.OS === "ios" ? "padding" : undefined}
+			keyboardVerticalOffset={Platform.OS === "ios" ? -10 : 0}
+		>
 			<View style={styles.parentContainer}>
 				<View style={styles.container}>
 					<View>
-						<ChatHeader />
+						<ChatHeader chatPartnerName={chatPartnerDetails.name} />
 						<View style={styles.pageHeaderContainerBorder}></View>
 					</View>
 					<View style={styles.chatContainer}>
@@ -40,44 +112,56 @@ const ChatRoom = () => {
 								<Text>Today</Text>
 							</View>
 						</View>
-						<View style={styles.messageSentBubble}>
-							<View style={styles.messageSent}>
-								<Text style={styles.messageSentText}>Hello Daniel, Please can you still make it today?</Text>
-							</View>
-							<Text style={styles.messageTime}>12:20</Text>
-						</View>
-						<View style={styles.messageReceivedBubble}>
-							<View style={styles.messageReceived}>
-								<Text style={styles.messageSentReceived}>Yes I will, I am currently finishing up a job but will head to your axis in an hour time.</Text>
-							</View>
-							<Text style={styles.receivedMessageTime}>12:20</Text>
-						</View>
+						{/* <FlatList
+							contentContainerStyle={styles.chatFlatlist}
+							data={filteredMessages}
+							keyExtractor={(item) => item.id.toString()}
+							renderItem={({ item }) => (
+								<MessageBubble
+									key={item.id}
+									message={item.message}
+									timestamp={item.timestamp}
+									isCurrentUser={item.senderId === currentUser.id}
+								/>
+							)}
+							// inverted
+						/> */}
+						{filteredMessages.map((message) => (
+							<MessageBubble
+								key={message.id}
+								message={message.message}
+								timestamp={message.timestamp}
+								isCurrentUser={message.senderId === currentUser.id}
+							/>
+						))}
 					</View>
 				</View>
 				<View style={styles.chatActions}>
 					<View style={styles.chatActionIcon}>
 						<Ionicons name="add" size={20} />
 					</View>
-					<View style={styles.textMessage}>
-						<TextInput
-							style={styles.textMessageInput}
-							placeholder="Write Something Here"
-							numberOfLines={5}
-							multiline={true}
-							value={message}
-							onChangeText={(message) => {
-								setMessage(message);
-								message.length < 1 ? setInputStart(false) : setInputStart(true);
-							}}
-						/>
-					</View>
+					<TextInput
+						style={styles.textMessageInput}
+						placeholder="Write Something Here"
+						numberOfLines={5}
+						multiline={true}
+						value={message}
+						onChangeText={(message) => {
+							setMessage(message);
+							message.length < 1 ? setInputStart(false) : setInputStart(true);
+						}}
+						onSubmitEditing={sendMessage}
+					/>
+
 					<View style={styles.chatActionIcon}>
 						<Ionicons name="camera-outline" size={20} />
 					</View>
-					<View style={styles.chatActionIcon}>{inputStart ? <Ionicons name="send" size={20} /> : <Ionicons name="mic-outline" size={20} />}</View>
+					<View style={styles.chatActionIcon}>
+						{inputStart ? <Ionicons name="send" size={20} onPress={sendMessage} /> : <Ionicons name="mic-outline" size={20} />}
+					</View>
 				</View>
 			</View>
-		</CustomKeyboardView>
+		</KeyboardAvoidingView>
 	);
 };
 
@@ -90,7 +174,6 @@ const generalStyles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: colors.white,
-		gap: 20,
 	},
 
 	pageHeaderContainerBorder: {
@@ -103,9 +186,15 @@ const generalStyles = StyleSheet.create({
 	},
 
 	chatContainer: {
-		paddingHorizontal: 20,
-		position: "relative",
-		// backgroundColor: "#f0f",
+		paddingHorizontal: 10,
+		// position: "relative",
+		backgroundColor: "#f0f",
+		flex: 1,
+	},
+
+	chatFlatlist: {
+		height: "100%",
+		backgroundColor: "red",
 	},
 
 	dateContainer: {
@@ -124,12 +213,12 @@ const generalStyles = StyleSheet.create({
 
 	messageSentBubble: {
 		backgroundColor: colors.mainColor,
-		padding: 15,
+		padding: 10,
 		borderRadius: 10,
-		width: "75%",
-		marginTop: 50,
+		width: "50%",
+		marginTop: 30,
 		position: "absolute",
-		right: 20,
+		right: 5,
 	},
 
 	messageSent: {},
@@ -140,12 +229,12 @@ const generalStyles = StyleSheet.create({
 
 	messageReceivedBubble: {
 		backgroundColor: colors.chatBubbleSecondary,
-		padding: 15,
+		padding: 10,
 		borderRadius: 10,
-		width: "75%",
+		width: "50%",
 		position: "absolute",
-		top: 20,
-		left: 20,
+		top: -40,
+		left: 5,
 	},
 
 	messageReceived: {},
@@ -167,7 +256,7 @@ const generalStyles = StyleSheet.create({
 	},
 
 	chatActions: {
-		// backgroundColor: "#ff0",
+		backgroundColor: "white",
 		flexDirection: "row",
 		padding: 20,
 		alignItems: "center",
@@ -181,18 +270,29 @@ const generalStyles = StyleSheet.create({
 		paddingVertical: 40,
 	},
 
-	textMessage: {
+	// textMessage: {
+	// 	borderWidth: 1,
+	// 	borderRadius: 20,
+	// 	borderColor: colors.greyBorder,
+	// 	// backgroundColor: colors.grey2,
+	// 	backgroundColor: "purple",
+	// 	alignItems: "center",
+	// 	justifyContent: "center",
+	// 	width: "65%",
+	// },
+
+	textMessageInput: {
 		borderWidth: 1,
 		borderRadius: 20,
 		borderColor: colors.greyBorder,
-		backgroundColor: colors.grey2,
+		// backgroundColor: colors.grey2,
+		alignItems: "center",
+		justifyContent: "center",
 		width: "65%",
-	},
-
-	textMessageInput: {
 		height: 30,
-		paddingLeft: 20,
-		paddingRight: 10,
+		// paddingLeft: 20,
+		// paddingRight: 10,
+		backgroundColor: "red",
 	},
 
 	chatActionIcon: {

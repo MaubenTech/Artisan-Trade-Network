@@ -5,17 +5,23 @@ import { Text } from "@components/Text";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import { compactStyles } from "@helpers/styles";
+import { UserState } from "@store/usersSlice";
+import useAppSelector from "@hooks/useAppSelector";
+import { RootState } from "@store";
+import { selectMessages } from "@store/chatSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const ChatPreview = ({ item }: { item: number }) => {
+const ChatPreview = ({ item, chatPartnerID }: { item: UserState; chatPartnerID: number }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const openChatRoom = () => {
 		// router.navigate({ pathname: "/ChatRoom" });
-		router.push("/Chat/ChatRoom");
+		router.push({ pathname: "/Chat/ChatRoom", params: { chatPartnerID, item: JSON.stringify(item) } });
 		// router.push({ pathname: "/ChatRoom" });
 	};
+
+	const messages = useAppSelector(selectMessages);
 
 	return (
 		<TouchableOpacity style={styles.chat} onPress={openChatRoom}>
@@ -24,7 +30,7 @@ const ChatPreview = ({ item }: { item: number }) => {
 			</View>
 			<View style={styles.chatPreviewContainer}>
 				<View style={styles.chatPreviewDetail}>
-					<Text style={styles.sender}>Drew Berry</Text>
+					<Text style={styles.sender}>{item.name}</Text>
 					<Text style={styles.chatTime}>12:20pm</Text>
 				</View>
 				<View style={{ width: width * 0.7 }}>
