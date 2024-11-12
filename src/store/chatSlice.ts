@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@store";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { UserState } from "./usersSlice";
 
@@ -34,8 +35,18 @@ const initialState: ChatState = {
 		type: "ARTISAN",
 	},
 	messages: [
-		{ id: uuidv4(), senderId: "2", message: "Please abeg", timestamp: new Date().toLocaleDateString(), chatPartnerID: "1" },
-		{ id: uuidv4(), senderId: "1", message: "Sike", timestamp: new Date().toLocaleDateString(), chatPartnerID: "2" },
+		{ id: uuidv4(), senderId: "1", message: "1's message to 2", timestamp: new Date().toLocaleDateString(), chatPartnerID: "2" },
+		{ id: uuidv4(), senderId: "1", message: "1's message to 3", timestamp: new Date().toLocaleDateString(), chatPartnerID: "3" },
+		{ id: uuidv4(), senderId: "1", message: "1's message to 4", timestamp: new Date().toLocaleDateString(), chatPartnerID: "4" },
+		{ id: uuidv4(), senderId: "2", message: "2's message to 1", timestamp: new Date().toLocaleDateString(), chatPartnerID: "1" },
+		{ id: uuidv4(), senderId: "2", message: "2's message to 3", timestamp: new Date().toLocaleDateString(), chatPartnerID: "3" },
+		{ id: uuidv4(), senderId: "2", message: "2's message to 4", timestamp: new Date().toLocaleDateString(), chatPartnerID: "4" },
+		{ id: uuidv4(), senderId: "3", message: "3's message to 1", timestamp: new Date().toLocaleDateString(), chatPartnerID: "1" },
+		{ id: uuidv4(), senderId: "3", message: "3's message to 2", timestamp: new Date().toLocaleDateString(), chatPartnerID: "2" },
+		{ id: uuidv4(), senderId: "3", message: "3's message to 4", timestamp: new Date().toLocaleDateString(), chatPartnerID: "4" },
+		{ id: uuidv4(), senderId: "4", message: "4's message to 1", timestamp: new Date().toLocaleDateString(), chatPartnerID: "1" },
+		{ id: uuidv4(), senderId: "4", message: "4's message to 2", timestamp: new Date().toLocaleDateString(), chatPartnerID: "2" },
+		{ id: uuidv4(), senderId: "4", message: "4's message to 3", timestamp: new Date().toLocaleDateString(), chatPartnerID: "3" },
 	],
 };
 
@@ -54,14 +65,16 @@ const chatSlice = createSlice({
 			// 	timestamp: new Date().toLocaleDateString(),
 			// };
 
-			state.messages.push({
-				...action.payload,
-				id: uuidv4(),
-				chatPartnerID: action.payload.chatPartnerID,
-				message: action.payload.message,
-				senderId: action.payload.senderId,
-				timestamp: new Date().toLocaleDateString(),
-			});
+			// state.messages.push({
+			// 	...action.payload,
+			// 	id: uuidv4(), //TODO: Don't use a randomizer function within the reducer. It makes it impure and defeats the standard practice of reducers!
+			// 	chatPartnerID: action.payload.chatPartnerID,
+			// 	message: action.payload.message,
+			// 	senderId: action.payload.senderId,
+			// 	timestamp: new Date().toLocaleDateString(),
+			// });
+
+			state.messages.push(action.payload);
 
 			// state.messages.push(newMessage);
 		},
