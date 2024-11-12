@@ -31,15 +31,18 @@ const setStatusBackgroundColor = (status: JobStatus) => {
 	}
 };
 
-const PostedJob = ({ job }: { job: Job }) => {
+const PostedJob = ({ job, isLastIndex }: { job: Job; isLastIndex: boolean }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-
-	const [bidStage, setBidStage] = useState<BidStatus>("Completed"); //change Bid status value to see different pages
 
 	const selectedJob = useAppSelector((state: RootState) => selectJobById(state, job._id));
 
 	return (
-		<Link style={styles.job} asChild href={{ pathname: "/Jobs/PostedJobDetails", params: { bidStage, jobId: job._id } }} key={job._id}>
+		<Link
+			style={{ ...styles.job, borderBottomWidth: isLastIndex ? 0 : 1 }}
+			asChild
+			href={{ pathname: "/Jobs/PostedJobDetails", params: { jobId: job._id } }}
+			key={job._id}
+		>
 			<TouchableOpacity>
 				<View style={styles.jobPicture}>
 					{/* <JobPicture /> */}

@@ -8,7 +8,7 @@ import MenuHeader from "@components/MenuHeader";
 import HomeCarousel from "@components/HomeCarousel";
 import React, { ReactElement, useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
-
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { BidJob, PostedBid } from "../Bids";
 import { selectCurrentUser } from "@store/authSlice";
 import useAppSelector from "@hooks/useAppSelector";
@@ -33,6 +33,7 @@ export interface SwipeData extends LinkProps<string> {
 export default function HomePage() {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [notificationPresent, setNotificationPresent] = useState(false);
+	const bottomTabBarHeight = useBottomTabBarHeight();
 
 	const { nickName, type: userType } = useAppSelector(selectCurrentUser);
 
@@ -77,7 +78,7 @@ export default function HomePage() {
 			<View style={styles.menuHeaderContainer}>
 				<MenuHeader />
 			</View>
-			<ScrollView style={{ backgroundColor: colors.white }} contentContainerStyle={styles.container}>
+			<ScrollView style={{ backgroundColor: colors.white }} contentContainerStyle={{ ...styles.container, paddingBottom: bottomTabBarHeight + 20 + 20 }}>
 				<View style={styles.contentSection}>
 					<View style={styles.salutationContainer}>
 						<Text style={styles.salutationText}>Hello</Text>
@@ -132,7 +133,7 @@ const generalStyles = StyleSheet.create({
 		// flex: 1,
 		backgroundColor: colors.white,
 		alignItems: "center",
-		paddingBottom: "35%",
+		// paddingBottom: "35%",
 	},
 
 	contentSection: {

@@ -15,6 +15,7 @@ import useAppSelector from "@hooks/useAppSelector";
 import { selectJobById } from "@store/jobsSlice";
 import { formatDistance, formatDistanceToNow, sub } from "date-fns";
 import { selectBidJobByBidId, selectBidJobs } from "@store/bidsSlice";
+import { JobStatus } from "../Jobs";
 
 const { width, height } = Dimensions.get("window");
 
@@ -23,12 +24,14 @@ export type BidJob = {
 	type: string;
 	service: string;
 	description: string;
-	bidPrice: string;
+	// bidStatus: BidStatus;
+	// jobStatus: JobStatus;
+	bidPrice: number;
 	createdAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
 	updatedAt: string; //TODO: Check if you can type a datestring, instead of using plain strings
 };
 
-export type BidStatus = "Initial" | "Bid" | "Pending" | "Active" | "Completed";
+export type BidStatus = "Bid" | "Pending" | "Approved" | "Rejected";
 
 export const PostedBid = ({ bidJob, containerStyle }: { bidJob: BidJob; containerStyle?: StyleProp<ViewStyle> }) => {
 	const timeAgo = formatDistanceToNow(bidJob.createdAt, { addSuffix: true });

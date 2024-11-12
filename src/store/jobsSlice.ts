@@ -3,6 +3,7 @@ import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@r
 import { RootState } from "@store";
 import { JobStatus } from "app/(tabs)/Jobs";
 import * as ImagePicker from "expo-image-picker";
+import { approveAcceptedBid } from "./bidsSlice";
 
 export type PartialPickerAsset = Partial<ImagePicker.ImagePickerAsset>;
 
@@ -62,7 +63,8 @@ const dummyJob: Job[] = [
 		_id: "2",
 		title: "Need to repair my toilet again",
 		type: "Maintenance",
-		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		description:
+			"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
 		budget: "50,000 - 70,000",
 		address: "No 1 Two Street, Three City, Four State",
 		service: "Plumbering",
@@ -119,7 +121,8 @@ const dummyJob: Job[] = [
 		_id: "5",
 		title: "Need to repair my toilet again",
 		type: "Maintenance",
-		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		description:
+			"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
 		budget: "50,000 - 70,000",
 		address: "No 1 Two Street, Three City, Four State",
 		service: "Plumbering",
@@ -174,9 +177,10 @@ const dummyJob: Job[] = [
 	},
 	{
 		_id: "8",
-		title: "Need to repair my toilet again",
+		title: "I need to make my hair!",
 		type: "Maintenance",
-		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		description:
+			"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
 		budget: "50,000 - 70,000",
 		address: "No 1 Two Street, Three City, Four State",
 		service: "Plumbering",
@@ -212,12 +216,12 @@ const dummyJob: Job[] = [
 	},
 	{
 		_id: "10",
-		title: "Need to repair my toilet",
+		title: "My Rolls Royce is looking pretty mashed up!",
 		type: "Maintenance",
 		description: "Lorem dolore quis pariatur porro ullam facilis molestiae quasi.",
-		budget: "50,000 - 70,000",
+		budget: "500,000 - 700,000",
 		address: "No 1 Two Street, Three City, Four State",
-		service: "Plumbering",
+		service: "Mechanic",
 		media: [
 			{
 				uri: "nothing_yet",
@@ -233,7 +237,8 @@ const dummyJob: Job[] = [
 		_id: "11",
 		title: "Need to repair my toilet again",
 		type: "Maintenance",
-		description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
+		description:
+			"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur porro ullam facilis molestiae quasi.",
 		budget: "50,000 - 70,000",
 		address: "No 1 Two Street, Three City, Four State",
 		service: "Plumbering",
@@ -342,6 +347,7 @@ const jobSlice = createSlice({
 	},
 	selectors: {
 		selectJobsState: (jobs: JobState) => jobs,
+		selectAllJobs: (jobs: JobState) => jobs.jobList,
 	},
 	// extraReducers: (builder) => {
 	// 	builder
@@ -360,7 +366,7 @@ const jobSlice = createSlice({
 	// 			console.error("Failed to fetch Jobs");
 	// 		});
 	// },
-	// TODO: When we start connecting to the api, this becomes useful
+	// NOTE: When we start connecting to the api, this becomes useful
 });
 
 export const selectJobTitles = createSelector(
@@ -368,15 +374,32 @@ export const selectJobTitles = createSelector(
 	(jobList) => jobList.map((job) => job.title)
 );
 
-export const { markJobCompleted, addNewJob, updateJobStatus, setJobTitle, setJobType, setJobDescription, setJobBudget, setJobAddress, setJobService, setJobMedia, submitJob, resetCurrentJob } =
-	jobSlice.actions;
+export const {
+	markJobCompleted,
+	addNewJob,
+	updateJobStatus,
+	setJobTitle,
+	setJobType,
+	setJobDescription,
+	setJobBudget,
+	setJobAddress,
+	setJobService,
+	setJobMedia,
+	submitJob,
+	resetCurrentJob,
+} = jobSlice.actions;
 
-export const { selectJobsState } = jobSlice.selectors;
+export const { selectJobsState, selectAllJobs } = jobSlice.selectors;
 
-export const selectJobById = (stateOrJobs: RootState | JobState, jobId: string): Job => {
-	if ("jobs" in stateOrJobs) {
-		return stateOrJobs.jobs.jobList.find((job) => job._id === jobId);
-	} else return stateOrJobs.jobList.find((job) => job._id === jobId);
+export const selectJobById = (stateOrJobsOrJobList: RootState | JobState | Job[], jobId: string): Job => {
+	if ("jobs" in stateOrJobsOrJobList) {
+		return stateOrJobsOrJobList.jobs.jobList.find((job) => job._id === jobId);
+	} else if ("jobList" in stateOrJobsOrJobList) {
+		return stateOrJobsOrJobList.jobList.find((job) => job._id === jobId);
+	} else if (Array.isArray(stateOrJobsOrJobList)) {
+		console.log("Job list is array");
+		return stateOrJobsOrJobList.find((job) => job._id === jobId);
+	}
 };
 
 export default jobSlice.reducer;

@@ -12,19 +12,19 @@ import useAppSelector from "@hooks/useAppSelector";
 import { selectCurrentUser } from "@store/authSlice";
 import { Job, markJobCompleted } from "@store/jobsSlice";
 import useAppDispatch from "@hooks/useAppDispatch";
+import { approveAcceptedBid, placeBid } from "@store/bidsSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const Posted = () => (
+const Posted = ({ jobId }: { jobId: string }) => (
 	<View style={styles.applicantContainer}>
 		<Text style={styles.headerText}>10 Applicants</Text>
 		<Text style={styles.subText}>Click to view all applicants.</Text>
-		<ButtonGroup positiveOption="View All Applicants" href={"/PostedJobApplicants"} />
+		<ButtonGroup positiveOption="View All Applicants" href={{ pathname: "/Jobs/PostedJobApplicants", params: { jobId } }} />
 	</View>
 );
 
-const Active = ({ jobId, jobStage }: { jobId: string; jobStage: JobStatus }) => {
-	const [jobStatus, setJobStatus] = useState<JobStatus>(jobStage);
+const Active = ({ jobId }: { jobId: string }) => {
 	const dispatch = useAppDispatch();
 	// console.log('Job Id in active component is ": ' + jobId);
 
@@ -32,19 +32,13 @@ const Active = ({ jobId, jobStage }: { jobId: string; jobStage: JobStatus }) => 
 		dispatch(markJobCompleted(jobId));
 	};
 
-	useEffect(() => {
-		// console.log(jobStatus + " Job Status in Active");
-	}, [jobStatus]);
-
-	return jobStatus === "Completed" ? (
-		<Completed />
-	) : (
+	return (
 		<View style={styles.applicantContainer}>
 			<ButtonGroup positiveOption="Open Chat" href={"/Chat"} containerStyle={{ marginBottom: 10 }} />
 			<ButtonGroup
 				positiveOption="Job Completed"
 				positiveOptionBg={colors.greenShade}
-				negativeHref={"/CancelJob"}
+				negativeHref={"/Jobs/CancelJob"}
 				negativeOptionStyle={{ borderColor: "#94A3B1" }} // is this line needed?
 				negativeOption="Cancel Job"
 				reverse
@@ -60,24 +54,16 @@ const Completed = () => (
 	</View>
 );
 
-const SPPending = () => (
-	<View style={[styles.applicantContainer, styles.spApplicantContainer, styles.spPendingStageContainer]}>
-		<Link style={[styles.button, styles.spPendingButton, styles.rejectButton]} asChild href={"/BidSubmitted"}>
-			<TouchableOpacity>
-				<Text style={[styles.buttonText, styles.spPendingButtonText]}>Reject</Text>
-			</TouchableOpacity>
-		</Link>
-		<Link style={[styles.button, styles.spPendingButton, styles.approveButton]} asChild href={"/BidSubmitted"}>
-			<TouchableOpacity>
-				<Text style={[styles.buttonText, styles.spPendingButtonText]}>Approve</Text>
-			</TouchableOpacity>
-		</Link>
-	</View>
-);
-
-const SPInitial = () => {
+const SPInitial = ({ jobId }: { jobId: string }) => {
 	const [inputFocused, setInputFocused] = useState(false);
+	const [bidPrice, setBidPrice] = useState("0");
+	const { _id: artisanId } = useAppSelector(selectCurrentUser);
 	const keyboardHeight = useKeyboardHeight();
+	const dispatch = useAppDispatch();
+	const handleBid = () => {
+		dispatch(placeBid({ jobId, bidPrice: Number(bidPrice), description: "Oh well", artisanId }));
+	};
+
 	return (
 		<View style={[styles.applicantContainer, styles.spApplicantContainer, , Platform.OS === "ios" && { paddingBottom: keyboardHeight + 30 }]}>
 			<Text style={[styles.subText, styles.spSubText]}>Amount</Text>
@@ -85,13 +71,38 @@ const SPInitial = () => {
 				style={[styles.bidInput, inputFocused ? styles.bidInputFocused : {}]}
 				placeholder="Input your bid"
 				placeholderTextColor={"#8F8F8F"}
+				onChangeText={(bidPrice) => setBidPrice(bidPrice)}
 				onFocus={() => setInputFocused(true)}
 				onBlur={() => setInputFocused(false)}
 				keyboardType="numeric"
 			/>
+			{/* TODO: Link should be suppressed till the handleBid action is complete, to avoid misinformation */}
 			<Link style={styles.button} asChild href={"/BidSubmitted"}>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={handleBid}>
 					<Text style={styles.buttonText}>Bid</Text>
+				</TouchableOpacity>
+			</Link>
+		</View>
+	);
+};
+
+const SPPending = ({ bidId }: { bidId: string }) => {
+	const dispatch = useAppDispatch();
+	const handleApproveAcceptedBid = () => {
+		dispatch(approveAcceptedBid({ bidId }));
+	};
+
+	return (
+		<View style={[styles.applicantContainer, styles.spApplicantContainer, styles.spPendingStageContainer]}>
+			{/* TODO: Both these links should not lead anywhere, and even if they do, the redirection should only be applied after the job is completed! */}
+			<Link style={[styles.button, styles.spPendingButton, styles.rejectButton]} asChild href={"/BidSubmitted"}>
+				<TouchableOpacity>
+					<Text style={[styles.buttonText, styles.spPendingButtonText]}>Reject</Text>
+				</TouchableOpacity>
+			</Link>
+			<Link style={[styles.button, styles.spPendingButton, styles.approveButton]} asChild href={"/BidSubmitted"}>
+				<TouchableOpacity onPress={handleApproveAcceptedBid}>
+					<Text style={[styles.buttonText, styles.spPendingButtonText]}>Approve</Text>
 				</TouchableOpacity>
 			</Link>
 		</View>
@@ -104,9 +115,7 @@ const SPActive = () => (
 	</View>
 );
 
-const SPCompleted = () => {};
-
-const BottomModal = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidStage?: BidStatus; jobId: string }) => {
+const BottomModal = ({ jobStage, bidStage, jobId, bidId }: { jobStage?: JobStatus; bidStage?: BidStatus | JobStatus; jobId: string; bidId: string }) => {
 	const { type: userType } = useAppSelector(selectCurrentUser);
 
 	// console.log("Job Id in BOttom modal is: " + jobId);
@@ -119,27 +128,25 @@ const BottomModal = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidS
 	if (userType == "NORMAL") {
 		switch (jobStage) {
 			case "Posted":
-				return <Posted />;
+				return <Posted jobId={jobId} />;
 			case "Active":
-				return <Active jobId={jobId} jobStage={jobStage} />;
+				return <Active jobId={jobId} />;
 			case "Completed":
 				return <Completed />;
 		}
 	}
 
 	if (userType === "ARTISAN") {
-		switch (bidStage) {
-			case "Initial":
-				return <SPInitial />;
-			case "Bid":
-				return <></>;
+		switch (
+			bidStage // bidStage here should be the status of the bid or the status of the job if there's no bid or the bid is confirmed and approved/rejected
+		) {
+			case "Posted":
+				return <SPInitial jobId={jobId} />;
 			case "Pending":
-				return <SPPending />;
+				return <SPPending bidId={bidId} />;
 			case "Active":
 				return <SPActive />;
-			case "Completed":
-				return <></>;
-			default:
+			default: // Return nothing for all the other bidStage/jobStage types as there are no actions to be done with them
 				return <></>;
 		}
 	}

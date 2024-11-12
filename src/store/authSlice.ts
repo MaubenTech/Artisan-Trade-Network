@@ -31,7 +31,7 @@ interface Register {
 }
 
 interface User {
-	id: number;
+	_id: string;
 	name: string;
 	nickName: string;
 	email: string;
@@ -60,28 +60,35 @@ const authSlice = createSlice({
 
 			//NOTE: Dummy login functionality
 			const JOHN_DOE: User = {
-				id: 1,
+				_id: "1",
 				name: "John Doe",
 				nickName: "John",
 				email: "johndoe@gmail.com",
 				type: "ARTISAN",
 			};
 			const JANET_STONES: User = {
-				id: 2,
+				_id: "2",
 				name: "Janet Stones",
 				nickName: "Janet",
 				email: "janetstones@gmail.com",
 				type: "NORMAL",
 			};
 			const NONSO_ALI: User = {
-				id: 3,
+				_id: "3",
 				name: "Nonso Ali",
 				nickName: "Nonso",
 				email: "nonsoali@gmail.com",
 				type: "NORMAL",
 			};
+			const DREW_BERRY: User = {
+				_id: "4",
+				name: "Drew Berry",
+				nickName: "Drew",
+				email: "drewberry@gmail.com",
+				type: "ARTISAN",
+			};
 			const DEFAULT: User = {
-				id: -1,
+				_id: "-1",
 				name: "Unknown",
 				nickName: "Unknown",
 				email: "unknown",
@@ -97,6 +104,9 @@ const authSlice = createSlice({
 					break;
 				case "nonsoali@gmail.com":
 					state.user = NONSO_ALI;
+					break;
+				case "drewberry@gmail.com":
+					state.user = DREW_BERRY;
 					break;
 				default:
 					state.user = DEFAULT;
@@ -126,7 +136,6 @@ const authSlice = createSlice({
 		selectCurrentUser: (state: AuthState) => state.user,
 	},
 });
- 
 
 export const { userLoggedIn, userLoggedOut } = authSlice.actions;
 
