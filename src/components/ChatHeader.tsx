@@ -18,12 +18,9 @@ const ChatHeader = ({ chatPartnerName }: { chatPartnerName: string }) => {
 	return (
 		<>
 			<StatusBar translucent />
-			<SafeAreaView
-				// style={{ backgroundColor: "#f00" }}
-				edges={{ top: "additive" }}
-			>
-				<View style={styles.parentContainer}>
-					<View style={styles.container}>
+			<SafeAreaView edges={{ top: "additive" }}>
+				<View style={[styles.parentContainer]}>
+					<View style={[styles.container]}>
 						<Pressable
 							style={styles.backButton}
 							onPress={() => {
@@ -126,7 +123,7 @@ const iosStyles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		paddingHorizontal: 20,
-		paddingVertical: 20,
+		paddingVertical: 5,
 		paddingTop: 0,
 		// backgroundColor: "#0f0",
 	},

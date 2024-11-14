@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import colors from "@helpers/colors";
 import ChatHeader from "@components/ChatHeader";
 import { View, StyleSheet, Platform, FlatList, ScrollView, KeyboardAvoidingView } from "react-native";
@@ -27,7 +27,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, timestamp, isCur
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	return (
 		<>
-			<View style={isCurrentUser ? styles.messageSentBubble : styles.messageReceivedBubble}>
+			<View style={[styles.messageBubble, isCurrentUser ? styles.messageSentBubble : styles.messageReceivedBubble]}>
 				<Text style={isCurrentUser ? styles.messageSentText : styles.messageReceived}>{message}</Text>
 				<Text style={isCurrentUser ? styles.messageTime : styles.receivedMessageTime}>{timestamp}</Text>
 			</View>
@@ -58,9 +58,6 @@ const ChatRoom = () => {
 			(msg.senderId === chatPartnerID && msg.chatPartnerID === currentUser._id)
 	);
 
-	// console.log("Filtered Messages: ", filteredMessages);
-	// console.log("Raw Messages: ", messages);
-
 	const dispatch = useAppDispatch();
 
 	useFocusEffect(() => {
@@ -71,6 +68,8 @@ const ChatRoom = () => {
 		};
 	});
 
+	const flatListRef = useRef<FlatList>(null);
+
 	const sendMessage = () => {
 		if (message.trim()) {
 			dispatch(
@@ -78,7 +77,7 @@ const ChatRoom = () => {
 					id: uuidv4(),
 					message: message.trim(),
 					senderId: currentUser._id,
-					timestamp: new Date().toLocaleDateString(),
+					timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
 					chatPartnerID: chatPartnerID,
 				})
 			);
@@ -88,18 +87,16 @@ const ChatRoom = () => {
 	};
 
 	useEffect(() => {
-		// messages.forEach((message) => console.log("UPDATED mESSAGES: " + message.message));
-		// console.log("Updated Messages: ", filteredMessages);
-
-		console.log("Partner ID: " + chatPartnerID);
-		console.log("The logged in user Id: " + currentUser._id);
-	}, [messages]);
+		if (flatListRef.current) {
+			flatListRef.current.scrollToEnd({ animated: true });
+		}
+	}, [filteredMessages]);
 
 	return (
 		<KeyboardAvoidingView
 			style={styles.parentContainer}
 			behavior={Platform.OS === "ios" ? "padding" : undefined}
-			keyboardVerticalOffset={Platform.OS === "ios" ? -10 : 0}
+			keyboardVerticalOffset={Platform.OS === "ios" ? -5 : 0}
 		>
 			<View style={styles.parentContainer}>
 				<View style={styles.container}>
@@ -113,7 +110,8 @@ const ChatRoom = () => {
 								<Text>Today</Text>
 							</View>
 						</View>
-						{/* <FlatList
+						<FlatList
+							ref={flatListRef}
 							contentContainerStyle={styles.chatFlatlist}
 							data={filteredMessages}
 							keyExtractor={(item) => item.id.toString()}
@@ -122,19 +120,11 @@ const ChatRoom = () => {
 									key={item.id}
 									message={item.message}
 									timestamp={item.timestamp}
-									isCurrentUser={item.senderId === currentUser.id}
+									isCurrentUser={item.senderId === currentUser._id}
 								/>
 							)}
-							// inverted
-						/> */}
-						{filteredMessages.map((message) => (
-							<MessageBubble
-								key={message.id}
-								message={message.message}
-								timestamp={message.timestamp}
-								isCurrentUser={message.senderId === currentUser._id}
-							/>
-						))}
+							showsVerticalScrollIndicator={false}
+						/>
 					</View>
 				</View>
 				<View style={styles.chatActions}>
@@ -170,6 +160,7 @@ const generalStyles = StyleSheet.create({
 	parentContainer: {
 		flex: 1,
 		paddingBottom: 10,
+		backgroundColor: colors.white,
 	},
 
 	container: {
@@ -188,19 +179,18 @@ const generalStyles = StyleSheet.create({
 
 	chatContainer: {
 		paddingHorizontal: 10,
-		// position: "relative",
-		backgroundColor: "#f0f",
 		flex: 1,
+		position: "relative",
 	},
 
-	chatFlatlist: {
-		height: "100%",
-		backgroundColor: "red",
-	},
+	chatFlatlist: {},
 
 	dateContainer: {
 		alignItems: "center",
-		marginBottom: 20,
+		position: "absolute",
+		zIndex: 1,
+		width: "100%",
+		marginTop: 10,
 	},
 
 	date: {
@@ -210,16 +200,19 @@ const generalStyles = StyleSheet.create({
 		width: 90,
 		textAlign: "center",
 		alignItems: "center",
+		opacity: 0.7,
+	},
+
+	messageBubble: {
+		maxWidth: "75%",
+		padding: 10,
+		borderRadius: 10,
+		marginVertical: 5,
 	},
 
 	messageSentBubble: {
 		backgroundColor: colors.mainColor,
-		padding: 10,
-		borderRadius: 10,
-		width: "50%",
-		marginTop: 30,
-		position: "absolute",
-		right: 5,
+		alignSelf: "flex-end",
 	},
 
 	messageSent: {},
@@ -230,12 +223,7 @@ const generalStyles = StyleSheet.create({
 
 	messageReceivedBubble: {
 		backgroundColor: colors.chatBubbleSecondary,
-		padding: 10,
-		borderRadius: 10,
-		width: "50%",
-		position: "absolute",
-		top: -40,
-		left: 5,
+		alignSelf: "flex-start",
 	},
 
 	messageReceived: {},
@@ -259,7 +247,9 @@ const generalStyles = StyleSheet.create({
 	chatActions: {
 		backgroundColor: "white",
 		flexDirection: "row",
-		padding: 20,
+		padding: 5,
+		paddingBottom: 0,
+		paddingTop: 5,
 		alignItems: "center",
 		justifyContent: "space-between",
 		borderWidth: 1,
@@ -267,8 +257,7 @@ const generalStyles = StyleSheet.create({
 		borderColor: colors.inputBorderColor,
 		borderTopRightRadius: 20,
 		borderTopLeftRadius: 20,
-		// height: "15%",
-		paddingVertical: 40,
+		// paddingVertical: 30,
 	},
 
 	// textMessage: {
@@ -286,14 +275,13 @@ const generalStyles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 20,
 		borderColor: colors.greyBorder,
-		// backgroundColor: colors.grey2,
+		backgroundColor: colors.grey2,
 		alignItems: "center",
 		justifyContent: "center",
 		width: "65%",
 		height: 30,
-		// paddingLeft: 20,
-		// paddingRight: 10,
-		backgroundColor: "red",
+		paddingVertical: 10,
+		padding: 10,
 	},
 
 	chatActionIcon: {
@@ -304,16 +292,8 @@ const generalStyles = StyleSheet.create({
 	},
 });
 
-const androidStyles = StyleSheet.create({
-	messageReceivedBubble: {
-		marginTop: 140,
-	},
-});
+const androidStyles = StyleSheet.create({});
 
-const iosStyles = StyleSheet.create({
-	messageReceivedBubble: {
-		marginTop: 130,
-	},
-});
+const iosStyles = StyleSheet.create({});
 
 export default ChatRoom;
