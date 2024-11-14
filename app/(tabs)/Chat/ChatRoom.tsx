@@ -205,9 +205,13 @@ const generalStyles = StyleSheet.create({
 
 	messageBubble: {
 		maxWidth: "75%",
-		padding: 10,
+		// minWidth: "25%",
+		justifyContent: "space-between",
+		paddingHorizontal: 8,
+		paddingVertical: 5,
 		borderRadius: 10,
 		marginVertical: 5,
+		flexDirection: "row",
 	},
 
 	messageSentBubble: {
@@ -219,6 +223,7 @@ const generalStyles = StyleSheet.create({
 
 	messageSentText: {
 		color: colors.white,
+		maxWidth: "60%",
 	},
 
 	messageReceivedBubble: {
@@ -235,13 +240,17 @@ const generalStyles = StyleSheet.create({
 	messageTime: {
 		color: colors.white,
 		alignSelf: "flex-end",
-		fontSize: 12,
+		fontSize: 10,
+		marginTop: 10,
+		marginLeft: 15,
 	},
 
 	receivedMessageTime: {
 		alignSelf: "flex-end",
 		fontWeight: "200",
-		fontSize: 12,
+		fontSize: 10,
+		marginTop: 10,
+		marginLeft: 15,
 	},
 
 	chatActions: {
