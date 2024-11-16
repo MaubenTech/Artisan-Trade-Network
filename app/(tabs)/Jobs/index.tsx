@@ -3,7 +3,7 @@ import SearchBar from "@components/SearchBar";
 import MenuHeader from "@components/MenuHeader";
 import { compactStyles } from "@helpers/styles";
 import FilterComponent from "@components/FilterComponent";
-import PostedJob from "@components/JobComponents/PostedJob";
+import PostedJob from "@components/jobComponents/PostedJob";
 import { View, StyleSheet, Dimensions, Platform, ScrollView } from "react-native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import useAppSelector from "@hooks/useAppSelector";

@@ -2,7 +2,7 @@ import React from "react";
 import colors from "@helpers/colors";
 import { View, StyleSheet, Dimensions } from "react-native";
 import PageHeader from "@components/PageHeader";
-import JobApplication from "@components/JobComponents/JobApplication";
+import JobApplication from "@components/jobComponents/JobApplication";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import useAppDispatch from "@hooks/useAppDispatch";

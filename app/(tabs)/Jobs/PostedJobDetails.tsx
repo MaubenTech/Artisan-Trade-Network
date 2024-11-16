@@ -7,8 +7,6 @@ import PageHeader from "@components/PageHeader";
 import { View, StyleSheet, Dimensions, ScrollView, Platform, Animated } from "react-native";
 import { JobStatus } from "app/(tabs)/Jobs";
 import { BidStatus } from "app/(tabs)/Bids";
-import BottomModal from "@components/JobComponents/PostedJobBottomModal";
-import PostedJobProgressStatus from "@components/JobComponents/PostedJobProgressStatus";
 import LocationIcon from "@assets/icons/services/locationIcon.svg";
 import { compactStyles } from "@helpers/styles";
 import useAppSelector from "@hooks/useAppSelector";
@@ -23,6 +21,8 @@ import useAppDispatch from "@hooks/useAppDispatch";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 import { useSharedValue } from "react-native-reanimated";
 import SmartImage from "@components/SmartImage";
+import PostedJobProgressStatus from "@components/jobComponents/PostedJobProgressStatus";
+import BottomModal from "@components/jobComponents/PostedJobBottomModal";
 
 const { width, height } = Dimensions.get("window");
 

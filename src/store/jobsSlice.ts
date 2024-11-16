@@ -4,6 +4,8 @@ import { RootState } from "@store";
 import { JobStatus } from "app/(tabs)/Jobs";
 import * as ImagePicker from "expo-image-picker";
 import { approveAcceptedBid } from "./bidsSlice";
+import createAppSelector from "@hooks/createAppSelector";
+import { selectCurrentUser } from "./authSlice";
 
 export type PartialPickerAsset = Partial<ImagePicker.ImagePickerAsset>;
 
@@ -346,8 +348,8 @@ const jobSlice = createSlice({
 		},
 	},
 	selectors: {
-		selectJobsState: (jobs: JobState) => jobs,
-		selectAllJobs: (jobs: JobState) => jobs.jobList,
+		selectJobsState: (jobs: JobState) => jobs, //TODO: When making the fetch calls to the api, this selector should use dynamic filtering fetch calls for the jobList to fetch jobs based on the user type. Regular users = Get jobs they create, Artisans = Get jobs other users create and the ones they create.
+		selectAllJobs: (jobs: JobState) => jobs.jobList, //TODO: When making the fetch calls to the api, this selector should use dynamic filtering fetch calls to fetch jobs based on the user type. Regular users = Get jobs they create, Artisans = Get jobs other users create and the ones they create.
 	},
 	// extraReducers: (builder) => {
 	// 	builder
@@ -401,5 +403,22 @@ export const selectJobById = (stateOrJobsOrJobList: RootState | JobState | Job[]
 		return stateOrJobsOrJobList.find((job) => job._id === jobId);
 	}
 };
+
+export const selectJobsPageJobs = createAppSelector([selectJobsState, selectCurrentUser], (jobs, currentUser) => {
+	//If user is a regular user, return their jobs
+	return currentUser.type === "NORMAL"
+		? jobs
+		: {
+				...jobs,
+				jobList: jobs.jobList.filter((job) => job.userId === currentUser._id || (job.userId !== currentUser._id && job.status !== "Posted")), //Basically getting their jobs and jobs posted from other users, THAT aren't active yet.
+		  };
+});
+
+export const selectBidsPageJobs = createAppSelector([selectJobsState, selectCurrentUser], (jobs, user) => {
+	return {
+		...jobs,
+		jobList: jobs.jobList.filter((job) => job.userId !== user._id && job.status === "Posted"), //Returning jobs from other users that aren't active yet, so the artisan can bid for them
+	};
+});
 
 export default jobSlice.reducer;

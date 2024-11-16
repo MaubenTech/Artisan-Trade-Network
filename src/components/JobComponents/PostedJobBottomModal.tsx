@@ -94,7 +94,7 @@ const SPPending = ({ bidId }: { bidId: string }) => {
 
 	return (
 		<View style={[styles.applicantContainer, styles.spApplicantContainer, styles.spPendingStageContainer]}>
-			{/* TODO: Both these links should not lead anywhere, and even if they do, the redirection should only be applied after the job is completed! */}
+			{/* TODO: Both these links should not lead anywhere, and even if they do, the redirection should only be applied after the job is approved! */}
 			<Link style={[styles.button, styles.spPendingButton, styles.rejectButton]} asChild href={"/BidSubmitted"}>
 				<TouchableOpacity>
 					<Text style={[styles.buttonText, styles.spPendingButtonText]}>Reject</Text>
