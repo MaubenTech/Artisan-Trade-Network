@@ -23,7 +23,7 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, timestamp, isCurrentUser }) => {
-	console.log("Message Received: ", message);
+	// console.log("Message Received: ", message);
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	return (
 		<>
@@ -86,11 +86,12 @@ const ChatRoom = () => {
 		setMessage("");
 	};
 
-	useEffect(() => {
+	const handleContentSizeChange = () => {
 		if (flatListRef.current) {
+			console.log("Flatlist's current exists!");
 			flatListRef.current.scrollToEnd({ animated: true });
 		}
-	}, [filteredMessages]);
+	};
 
 	return (
 		<KeyboardAvoidingView
@@ -124,6 +125,7 @@ const ChatRoom = () => {
 								/>
 							)}
 							showsVerticalScrollIndicator={false}
+							onContentSizeChange={handleContentSizeChange} // NOTE: Using handleContentSizeChange to scrollToEnd means that Flatlist should accurately calculate the size of its content before changing. If you're using async to fetch data, make sure it loads before rendering the FlatList!
 						/>
 					</View>
 				</View>
