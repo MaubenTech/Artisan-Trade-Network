@@ -38,7 +38,7 @@ const Active = ({ jobId }: { jobId: string }) => {
 			<ButtonGroup
 				positiveOption="Job Completed"
 				positiveOptionBg={colors.greenShade}
-				negativeHref={"/Jobs/CancelJob"}
+				negativeHref={{ pathname: "/Jobs/CancelJob", params: { jobId } }}
 				negativeOptionStyle={{ borderColor: "#94A3B1" }} // is this line needed?
 				negativeOption="Cancel Job"
 				reverse

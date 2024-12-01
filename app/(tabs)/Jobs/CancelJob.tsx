@@ -14,9 +14,10 @@ import OtherReason from "@assets/icons/cancelJob/OtherReason.svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AccidentalRequest from "@assets/icons/cancelJob/AccidentalRequest.svg";
 import { KeyboardAvoidingView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 import useAppDispatch from "@hooks/useAppDispatch";
+import { cancelJob } from "@store/jobsSlice";
 
 interface ReasonType {
 	reasonLogo: React.ComponentType<SvgProps>;
@@ -77,6 +78,14 @@ const cancelReasons: ReasonType[] = [
 const CancelJob = () => {
 	const [inputValue, setInputValue] = useState<string>("");
 	const [showInput, setShowInput] = useState<boolean>(false);
+
+	const { jobId }: { jobId: string } = useLocalSearchParams();
+	const router = useRouter();
+
+	const handleCancelJob = () => {
+		dispatch(cancelJob(jobId));
+		router.navigate("/Jobs");
+	};
 	const dispatch = useAppDispatch();
 
 	useFocusEffect(() => {
@@ -112,7 +121,7 @@ const CancelJob = () => {
 					))}
 				</View>
 				<View>
-					<ButtonGroup positiveOption="Cancel" href={"/"} paddingHorizontal={20} />
+					<ButtonGroup positiveOption="Cancel" href={"/"} paddingHorizontal={20} onPress={handleCancelJob} />
 				</View>
 			</View>
 		</KeyboardAwareScrollView>
