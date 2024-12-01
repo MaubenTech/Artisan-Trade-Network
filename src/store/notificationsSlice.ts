@@ -61,7 +61,8 @@ const initialState: NotificationState[] = [
 
 const notificationSlice = createSlice({
 	name: "notifications",
-	initialState,
+	// initialState,
+	initialState: [],
 	reducers: {
 		notificationRead: (state, action: PayloadAction<NotificationState>) => {
 			state.find((notification) => notification.id === action.payload.id).isRead = true;

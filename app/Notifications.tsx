@@ -7,6 +7,7 @@ import { Text } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
 import { BidNotificationState, MessageNotificationState } from "@store/notificationsSlice";
 import useAppSelector from "@hooks/useAppSelector";
+import EmptyNotifications from "@components/notificationComponents/EmptyNotifications";
 
 const { width, height } = Dimensions.get("window");
 
@@ -70,10 +71,14 @@ const Notifications = () => {
 			<PageHeader pageName="Notifications" />
 			<View style={styles.container}>
 				<View style={styles.notificationContainer}></View>
-				{notifications.map(
-					(notification, index) =>
-						(notification.type === "BID" && <BidNotification {...notification} key={index} />) || //
-						(notification.type === "MESSAGE" && <MessageNotification {...notification} key={index} />)
+				{notifications.length > 0 ? (
+					notifications.map(
+						(notification, index) =>
+							(notification.type === "BID" && <BidNotification {...notification} key={index} />) || //
+							(notification.type === "MESSAGE" && <MessageNotification {...notification} key={index} />)
+					)
+				) : (
+					<EmptyNotifications />
 				)}
 			</View>
 		</>
