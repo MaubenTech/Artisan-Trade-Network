@@ -277,7 +277,8 @@ const dummyJob: Job[] = [
 ];
 
 const initialState: JobState = {
-	jobList: [...dummyJob],
+	// jobList: [...dummyJob],
+	jobList: [],
 	currentJob: {
 		media: [],
 	},
@@ -303,6 +304,12 @@ const jobSlice = createSlice({
 			if (job) job.status = "Completed";
 			console.info(job.status);
 			// state.jobList[0].status = "Completed";
+		},
+		cancelJob: (state, action: PayloadAction<string>) => {
+			const jobId = action.payload;
+			const job = state.jobList.find((job) => job._id === jobId);
+			job.status = "Cancelled";
+			console.info(job.status);
 		},
 		setJobTitle: (state, action: PayloadAction<string>) => {
 			state.currentJob.title = action.payload;
@@ -378,6 +385,7 @@ export const selectJobTitles = createSelector(
 
 export const {
 	markJobCompleted,
+	cancelJob,
 	addNewJob,
 	updateJobStatus,
 	setJobTitle,

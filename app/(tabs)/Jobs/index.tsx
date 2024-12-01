@@ -13,10 +13,11 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store";
 import { Text } from "@components/Text";
 import { selectJobsState } from "@store/jobsSlice";
+import EmptyJobs from "@components/jobComponents/EmptyJobs";
 
 const { width, height } = Dimensions.get("window");
 
-export type JobStatus = "Posted" | "Active" | "Completed" | "Cancelled";
+export type JobStatus = "Posted" | "Active" | "Completed" | "Cancelled" | "Pending"; //TODO: Jobs should have a pending status for regular users where the job has been posted and artisans have bid for the job, but it's yet to be approved by the user. For Artisans, there should only be Pending for bids as Pending jobs don't mean anything to them (they can still bid for the jobs)
 
 export type Job = {
 	jobTitle: string;
@@ -67,14 +68,18 @@ const Jobs = () => {
 				<View style={[styles.componentContainer, styles.filterContainer]}>
 					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
 				</View>
-				<ScrollView style={styles.jobContainer} contentContainerStyle={{ ...styles.jobContentContainer, paddingBottom: bottomTabBarHeight }}>
-					{/* <PostedJobs /> */}
-					{/* {loading && <Text>Loading...</Text>}
+				{jobs.length > 0 ? (
+					<ScrollView style={styles.jobContainer} contentContainerStyle={{ ...styles.jobContentContainer, paddingBottom: bottomTabBarHeight }}>
+						{/* <PostedJobs /> */}
+						{/* {loading && <Text>Loading...</Text>}
                     {error && <Text> Error Fetching Jobs: {error}</Text>} */}
-					{jobs.map((job, index) => (
-						<PostedJob job={job} key={job._id} isLastIndex={index === jobs.length - 1} />
-					))}
-				</ScrollView>
+						{jobs.map((job, index) => (
+							<PostedJob job={job} key={job._id} isLastIndex={index === jobs.length - 1} />
+						))}
+					</ScrollView>
+				) : (
+					<EmptyJobs />
+				)}
 			</View>
 		</>
 	);
