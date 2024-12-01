@@ -156,4 +156,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SettingSection;
+export default Settings;
