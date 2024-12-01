@@ -22,11 +22,22 @@ const { width, height } = Dimensions.get("window");
 const setStatusBackgroundColor = (status: JobStatus) => {
 	switch (status) {
 		case "Posted":
+		case "Pending":
 			return { backgroundColor: colors.yellow };
 
 		case "Active":
 			return {
 				backgroundColor: colors.greenShade,
+			};
+
+		case "Cancelled":
+			return {
+				backgroundColor: colors.red,
+			};
+
+		case "Completed":
+			return {
+				backgroundColor: colors.mainColor,
 			};
 	}
 };
