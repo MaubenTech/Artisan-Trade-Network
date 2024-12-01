@@ -8,6 +8,7 @@ import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import useAppDispatch from "@hooks/useAppDispatch";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectBidsByJobId } from "@store/bidsSlice";
+import EmptyNotifications from "@components/notificationComponents/EmptyNotifications";
 
 const { width } = Dimensions.get("window");
 

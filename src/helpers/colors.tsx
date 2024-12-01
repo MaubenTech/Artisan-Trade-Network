@@ -4,6 +4,7 @@ const colors = {
 	mainColorbg: "#F6F6F6",
 	shadedMainColor: "#C3E8FF",
 	yellow: "#F9BC15",
+	red: "#FF2C2C",
 	greenShade: "#33A852",
 	redShade: "#EA4435",
 	brownShade: "#2B2B2B",

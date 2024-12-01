@@ -7,7 +7,7 @@ import reviewReducer from "./reviewsSlice";
 import serviceReducer from "./servicesSlice";
 import notificationReducer from "./notificationsSlice";
 import registrationReducer from "./registrationSlice";
-import profilePageReducer from "./profilePageSlice";
+import profileReducer from "./profileSlice";
 import miscellaneousReducer from "./miscellaneousSlice";
 import approveAcceptedBidMiddleware from "./middlewares/approveAcceptedBidMiddleware";
 import chatReducer from "./chatSlice";
@@ -22,7 +22,7 @@ const store = configureStore({
 		services: serviceReducer,
 		notifications: notificationReducer,
 		registration: registrationReducer,
-		profilePage: profilePageReducer,
+		profile: profileReducer,
 		miscellaneous: miscellaneousReducer,
 		messages: chatReducer,
 	},

@@ -44,9 +44,9 @@ const MenuHeader = () => {
 						href={userType === "NORMAL" ? "/Profile" : "/ProfilePageSP"}
 						asChild
 					>
-						<TouchableWithoutFeedback>
+						<TouchableOpacity activeOpacity={1}>
 							<Image source={ProfilePic} style={styles.profilePic} contentFit="contain" />
-						</TouchableWithoutFeedback>
+						</TouchableOpacity>
 					</Link>
 				</View>
 			</View>

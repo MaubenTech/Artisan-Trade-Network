@@ -5,7 +5,7 @@ const approveAcceptedBidMiddleware = (store) => (next) => (action) => {
 	const result = next(action);
 	//TODO: Make sure approval for accepted bid is the first for the job, ie. Job is not yet active already! - Done!
 
-	//TODO: Normally this middleware is meant to be called after the approveAcceptedBid reducer function is ran, but it intercepts the action before it gets to the reducer, hence resulting in the job being changed to active before the being is completely accepted.
+	//TODO: Normally this middleware is meant to be called after the approveAcceptedBid reducer function is ran, but it intercepts the action before it gets to the reducer, hence resulting in the job being changed to active before the bid is completely accepted.
 	//Two ways to solve this:
 	//      1. Make sure the middleware runs AFTER the reducer function (Idk how possible that one is) - Done!.
 	//      2. Listen for the fulfilled and rejected states of the async function and reverse the job status if the call didn't make it through (NOTE: This will mean double requests to the backend)
