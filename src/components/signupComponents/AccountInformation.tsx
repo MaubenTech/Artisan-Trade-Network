@@ -22,6 +22,7 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 	const [gender, setGender] = useState<"Male" | "Female">("Male");
 
 	const [showCalender, setShowCalender] = useState(false);
+	const [date, setDate] = useState<Date>();
 
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -35,16 +36,16 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 
 	useEffect(() => {
 		if (showCalender) {
-			DateTimePickerAndroid.open({
-				value: new Date(),
-				onChange: (ev, date) => {
-					console.log(`Date: ${date}`);
-					setShowCalender(false);
-				},
-				mode: "date",
-				is24Hour: true,
-				maximumDate: new Date(),
-			});
+			// DateTimePickerAndroid.open({
+			// 	value: new Date(),
+			// 	onChange: (ev, date) => {
+			// 		console.log(`Date: ${date}`);
+			// 		setShowCalender(false);
+			// 	},
+			// 	mode: "date",
+			// 	is24Hour: true,
+			// 	maximumDate: new Date(),
+			// });
 		}
 	});
 
@@ -71,11 +72,16 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 						<View style={styles.subDetailsContainer}>
 							<Text style={styles.text}>Date Of Birth</Text>
 							<View style={[styles.detailsInput, styles.dateOfBirthContainer]}>
-								<TextInput style={styles.dateOfBirthInput} placeholder="DD/MM/YYY" readOnly={true} />
+								<TextInput
+									style={styles.dateOfBirthInput}
+									placeholder="DD/MM/YYY"
+									value={date && date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
+									readOnly={true}
+								/>
 								<TouchableOpacity
 									onPress={() => {
-										handlePresentModalPress();
-										// setShowCalender(true)
+										// handlePresentModalPress();
+										setShowCalender(true);
 									}}
 									style={styles.calenderButton}
 								>
@@ -83,6 +89,18 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 								</TouchableOpacity>
 							</View>
 						</View>
+						{showCalender && (
+							<RNDateTimePicker
+								testID="dateTimePicker"
+								value={date ?? new Date()}
+								mode="date"
+								is24Hour={true}
+								onChange={(event, date) => {
+									setDate(date);
+									setShowCalender(false);
+								}}
+							/>
+						)}
 					</View>
 					<View style={[styles.componentContainer, { flex: 1 }]}>
 						<Text style={styles.text}>Gender</Text>
@@ -107,12 +125,12 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 							</Link>
 						</View>
 					</View>
-					<BottomSheetModal ref={bottomSheetModalRef} onChange={handleSheetChanges}>
+					{/* <BottomSheetModal ref={bottomSheetModalRef} onChange={handleSheetChanges}>
 						<BottomSheetView style={styles.contentContainer}>
 							<RNDateTimePicker mode="date" value={new Date()} />
 							<Text>Awesome 🎉</Text>
 						</BottomSheetView>
-					</BottomSheetModal>
+					</BottomSheetModal> */}
 				</SafeAreaView>
 			</BottomSheetModalProvider>
 		</GestureHandlerRootView>
