@@ -1,109 +1,59 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Image, TextInput, Pressable, Button, TouchableOpacity } from "react-native";
-import { Text } from "@components/Text";
-import { Link, Redirect } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ButtonGroup from "@components/ButtonGroup";
-import RadioGroup, { OptionParams } from "@components/RadioGroup";
-import { useState } from "react";
-import colors from "@helpers/colors";
+import { BackHandler, StyleSheet, View } from "react-native";
+import { Text, TextInput } from "@components/Text";
+import React, { useState } from "react";
+import { compactStyles } from "@helpers/styles";
+import AccountInformation from "@components/signupComponents/AccountInformation";
+import ContactDetails from "@components/signupComponents/ContactDetails";
+import Password from "@components/signupComponents/Password";
+import OtpVerification from "@components/signupComponents/OtpVerification";
+import { useRouter } from "expo-router";
 
-export default function SignUp() {
-    const [gender, setGender] = useState<string>("Male");
+const SignUp = () => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const router = useRouter();
 
-    // userLoggedIn();
-    // userLoggedOut()
+	const [index, setIndex] = useState(0);
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.logo}>
-                <Image source={require("@assets/images/logo.png")} />
-            </View>
-            <View style={styles.componentContainer}>
-                <Text style={styles.header}> Create An Account</Text>
-                <Text style={styles.subHeader}>Welcome! please enter your personal details.</Text>
-            </View>
-            <View style={styles.componentContainer}>
-                <View style={styles.subDetailsContainer}>
-                    <Text style={styles.text}>First Name</Text>
-                    <TextInput style={styles.detailsInput} placeholder="Enter Your First Name" />
-                </View>
-                <View style={styles.subDetailsContainer}>
-                    <Text style={styles.text}>Last Name</Text>
-                    <TextInput style={styles.detailsInput} placeholder="Enter Your Last Name" />
-                </View>
-                <View style={styles.subDetailsContainer}>
-                    <Text style={styles.text}>Date Of Birth</Text>
-                    <TextInput style={styles.detailsInput} placeholder="DD/MM/YYY" />
-                </View>
-            </View>
-            <View style={[styles.componentContainer, { flex: 1 }]}>
-                <Text style={styles.text}>Gender</Text>
-                <RadioGroup
-                    options={[
-                        { label: "Male", value: "Male" },
-                        { label: "Female", value: "Female" },
-                    ]}
-                    selectedOption={gender}
-                    onChanged={setGender}
-                    optionStyle={{ padding: 15 }}
-                />
-            </View>
-            <View style={styles.optionsContainer}>
-                <ButtonGroup href={"/ContactDetails"} positiveOption="Proceed" paddingHorizontal={20} />
-                <View style={styles.existingUserContainer}>
-                    <Text>Existing User?</Text>
-                    <Link href={"/"} asChild>
-                        <TouchableOpacity>
-                            <Text style={{ textDecorationLine: "underline" }}>Login</Text>
-                        </TouchableOpacity>
-                    </Link>
-                </View>
-            </View>
-        </SafeAreaView>
-    );
-}
+	const submitAccountInformation = (firstName: string, lastName: string, dateOfBirth: string, gender: "Male" | "Female") => {
+		setIndex(1);
+	};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        gap: 20,
-    },
-    logo: {
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    componentContainer: {
-        gap: 5,
-        paddingHorizontal: 20,
-    },
-    header: {
-        fontSize: 23,
-        fontWeight: "bold",
-    },
-    subHeader: {},
-    subDetailsContainer: {
-        gap: 8,
-    },
-    text: {
-        color: "black",
-        fontSize: 17,
-    },
-    detailsInput: {
-        borderWidth: 2,
-        borderRadius: 10,
-        padding: 15,
-        borderColor: colors.inputBorderColor,
-    },
+	const submitContactDetails = (address: string, email: string, phoneNumber: string) => {
+		setIndex(2);
+	};
 
-    optionsContainer: {
-        flex: 1,
-    },
+	const submitPassword = (password: string) => {
+		setIndex(3);
+	};
 
-    existingUserContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        gap: 10,
-    },
-});
+	BackHandler.addEventListener("hardwareBackPress", () => {
+		if (index !== 0) {
+			setIndex(index - 1);
+		} else {
+			router.back();
+		}
+
+		return true;
+	});
+
+	switch (index) {
+		case 0:
+			return <AccountInformation onSubmit={submitAccountInformation} />;
+		case 1:
+			return <ContactDetails onSubmit={submitContactDetails} />;
+		case 2:
+			return <Password onSubmit={submitPassword} />;
+		case 3:
+			return <OtpVerification />;
+		default:
+			return null;
+	}
+};
+
+export default SignUp;
+
+const generalStyles = StyleSheet.create({});
+
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({});
