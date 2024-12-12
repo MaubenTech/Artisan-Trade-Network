@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import JobHistory from "app/(customerPages)/(customerProfile)/JobHistory";
-import OtpVerification from "app/(registration)/OtpVerification";
+import OtpVerification from "@components/signupComponents/OtpVerification";
 
 interface ProfileState {
 	jobsDone: number;

@@ -76,13 +76,13 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 					<Text style={styles.pageHeaderTitle}>{pageName}</Text>
 					{profile ? (
 						isApplicantPage ? (
-							<Link style={styles.settingsContainer} asChild href={"/Settings"}>
+							<Link style={styles.settingsContainer} asChild href={"/(customerPages)/(customerProfile)/Settings"}>
 								<TouchableOpacity>
 									<MoreIcon color={"black"} />
 								</TouchableOpacity>
 							</Link>
 						) : (
-							<Link style={[styles.settingsContainer]} asChild href={"/Settings"}>
+							<Link style={[styles.settingsContainer]} asChild href={"/(customerPages)/(customerProfile)/Settings"}>
 								<TouchableOpacity>
 									<Ionicons name="settings-outline" size={20} />
 								</TouchableOpacity>
