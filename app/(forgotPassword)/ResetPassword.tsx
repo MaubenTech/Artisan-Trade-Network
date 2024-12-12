@@ -3,12 +3,13 @@ import { Text } from "@components/Text";
 import { Link, useRouter } from "expo-router";
 
 import HeaderImage from "@assets/images/resetPasswordHeader.svg";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import colors from "@helpers/colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonGroup from "@components/ButtonGroup";
 import { compactStyles } from "@helpers/styles";
 import useKeyboardHeight from "@helpers/useKeyboardHeight";
+import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 
 const { width, height } = Dimensions.get("window");
 
@@ -17,6 +18,17 @@ const ResetPassword = (): JSX.Element => {
 	const router = useRouter();
 	const keyboardHeight = useKeyboardHeight();
 	const { top } = useSafeAreaInsets();
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+
+	const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+	const borderColorStyle = { borderColor: passwordsMatch ? colors.inputBorderColor : colors.red };
+
+	useEffect(() => {
+		if (password !== confirmPassword) setPasswordsMatch(false);
+		else setPasswordsMatch(true);
+	}, [password, confirmPassword]);
 	return (
 		<ScrollView style={{ marginTop: top }} contentContainerStyle={styles.container}>
 			<View style={styles.imageContainer}>
@@ -30,11 +42,22 @@ const ResetPassword = (): JSX.Element => {
 				<View style={styles.resetPasswordFormContainer}>
 					<View style={styles.resetPasswordDetailContainer}>
 						<Text style={styles.formText}>Password</Text>
-						<TextInput style={styles.resetPasswordInput} secureTextEntry />
+						<TextInput value={password} onChangeText={setPassword} style={[styles.resetPasswordInput, borderColorStyle]} secureTextEntry />
 					</View>
 					<View style={styles.resetPasswordDetailContainer}>
 						<Text style={styles.formText}>Re-Password</Text>
-						<TextInput style={styles.resetPasswordInput} secureTextEntry />
+						<TextInput
+							value={confirmPassword}
+							onChangeText={setConfirmPassword}
+							style={[styles.resetPasswordInput, borderColorStyle]}
+							secureTextEntry
+						/>
+						{!passwordsMatch && (
+							<View style={styles.unmatchedContainer}>
+								<RedExclamationMark />
+								<Text style={styles.unmatchedText}>Password doesn't match</Text>
+							</View>
+						)}
 					</View>
 				</View>
 				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
@@ -105,6 +128,18 @@ const generalStyles = StyleSheet.create({
 		borderWidth: 1.05,
 		borderRadius: 10,
 		fontSize: 13,
+	},
+
+	unmatchedContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 8,
+	},
+
+	unmatchedText: {
+		fontSize: 12,
+		paddingTop: 2,
+		color: colors.red,
 	},
 
 	buttonsContainer: {},
