@@ -109,7 +109,7 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 					</View>
 					<BottomSheetModal ref={bottomSheetModalRef} onChange={handleSheetChanges}>
 						<BottomSheetView style={styles.contentContainer}>
-							<RNDateTimePicker mode="date" display="spinner" value={new Date()} />
+							<RNDateTimePicker mode="date" value={new Date()} />
 							<Text>Awesome 🎉</Text>
 						</BottomSheetView>
 					</BottomSheetModal>
