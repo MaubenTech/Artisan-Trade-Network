@@ -26,19 +26,26 @@ export interface Job {
 
 export type JobType = "Installation" | "Maintainence";
 
-// export const fetchJobs = createAsyncThunk<Job[], void>("jobs/FetchJobs", async () => {
-// 	const jobs = await getData<Job[]>("/jobs");
-// 	return jobs;
-// });
+export const fetchJobs = createAsyncThunk<Job[], void>("jobs/FetchJobs", async () => {
+	const jobs = await getData<Job[]>("/jobs");
+	return jobs;
+}, {
+	condition(arg, api) {
+		const jobsStatus = selectJobStatus(api.getState() as RootState)
+		if(jobsStatus !== 'idle') return false
+	},
+}
+);
 
-// const jobs = getData("/jobs");
-// console.log("Jobs:", jobs);
+const jobs = getData("/jobs");
+console.log("Jobs:", jobs);
 
 interface JobState {
 	jobList: Job[];
 	currentJob: Partial<Job>;
-	loading: boolean;
+	// loading: boolean;
 	error: string | null;
+	status: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const dummyJob: Job[] = [
@@ -277,12 +284,12 @@ const dummyJob: Job[] = [
 ];
 
 const initialState: JobState = {
-	// jobList: [...dummyJob],
 	jobList: [],
+	// jobList: [],
 	currentJob: {
 		media: [],
 	},
-	loading: false,
+	status: 'idle',
 	error: null,
 };
 
@@ -358,22 +365,26 @@ const jobSlice = createSlice({
 		selectJobsState: (jobs: JobState) => jobs, //TODO: When making the fetch calls to the api, this selector should use dynamic filtering fetch calls for the jobList to fetch jobs based on the user type. Regular users = Get jobs they create, Artisans = Get jobs other users create and the ones they create.
 		selectAllJobs: (jobs: JobState) => jobs.jobList, //TODO: When making the fetch calls to the api, this selector should use dynamic filtering fetch calls to fetch jobs based on the user type. Regular users = Get jobs they create, Artisans = Get jobs other users create and the ones they create.
 	},
+	extraReducers: (builder) => {
+		builder
+			.addCase(fetchJobs.pending, (state) => {
+				state.status = 'pending';
+				state.error = null;
+			})
+			.addCase(fetchJobs.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				// state.error = null;
+				console.info('Jobs From API',...action.payload)
+				state.jobList.push(...action.payload);
+			})
+			.addCase(fetchJobs.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message || "Failed to fetch Jobs";
+				console.error("Failed to fetch Jobs");
+			});
+	},
 	// extraReducers: (builder) => {
-	// 	builder
-	// 		.addCase(fetchJobs.pending, (state) => {
-	// 			state.loading = true;
-	// 			state.error = null;
-	// 		})
-	// 		.addCase(fetchJobs.fulfilled, (state, action) => {
-	// 			state.loading = false;
-	// 			state.error = null;
-	// 			// state.jobs = action.payload;
-	// 		})
-	// 		.addCase(fetchJobs.rejected, (state, action) => {
-	// 			state.loading = false;
-	// 			state.error = action.error.message || "Failed to fetch Jobs";
-	// 			console.error("Failed to fetch Jobs");
-	// 		});
+	// 	builder.addCase((state) => {});
 	// },
 	// NOTE: When we start connecting to the api, this becomes useful
 });
@@ -411,6 +422,10 @@ export const selectJobById = (stateOrJobsOrJobList: RootState | JobState | Job[]
 		return stateOrJobsOrJobList.find((job) => job._id === jobId);
 	}
 };
+
+export const selectJobStatus = (state: RootState) => state.jobs.status;
+
+export const selectJobError = (state: RootState) => state.jobs.error;
 
 export const selectJobsPageJobs = createAppSelector([selectJobsState, selectCurrentUser], (jobs, currentUser) => {
 	//If user is a regular user, return their jobs

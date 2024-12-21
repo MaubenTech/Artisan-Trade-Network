@@ -4,7 +4,7 @@ import MenuHeader from "@components/MenuHeader";
 import { compactStyles } from "@helpers/styles";
 import FilterComponent from "@components/FilterComponent";
 import PostedJob from "@components/jobComponents/PostedJob";
-import { View, StyleSheet, Dimensions, Platform, ScrollView } from "react-native";
+import { View, StyleSheet, Dimensions, Platform, ScrollView, ActivityIndicator } from "react-native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import useAppSelector from "@hooks/useAppSelector";
 import useAppDispatch from "@hooks/useAppDispatch";
@@ -12,7 +12,7 @@ import useAppDispatch from "@hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store";
 import { Text } from "@components/Text";
-import { selectJobsState } from "@store/jobsSlice";
+import { fetchJobs, selectAllJobs, selectJobsState, selectJobStatus } from "@store/jobsSlice";
 import EmptyJobs from "@components/jobComponents/EmptyJobs";
 
 const { width, height } = Dimensions.get("window");
@@ -31,13 +31,17 @@ export type Job = {
 const Jobs = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
-	const { jobList: jobs, loading, error } = useAppSelector(selectJobsState);
+	// const { jobList: jobs, error } = useAppSelector(selectJobsState);
+
+	const dispatch = useAppDispatch();
+	const jobs = useAppSelector(selectAllJobs);
+	const jobsStatus = useAppSelector(selectJobStatus);
 
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
-	// useEffect(() => {
-	// 	dispatch(fetchJobs());
-	// }, [dispatch]);
+	useEffect(() => {
+		if (jobsStatus === "idle") dispatch(fetchJobs());
+	}, [jobsStatus, dispatch]);
 
 	const [filterOption, setFilterOption] = useState<string | number>("All");
 
@@ -68,17 +72,33 @@ const Jobs = () => {
 				<View style={[styles.componentContainer, styles.filterContainer]}>
 					<FilterComponent filterOptions={filterOptions} selectedOption={filterOption} onOptionChanged={setFilterOption} />
 				</View>
-				{jobs.length > 0 ? (
+				{/* {jobs.length > 0 ? (
 					<ScrollView style={styles.jobContainer} contentContainerStyle={{ ...styles.jobContentContainer, paddingBottom: bottomTabBarHeight }}>
-						{/* <PostedJobs /> */}
-						{/* {loading && <Text>Loading...</Text>}
-                    {error && <Text> Error Fetching Jobs: {error}</Text>} */}
+						<PostedJobs />
+						loading && <Text>Loading...</Text>
+                    {error && <Text> Error Fetching Jobs: {error}</Text>}
 						{jobs.map((job, index) => (
 							<PostedJob job={job} key={job._id} isLastIndex={index === jobs.length - 1} />
 						))}
 					</ScrollView>
 				) : (
 					<EmptyJobs />
+				)} */}
+				{jobsStatus === "pending" && (
+					<View style={styles.jobsLoadingContainer}>
+						<ActivityIndicator style={styles.jobsLoading} size={"large"} />
+					</View>
+				)}
+				{jobsStatus === "succeeded" && jobs.length > 0 ? (
+					<ScrollView style={styles.jobContainer} contentContainerStyle={{ ...styles.jobContentContainer, paddingBottom: bottomTabBarHeight }}>
+						{jobs.map((job, index) => (
+							<PostedJob job={job} key={job._id} isLastIndex={index === jobs.length - 1} />
+						))}
+					</ScrollView>
+				) : jobsStatus === "succeeded" && jobs.length === 0 ? (
+					<EmptyJobs />
+				) : (
+					jobsStatus === "failed" && <Text>Error Loading Jobs</Text>
 				)}
 			</View>
 		</>
@@ -113,6 +133,13 @@ const generalStyles = StyleSheet.create({
 	jobContentContainer: {
 		marginTop: -20,
 	},
+
+	jobsLoadingContainer: {
+		flex: 0.5,
+		justifyContent: "center",
+	},
+
+	jobsLoading: {},
 });
 
 const androidStyles = StyleSheet.create({});

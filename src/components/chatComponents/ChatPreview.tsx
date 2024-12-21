@@ -16,9 +16,7 @@ const ChatPreview = ({ item, chatPartnerID }: { item: UserState; chatPartnerID: 
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const openChatRoom = () => {
-		// router.navigate({ pathname: "/ChatRoom" });
 		router.push({ pathname: "/Chat/ChatRoom", params: { chatPartnerID, item: JSON.stringify(item) } });
-		// router.push({ pathname: "/ChatRoom" });
 	};
 
 	const messages = useAppSelector(selectMessages);
