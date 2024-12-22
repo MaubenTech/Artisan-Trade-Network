@@ -44,7 +44,6 @@
 		"react-native-keyboard-aware-scroll-view": "^0.9.5",
 		"react-native-maps": "1.18.0",
 		"react-native-modern-datepicker": "^1.0.0-beta.91",
-		"react-native-modern-datepicker-forked": "^1.0.0",
 		"react-native-pager-view": "6.5.1",
 		"react-native-progress": "^5.0.1",
 		"react-native-reanimated": "~3.16.1",

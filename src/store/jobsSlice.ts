@@ -26,15 +26,18 @@ export interface Job {
 
 export type JobType = "Installation" | "Maintainence";
 
-export const fetchJobs = createAsyncThunk<Job[], void>("jobs/FetchJobs", async () => {
-	const jobs = await getData<Job[]>("/jobs");
-	return jobs;
-}, {
-	condition(arg, api) {
-		const jobsStatus = selectJobStatus(api.getState() as RootState)
-		if(jobsStatus !== 'idle') return false
+export const fetchJobs = createAsyncThunk<Job[], void>(
+	"jobs/fetchJobs",
+	async () => {
+		const jobs = await getData<Job[]>("/jobs");
+		return jobs;
 	},
-}
+	{
+		condition(arg, api) {
+			const jobsStatus = selectAllJobsStatus(api.getState() as RootState);
+			if (jobsStatus !== "idle") return false;
+		},
+	}
 );
 
 const jobs = getData("/jobs");
@@ -45,7 +48,7 @@ interface JobState {
 	currentJob: Partial<Job>;
 	// loading: boolean;
 	error: string | null;
-	status: 'idle' | 'pending' | 'succeeded' | 'failed';
+	status: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const dummyJob: Job[] = [
@@ -289,7 +292,7 @@ const initialState: JobState = {
 	currentJob: {
 		media: [],
 	},
-	status: 'idle',
+	status: "idle",
 	error: null,
 };
 
@@ -368,25 +371,21 @@ const jobSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchJobs.pending, (state) => {
-				state.status = 'pending';
+				state.status = "pending";
 				state.error = null;
 			})
 			.addCase(fetchJobs.fulfilled, (state, action) => {
-				state.status = 'succeeded';
+				state.status = "succeeded";
 				// state.error = null;
-				console.info('Jobs From API',...action.payload)
+				console.info("Jobs From API", ...action.payload);
 				state.jobList.push(...action.payload);
 			})
 			.addCase(fetchJobs.rejected, (state, action) => {
-				state.status = 'failed';
+				state.status = "failed";
 				state.error = action.error.message || "Failed to fetch Jobs";
 				console.error("Failed to fetch Jobs");
 			});
 	},
-	// extraReducers: (builder) => {
-	// 	builder.addCase((state) => {});
-	// },
-	// NOTE: When we start connecting to the api, this becomes useful
 });
 
 export const selectJobTitles = createSelector(
@@ -423,9 +422,9 @@ export const selectJobById = (stateOrJobsOrJobList: RootState | JobState | Job[]
 	}
 };
 
-export const selectJobStatus = (state: RootState) => state.jobs.status;
+export const selectAllJobsStatus = (state: RootState) => state.jobs.status;
 
-export const selectJobError = (state: RootState) => state.jobs.error;
+export const selectAllJobsError = (state: RootState) => state.jobs.error;
 
 export const selectJobsPageJobs = createAppSelector([selectJobsState, selectCurrentUser], (jobs, currentUser) => {
 	//If user is a regular user, return their jobs

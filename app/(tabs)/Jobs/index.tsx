@@ -12,7 +12,7 @@ import useAppDispatch from "@hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store";
 import { Text } from "@components/Text";
-import { fetchJobs, selectAllJobs, selectJobsState, selectJobStatus } from "@store/jobsSlice";
+import { fetchJobs, selectAllJobs, selectJobsState, selectAllJobsStatus } from "@store/jobsSlice";
 import EmptyJobs from "@components/jobComponents/EmptyJobs";
 
 const { width, height } = Dimensions.get("window");
@@ -35,7 +35,7 @@ const Jobs = () => {
 
 	const dispatch = useAppDispatch();
 	const jobs = useAppSelector(selectAllJobs);
-	const jobsStatus = useAppSelector(selectJobStatus);
+	const jobsStatus = useAppSelector(selectAllJobsStatus);
 
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
