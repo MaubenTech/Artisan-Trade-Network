@@ -40,8 +40,8 @@ export const fetchJobs = createAsyncThunk<Job[], void>(
 	}
 );
 
-const jobs = getData("/jobs");
-console.log("Jobs:", jobs);
+// const jobs = getData("/jobs");
+// console.log("Jobs:", jobs);
 
 interface JobState {
 	jobList: Job[];
