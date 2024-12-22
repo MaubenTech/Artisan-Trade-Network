@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text } from "@components/Text";
 import PageHeader from "@components/PageHeader";
 import { View, StyleSheet, Dimensions } from "react-native";
 import JobRating from "@assets/images/JobRating.svg";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
+import useAppSelector from "@hooks/useAppSelector";
+import { selectAllReviews } from "@store/reviewsSlice";
+import Rating from "@components/Ratingt";
 
 const { height, width } = Dimensions.get("window");
 
@@ -35,22 +38,29 @@ const JobReviews: JobReview[] = [
 ];
 
 const MyRatings = () => {
+	const reviews = useAppSelector(selectAllReviews);
+
+	useEffect(() => {
+		console.info(reviews);
+	});
+
 	return (
 		<>
 			<PageHeader pageName="Reviews" />
 			<View style={styles.container}>
-				{JobReviews.map((jobReview, idx) => {
+				{reviews.map((jobReview, idx) => {
 					return (
 						<>
-							<View style={styles.jobReviewContainer} key={jobReview.jobReviewTitle}>
+							<View style={styles.jobReviewContainer} key={jobReview._id}>
 								<Text style={styles.jobReviewHeader}>{jobReview.jobReviewHeader}</Text>
 								<Text style={styles.jobReviewTitle}>{jobReview.jobReviewTitle}</Text>
-								<Text style={styles.jobReview}>{jobReview.jobReview}</Text>
+								<Text style={styles.jobReview}>{jobReview.comment}</Text>
 								<View style={styles.ratingContainer}>
 									<ProfilePicture width={40} />
 									<View>
 										<Text>Drew Berry</Text>
-										<JobRating width={60} />
+										{/* <JobRating width={90} /> */}
+										<Rating maxRating={5} />
 									</View>
 								</View>
 							</View>
