@@ -5,8 +5,9 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import JobRating from "@assets/images/JobRating.svg";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import useAppSelector from "@hooks/useAppSelector";
-import { selectAllReviews } from "@store/reviewsSlice";
+import { selectAllReviews, updateReviewRating } from "@store/reviewsSlice";
 import Rating from "@components/Ratingt";
+import useAppDispatch from "@hooks/useAppDispatch";
 
 const { height, width } = Dimensions.get("window");
 
@@ -39,32 +40,43 @@ const JobReviews: JobReview[] = [
 
 const MyRatings = () => {
 	const reviews = useAppSelector(selectAllReviews);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		console.info(reviews);
 	});
 
+	const getRatingChange = (newRating: number, index: number, reviewId: string) => {
+		console.info(`Review ${index}, updated rating: ${newRating}`);
+		dispatch(updateReviewRating({ _id: reviewId, rating: newRating }));
+		return newRating;
+	};
+
 	return (
 		<>
 			<PageHeader pageName="Reviews" />
 			<View style={styles.container}>
-				{reviews.map((jobReview, idx) => {
+				{reviews.map((review, index) => {
 					return (
 						<>
-							<View style={styles.jobReviewContainer} key={jobReview._id}>
-								<Text style={styles.jobReviewHeader}>{jobReview.jobReviewHeader}</Text>
-								<Text style={styles.jobReviewTitle}>{jobReview.jobReviewTitle}</Text>
-								<Text style={styles.jobReview}>{jobReview.comment}</Text>
+							<View style={styles.jobReviewContainer} key={review._id}>
+								<Text style={styles.jobReviewHeader}>{review.header}</Text>
+								<Text style={styles.jobReviewTitle}>{review.title}</Text>
+								<Text style={styles.jobReview}>{review.comment}</Text>
 								<View style={styles.ratingContainer}>
 									<ProfilePicture width={40} />
 									<View>
 										<Text>Drew Berry</Text>
 										{/* <JobRating width={90} /> */}
-										<Rating maxRating={5} />
+										<Rating
+											maxRating={5}
+											onRatingChange={(rating) => getRatingChange(rating, index, review._id)}
+											initialRating={review.rating}
+										/>
 									</View>
 								</View>
 							</View>
-							<View key={idx} style={styles.jobBorderBottom}></View>
+							<View key={index} style={styles.jobBorderBottom}></View>
 						</>
 					);
 				})}
