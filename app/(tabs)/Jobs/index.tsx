@@ -40,7 +40,7 @@ const Jobs = () => {
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
 	useEffect(() => {
-		if (jobsStatus === "idle") dispatch(fetchJobs());
+		// if (jobsStatus === "idle") dispatch(fetchJobs());
 	}, [jobsStatus, dispatch]);
 
 	const [filterOption, setFilterOption] = useState<string | number>("All");
