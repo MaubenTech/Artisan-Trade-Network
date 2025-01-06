@@ -1,3 +1,5 @@
+import { getData, postData } from "@helpers/APIFunction";
+import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Login {
@@ -39,21 +41,81 @@ interface User {
 }
 
 interface AuthState {
+	error: Record<string, string>;
+	status: "idle" | "loading" | "succeeded" | "failed";
 	user: User;
 	token: string;
 	isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
+	error: null,
+	status: "idle",
 	user: null,
 	token: null,
 	isAuthenticated: false,
 };
 
+export const loginUser = createAppAsyncThunk("auth/login", async ({ email, password }: Login, { getState, dispatch }) => {
+	type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
+	try {
+		const loggedInUser: UserLoginResult = await postData("/auth/signin", { email, password });
+		console.log(loggedInUser);
+		if (typeof loggedInUser === "object" && loggedInUser.token) {
+			console.log("User log in successful!");
+			dispatch(addRandomUser());
+		} else if (typeof loggedInUser === "string" && loggedInUser.includes("Invalid credentials")) {
+			//NOTE: This won't be necessary when the api is fixed and starts returning json objects for invalid credentials
+			console.log("Email or password invalid!");
+			dispatch(addInvalidCredentialsPlaceholder());
+		} else {
+			console.log("Unknown result from login...");
+			dispatch(addUnknownUser());
+		}
+
+		// return loggedInUser;
+	} catch (error) {
+		console.log("Error while fetching: " + JSON.stringify(error));
+		dispatch(addInvalidCredentialsPlaceholder());
+	}
+
+	console.log("Completed!");
+});
+
 const authSlice = createSlice({
 	name: "auth",
 	initialState: initialState,
 	reducers: {
+		addUnknownUser(state) {
+			const DEFAULT: User = {
+				_id: "-1",
+				name: "Unknown",
+				nickName: "Unknown",
+				email: "unknown",
+				type: "NORMAL",
+			};
+			state.user = DEFAULT;
+		},
+		addInvalidCredentialsPlaceholder(state) {
+			const INVALID_CREDENTIALS: User = {
+				_id: "-1",
+				name: "Invalid Credentials",
+				nickName: "Invalid",
+				email: "invalidcredentials@gmail.com",
+				type: "NORMAL",
+			};
+			state.user = INVALID_CREDENTIALS;
+		},
+		addRandomUser(state) {
+			const NONSO_ALI: User = {
+				_id: "3",
+				name: "Nonso Ali",
+				nickName: "Nonso",
+				email: "nonsoali@gmail.com",
+				type: "NORMAL",
+			};
+			state.user = NONSO_ALI;
+		},
 		userLoggedIn(state, action: PayloadAction<Login>) {
 			const { email, password } = action.payload;
 			//TODO: Login functionality
@@ -137,7 +199,7 @@ const authSlice = createSlice({
 	},
 });
 
-export const { userLoggedIn, userLoggedOut } = authSlice.actions;
+export const { addUnknownUser, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedIn, userLoggedOut } = authSlice.actions;
 
 export const { selectCurrentUser } = authSlice.selectors;
 
