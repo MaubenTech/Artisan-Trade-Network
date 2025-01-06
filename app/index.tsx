@@ -14,7 +14,7 @@ import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet, View, TouchableWithoutFeedback, TouchableOpacity, Dimensions, ScrollView, SafeAreaView, Platform, StatusBar } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { userLoggedIn } from "@store/authSlice";
+import { loginUser, userLoggedIn } from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 
 const { width, height } = Dimensions.get("window");
@@ -67,8 +67,13 @@ const index = () => {
 					<ButtonGroup
 						positiveOption="Login"
 						href={"/Home"}
-						onPress={() => {
-							dispatch(userLoggedIn({ email, password }));
+						//TODO: Converted onPress handler to async and awaited the dispatch, so it'll complete before navigating. Only downside is during the awaiting, the users won't know there's a process going on (no loader or identifier)
+						onPress={async () => {
+							await dispatch(loginUser({ email, password }));
+
+							// dispatch(userLoggedIn({ email, password }));
+
+							//TODO: Add the extra reducers to the auth slice and make sure there's no navigation till the user is logged in
 							router.navigate("/Home");
 						}}
 					/>
