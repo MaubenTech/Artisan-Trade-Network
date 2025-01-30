@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import Checkbox from "expo-checkbox";
@@ -12,10 +12,25 @@ import { Text, TextInput } from "@components/Text";
 import FacebookIcon from "@assets/images/facebook.svg";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet, View, TouchableWithoutFeedback, TouchableOpacity, Dimensions, ScrollView, SafeAreaView, Platform, StatusBar } from "react-native";
+import {
+	StyleSheet,
+	View,
+	TouchableWithoutFeedback,
+	TouchableOpacity,
+	Dimensions,
+	ScrollView,
+	SafeAreaView,
+	Platform,
+	StatusBar,
+	ActivityIndicator,
+} from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { loginUser, userLoggedIn } from "@store/authSlice";
+import { addUser, AuthState, loginUser, selectLoginStatus, userLoggedIn } from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
+import { fetchUsers } from "@store/usersSlice";
+import { getData } from "@helpers/APIFunction";
+import { useSelector } from "react-redux";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +43,22 @@ const index = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
+
+	const handleLogin = async () => {
+		// dispatch(loginUser({ email, password })).then((result) => {
+		// 	if (result.payload) {
+		// 		setEmail("");
+		// 		setPassword("");
+		// 		router.navigate("Home");
+		// 	}
+		// });
+		const result = await dispatch(loginUser({ email, password }));
+		if (result.meta.requestStatus === "fulfilled") {
+			router.navigate("Home");
+		}
+	};
+
+	const loginStatus = useSelector(selectLoginStatus);
 
 	const router = useRouter();
 	const dispatch = useAppDispatch();
@@ -43,7 +74,9 @@ const index = () => {
 						<Text style={styles.ctaHeader}>Login to your account</Text>
 						<Text style={styles.ctaSubtext}>Welcome back! Please enter your details</Text>
 					</View>
+					{loginStatus === "loading" && <LoadingIndicator visible />}
 					<View style={[styles.userInputContainer]}>
+						{loginStatus === "failed" && <Text style={styles.errorMessage}>Invalid Email or Password</Text>}
 						<View style={[styles.userInputSubContainer]}>
 							<Text style={[styles.userInputLabel]}>Email</Text>
 							<TextInput style={[styles.userInput]} value={email} onChangeText={setEmail} />
@@ -66,16 +99,14 @@ const index = () => {
 					</View>
 					<ButtonGroup
 						positiveOption="Login"
-						href={"/Home"}
 						//TODO: Converted onPress handler to async and awaited the dispatch, so it'll complete before navigating. Only downside is during the awaiting, the users won't know there's a process going on (no loader or identifier)
-						onPress={async () => {
-							await dispatch(loginUser({ email, password }));
-
-							// dispatch(userLoggedIn({ email, password }));
-
-							//TODO: Add the extra reducers to the auth slice and make sure there's no navigation till the user is logged in
-							router.navigate("/Home");
-						}}
+						// onPress={async () => {
+						// 	await dispatch(loginUser({ email, password }));
+						// 	// dispatch(userLoggedIn({ email, password }));
+						// 	//TODO: Add the extra reducers to the auth slice and make sure there's no navigation till the user is logged in
+						// 	router.navigate("Home");
+						// }}
+						onPress={handleLogin}
 					/>
 				</View>
 				<View style={[styles.componentContainer, styles.otherLoginContainer]}>
@@ -162,6 +193,10 @@ const generalStyles = StyleSheet.create({
 		fontSize: 12,
 		textDecorationLine: "underline",
 		color: colors.mainColor,
+	},
+
+	errorMessage: {
+		color: colors.red,
 	},
 });
 

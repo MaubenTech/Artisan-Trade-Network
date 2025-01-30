@@ -1,6 +1,8 @@
 import { getData, postData } from "@helpers/APIFunction";
 import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { jwtDecode } from "jwt-decode";
+import { fetchUsers } from "./usersSlice";
 
 interface Login {
 	email: string;
@@ -34,16 +36,26 @@ interface Register {
 
 interface User {
 	_id: string;
-	name: string;
-	nickName: string;
 	email: string;
+	firstname: string;
+	lastname: string;
+	dateofbirth: string;
+	gender: string;
+	address: string;
+	phonenumber: string;
+	password: string;
+	isVerified: boolean;
+	otp: string;
+	otpExpires: string;
 	type: "NORMAL" | "ARTISAN";
 }
 
-interface AuthState {
+type authUser = Pick<User, "_id" | "email" | "firstname" | "lastname">;
+
+export interface AuthState {
 	error: Record<string, string>;
 	status: "idle" | "loading" | "succeeded" | "failed";
-	user: User;
+	user: authUser;
 	token: string;
 	isAuthenticated: boolean;
 }
@@ -56,125 +68,191 @@ const initialState: AuthState = {
 	isAuthenticated: false,
 };
 
-export const loginUser = createAppAsyncThunk("auth/login", async ({ email, password }: Login, { getState, dispatch }) => {
-	type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
+export const loginUser = createAppAsyncThunk("auth/login", async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
+	// // type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
+	type UserLoginResult = { token: string } | string;
+	// try {
+	// 	const loggedInUser: UserLoginResult = await postData("/auth/signin", { email, password });
+	// 	console.log("Logged In User: ", loggedInUser);
+	// 	if (typeof loggedInUser === "object" && loggedInUser.token) {
+	// 		const decodedUser = jwtDecode<authUser>(loggedInUser.token);
+	// 		console.log(decodedUser);
+	// 		console.log("User log in successful!");
+	// 		dispatch(addUser({ ...decodedUser, token: loggedInUser.token }));
+	// 		return { ...decodedUser, token: loggedInUser.token };
+	// 	} else if (typeof loggedInUser === "string" && loggedInUser.includes("Invalid credentials")) {
+	// 		console.log("Email or password invalid!");
+	// 		dispatch(addInvalidCredentialsPlaceholder());
+	// 	} else {
+	// 		console.log("Unknown result from login...");
+	// 		dispatch(addUnknownUser());
+	// 	}
+	// 	// return loggedInUser;
+	// } catch (error) {
+	// 	// console.log("Error while fetching: " + JSON.stringify(error));
+	// 	dispatch(addInvalidCredentialsPlaceholder());
+	// }
 	try {
-		const loggedInUser: UserLoginResult = await postData("/auth/signin", { email, password });
-		console.log(loggedInUser);
-		if (typeof loggedInUser === "object" && loggedInUser.token) {
-			console.log("User log in successful!");
-			dispatch(addRandomUser());
-		} else if (typeof loggedInUser === "string" && loggedInUser.includes("Invalid credentials")) {
-			//NOTE: This won't be necessary when the api is fixed and starts returning json objects for invalid credentials
-			console.log("Email or password invalid!");
-			dispatch(addInvalidCredentialsPlaceholder());
-		} else {
-			console.log("Unknown result from login...");
-			dispatch(addUnknownUser());
+		dispatch(setStatus("loading"));
+		const response: UserLoginResult = await postData("/auth/signin", { email, password });
+
+		if (typeof response === "object" && response.token) {
+			const decoderUser = jwtDecode<authUser>(response.token);
+			dispatch(addUser({ ...decoderUser, token: response.token }));
+			dispatch(setStatus("succeeded"));
+		} else if (typeof response === "string" && response.includes("Invalid")) {
+			dispatch(setStatus("failed"));
+			return rejectWithValue("Invalid Credentials");
 		}
-
-		// return loggedInUser;
 	} catch (error) {
-		console.log("Error while fetching: " + JSON.stringify(error));
-		dispatch(addInvalidCredentialsPlaceholder());
+		dispatch(setStatus("failed"));
+		return rejectWithValue("Login Failed");
 	}
-
-	console.log("Completed!");
 });
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState: initialState,
 	reducers: {
+		setStatus(state, action: PayloadAction<AuthState["status"]>) {
+			state.status = action.payload;
+		},
 		addUnknownUser(state) {
 			const DEFAULT: User = {
 				_id: "-1",
-				name: "Unknown",
-				nickName: "Unknown",
+				firstname: "Unknown",
 				email: "unknown",
 				type: "NORMAL",
+				lastname: "",
+				dateofbirth: "",
+				gender: "",
+				address: "",
+				phonenumber: "",
+				password: "",
+				isVerified: false,
+				otp: "",
+				otpExpires: "",
 			};
 			state.user = DEFAULT;
 		},
 		addInvalidCredentialsPlaceholder(state) {
 			const INVALID_CREDENTIALS: User = {
 				_id: "-1",
-				name: "Invalid Credentials",
-				nickName: "Invalid",
+				firstname: "Invalid",
 				email: "invalidcredentials@gmail.com",
-				type: "NORMAL",
+				type: "ARTISAN",
+				lastname: "",
+				dateofbirth: "",
+				gender: "",
+				address: "",
+				phonenumber: "",
+				password: "",
+				isVerified: false,
+				otp: "",
+				otpExpires: "",
 			};
 			state.user = INVALID_CREDENTIALS;
 		},
-		addRandomUser(state) {
+		addRandomUser(state, action: PayloadAction<User>) {
 			const NONSO_ALI: User = {
-				_id: "3",
-				name: "Nonso Ali",
-				nickName: "Nonso",
-				email: "nonsoali@gmail.com",
+				_id: action.payload._id,
+				firstname: action.payload.firstname,
+				lastname: action.payload.lastname,
+				gender: action.payload.gender,
+				dateofbirth: action.payload.dateofbirth,
+				otp: action.payload.otp,
+				otpExpires: action.payload.otpExpires,
+				phonenumber: action.payload.phonenumber,
+				address: action.payload.address,
+				isVerified: action.payload.isVerified,
+				password: action.payload.password,
+				email: action.payload.email,
 				type: "NORMAL",
 			};
 			state.user = NONSO_ALI;
+		},
+		addUser(state, action: PayloadAction<authUser & { token: string }>) {
+			const { _id, email, firstname, lastname, token } = action.payload;
+			state.user = {
+				_id,
+				email,
+				firstname,
+				lastname,
+				token,
+			} as authUser;
+
+			state.token = token;
+			state.isAuthenticated = true;
+			state.status = "succeeded";
+			console.log("Token is : ", token);
 		},
 		userLoggedIn(state, action: PayloadAction<Login>) {
 			const { email, password } = action.payload;
 			//TODO: Login functionality
 
-			//NOTE: Dummy login functionality
-			const JOHN_DOE: User = {
-				_id: "1",
-				name: "John Doe",
-				nickName: "John",
-				email: "johndoe@gmail.com",
-				type: "ARTISAN",
-			};
-			const JANET_STONES: User = {
-				_id: "2",
-				name: "Janet Stones",
-				nickName: "Janet",
-				email: "janetstones@gmail.com",
-				type: "NORMAL",
-			};
-			const NONSO_ALI: User = {
-				_id: "3",
-				name: "Nonso Ali",
-				nickName: "Nonso",
-				email: "nonsoali@gmail.com",
-				type: "NORMAL",
-			};
-			const DREW_BERRY: User = {
-				_id: "4",
-				name: "Drew Berry",
-				nickName: "Drew",
-				email: "drewberry@gmail.com",
-				type: "ARTISAN",
-			};
-			const DEFAULT: User = {
-				_id: "-1",
-				name: "Unknown",
-				nickName: "Unknown",
-				email: "unknown",
-				type: "NORMAL",
-			};
+			// //NOTE: Dummy login functionality
+			// const JOHN_DOE: User = {
+			// 	_id: "1",
+			// 	firstname: "John",
+			// 	email: "johndoe@gmail.com",
+			// 	type: "ARTISAN",
+			// 	lastname: "",
+			// 	dateofbirth: "",
+			// 	gender: "",
+			// 	address: "",
+			// 	phonenumber: "",
+			// 	password: "",
+			// 	isVerified: false,
+			// 	otp: "",
+			// 	otpExpires: ""
+			// };
+			// const JANET_STONES: User = {
+			// 	_id: "2",
+			// 	name: "Janet Stones",
+			// 	nickName: "Janet",
+			// 	email: "janetstones@gmail.com",
+			// 	type: "NORMAL",
+			// };
+			// const NONSO_ALI: User = {
+			// 	_id: "3",
+			// 	name: "Nonso Ali",
+			// 	nickName: "Nonso",
+			// 	email: "nonsoali@gmail.com",
+			// 	type: "NORMAL",
+			// };
+			// const DREW_BERRY: User = {
+			// 	_id: "4",
+			// 	name: "Drew Berry",
+			// 	nickName: "Drew",
+			// 	email: "drewberry@gmail.com",
+			// 	type: "ARTISAN",
+			// };
+			// const DEFAULT: User = {
+			// 	_id: "-1",
+			// 	name: "Unknown",
+			// 	nickName: "Unknown",
+			// 	email: "unknown",
+			// 	type: "NORMAL",
+			// };
 
-			switch (email) {
-				case "johndoe@gmail.com":
-					state.user = JOHN_DOE;
-					break;
-				case "janetstones@gmail.com":
-					state.user = JANET_STONES;
-					break;
-				case "nonsoali@gmail.com":
-					state.user = NONSO_ALI;
-					break;
-				case "drewberry@gmail.com":
-					state.user = DREW_BERRY;
-					break;
-				default:
-					state.user = DEFAULT;
-			}
+			// switch (email) {
+			// 	case "johndoe@gmail.com":
+			// 		state.user = JOHN_DOE;
+			// 		break;
+			// 	case "janetstones@gmail.com":
+			// 		state.user = JANET_STONES;
+			// 		break;
+			// 	case "nonsoali@gmail.com":
+			// 		state.user = NONSO_ALI;
+			// 		break;
+			// 	case "drewberry@gmail.com":
+			// 		state.user = DREW_BERRY;
+			// 		break;
+			// 	default:
+			// 		state.user = DEFAULT;
+			// }
 			state.isAuthenticated = true;
-			state.token = "user_token";
+			state.token = "user.token";
 		},
 		userLoggedOut(state) {
 			//TODO: Logout functionality, add logic to clear information from other slices and states
@@ -196,11 +274,12 @@ const authSlice = createSlice({
 	},
 	selectors: {
 		selectCurrentUser: (state: AuthState) => state.user,
+		selectLoginStatus: (state: AuthState) => state.status,
 	},
 });
 
-export const { addUnknownUser, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedIn, userLoggedOut } = authSlice.actions;
+export const { addUnknownUser, setStatus, addUser, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedIn, userLoggedOut } = authSlice.actions;
 
-export const { selectCurrentUser } = authSlice.selectors;
+export const { selectCurrentUser, selectLoginStatus } = authSlice.selectors;
 
 export default authSlice.reducer;
