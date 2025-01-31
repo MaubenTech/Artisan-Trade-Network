@@ -14,7 +14,7 @@ import { RootState } from "@store";
 import { addChat, selectMessages } from "@store/chatSlice";
 import { selectCurrentUser } from "@store/authSlice";
 import { v4 as uuidv4 } from "uuid";
-import { UserState } from "@store/usersSlice";
+import { User } from "@store/usersSlice";
 
 interface MessageBubbleProps {
 	message: string;
@@ -48,7 +48,7 @@ const ChatRoom = () => {
 
 	// const convertedChatPartnerID = Array.isArray(chatPartnerID) ? Number(chatPartnerID[0]) : Number(chatPartnerID);
 
-	const chatPartnerDetails = item && !Array.isArray(item) ? (JSON.parse(item) as UserState) : null;
+	const chatPartnerDetails = item && !Array.isArray(item) ? (JSON.parse(item) as User) : null;
 
 	const currentUser = useAppSelector(selectCurrentUser);
 
@@ -102,7 +102,7 @@ const ChatRoom = () => {
 			<View style={styles.parentContainer}>
 				<View style={styles.container}>
 					<View>
-						<ChatHeader chatPartnerName={chatPartnerDetails.name} />
+						<ChatHeader chatPartnerName={chatPartnerDetails.firstname} />
 						<View style={styles.pageHeaderContainerBorder}></View>
 					</View>
 					<View style={styles.chatContainer}>

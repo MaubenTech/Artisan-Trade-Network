@@ -16,7 +16,7 @@ const JobHistory = () => {
 		<View style={{ backgroundColor: colors.white }}>
 			<PageHeader pageName="Job History" />
 			<View style={styles.container}>
-				<Link style={styles.job} asChild href={"/(customerPages)/(profile)/JobHistoryDetails"}>
+				<Link style={styles.job} asChild href={"/JobHistoryDetails"}>
 					<TouchableOpacity>
 						<View style={styles.jobPicture}>
 							<JobPicture />
@@ -28,8 +28,8 @@ const JobHistory = () => {
 							</View>
 							<Text style={styles.jobServiceCategory}>Maintenance</Text>
 							<Text style={styles.jobDetailContent} lineBreakMode="middle" numberOfLines={2}>
-								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta
-								alias dolore quis pariatur porro ullam facilis molestiae quasi.
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis, aliquam Officia deserunt dicta alias dolore quis pariatur
+								porro ullam facilis molestiae quasi.
 							</Text>
 							<View style={styles.jobDetailFooter}>
 								<Text style={styles.jobPriceDetail}>₦ 500.00</Text>

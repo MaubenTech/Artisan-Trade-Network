@@ -50,7 +50,7 @@ interface User {
 	type: "NORMAL" | "ARTISAN";
 }
 
-type authUser = Pick<User, "_id" | "email" | "firstname" | "lastname">;
+type authUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
 
 export interface AuthState {
 	error: Record<string, string>;
@@ -172,13 +172,14 @@ const authSlice = createSlice({
 			state.user = NONSO_ALI;
 		},
 		addUser(state, action: PayloadAction<authUser & { token: string }>) {
-			const { _id, email, firstname, lastname, token } = action.payload;
+			const { _id, email, firstname, lastname, token, type = "NORMAL" } = action.payload;
 			state.user = {
 				_id,
 				email,
 				firstname,
 				lastname,
 				token,
+				type,
 			} as authUser;
 
 			state.token = token;

@@ -116,7 +116,7 @@ const generalStyles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 50,
-		padding: 12.5,
+		padding: 10.5,
 		// paddingVertical: 12.5,
 	},
 
@@ -154,18 +154,5 @@ const iosStyles = StyleSheet.create({
 		paddingLeft: 20,
 		paddingRight: 20,
 		paddingBottom: 0,
-	},
-
-	customTabBar: {},
-	iconText: {
-		top: 1,
-	},
-
-	inactiveIconContainer: {
-		alignSelf: "center",
-	},
-
-	iconContainer: {
-		padding: 10,
 	},
 });
