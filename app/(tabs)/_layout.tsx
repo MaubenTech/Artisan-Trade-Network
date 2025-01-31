@@ -11,6 +11,7 @@ import useAppSelector from "@hooks/useAppSelector";
 import { selectCurrentUser } from "@store/authSlice";
 import { CustomTab } from "@components/CustomTab";
 import CustomTabBar from "@components/CustomTabBar";
+import { horizontalScale } from "@helpers/metrics";
 
 const { width, height } = Dimensions.get("window");
 
@@ -85,10 +86,14 @@ const generalStyles = StyleSheet.create({
 		backgroundColor: colors.brownShade,
 		position: "absolute",
 		bottom: 20,
+		left: 20,
+		right: 20,
 		marginRight: 30,
 		marginLeft: 30,
 		paddingBottom: 0,
 		// height: 60,
+		elevation: 0,
+		borderTopWidth: 0,
 		height: verticalScale(70),
 	},
 
@@ -142,7 +147,25 @@ const androidStyles = StyleSheet.create({
 });
 
 const iosStyles = StyleSheet.create({
+	tabBarStyle: {
+		justifyContent: "center",
+		alignItems: "center",
+		height: verticalScale(60),
+		paddingLeft: 20,
+		paddingRight: 20,
+		paddingBottom: 0,
+	},
+
+	customTabBar: {},
 	iconText: {
 		top: 1,
+	},
+
+	inactiveIconContainer: {
+		alignSelf: "center",
+	},
+
+	iconContainer: {
+		padding: 10,
 	},
 });

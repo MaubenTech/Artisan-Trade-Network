@@ -8,6 +8,7 @@ import { moderateScale, verticalScale } from "react-native-size-matters";
 import { Text } from "@components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { compactStyles } from "@helpers/styles";
+import CustomTabBar from "./CustomTabBar";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,10 +36,16 @@ export const CustomTab = (props: Omit<BottomTabBarButtonProps & BottomTabProps, 
 	return (
 		<TouchableOpacity onPress={onPress} style={[conditionalButtonStyles, styles.customTabBar]} activeOpacity={1}>
 			<View style={[styles.iconContainer, focused ? styles.activeContainer : styles.inactiveIconContainer]}>
-				<Ionicons name={focused ? iconName : iconName + "-outline"} color={colors.whiteShade} size={moderateScale(18, 2)} />
+				<Ionicons name={focused ? iconName : iconName + "-outline"} color={focused ? colors.whiteShade : "#808080"} size={moderateScale(20)} />
 				{focused ? <Text style={styles.iconText}>{text}</Text> : <></>}
 			</View>
 		</TouchableOpacity>
+		// <TouchableOpacity onPress={onPress} style={[styles.container, focused && styles.focusedContainer]} activeOpacity={1}>
+		// 	<View style={styles.content}>
+		// 		<Ionicons name={focused ? iconName : `${iconName}-outline`} color={focused ? "#fff" : "#808080"} size={moderateScale(20)} />
+		// 		{focused && <Text style={styles.text}>{text}</Text>}
+		// 	</View>
+		// </TouchableOpacity>
 	);
 };
 
@@ -85,7 +92,41 @@ const androidStyles = StyleSheet.create({
 });
 
 const iosStyles = StyleSheet.create({
+	// container: {
+	// 	flex: 1,
+	// 	alignItems: "center",
+	// 	justifyContent: "center",
+	// 	paddingVertical: 8,
+	// },
+	// focusedContainer: {
+	// 	backgroundColor: "#0095ff",
+	// 	borderRadius: 20,
+	// 	marginHorizontal: 5,
+	// },
+	// content: {
+	// 	flexDirection: "row",
+	// 	alignItems: "center",
+	// 	justifyContent: "center",
+	// 	gap: 8,
+	// },
+	customTabBar: {
+		flex: 1,
+		paddingVertical: 8,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	iconContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 8,
+		justifyContent: "center",
+		marginHorizontal: 5,
+	},
+
 	iconText: {
-		top: 1,
+		color: colors.white,
+		fontSize: 14,
+		fontWeight: "500",
 	},
 });

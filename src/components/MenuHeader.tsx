@@ -20,14 +20,7 @@ const MenuHeader = () => {
 	const { top } = useSafeAreaInsets();
 	return (
 		<View style={(styles.menuContainer, { paddingTop: ios ? top : top + 10, backgroundColor: "white" })}>
-			<View
-				style={{
-					flexDirection: "row",
-					justifyContent: "space-between",
-					width: "100%",
-					backgroundColor: "white",
-				}}
-			>
+			<View style={styles.menuHeaderContainer}>
 				<MenuIcon />
 				<View style={styles.menuOptions}>
 					<Link style={styles.notificationIconContainer} asChild href={"/Notifications"}>
@@ -59,6 +52,13 @@ const generalStyles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
+		backgroundColor: "white",
+	},
+
+	menuHeaderContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		width: "100%",
 		backgroundColor: "white",
 	},
 
@@ -95,13 +95,25 @@ const generalStyles = StyleSheet.create({
 
 	profilePic: {
 		width: 35,
-		height: "180%",
+		height: "100%",
 		objectFit: "contain",
 	},
 });
 
 const androidStyles = StyleSheet.create({});
 
-const iosStyles = StyleSheet.create({});
+const iosStyles = StyleSheet.create({
+	menuHeaderContainer: {
+		alignItems: "center",
+	},
+
+	profilePicContainer: {
+		height: 20,
+	},
+
+	profilePic: {
+		height: "100%",
+	},
+});
 
 export default MenuHeader;

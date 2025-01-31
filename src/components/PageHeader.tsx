@@ -53,7 +53,7 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 					style={
 						profile
 							? {
-									...styles.pageHeaderElementsContainer,
+									...styles.profilePageHeaderContainer,
 									justifyContent: "space-between",
 							  }
 							: styles.pageHeaderElementsContainer
@@ -115,6 +115,7 @@ const PageHeader: React.FC<PageHeaderParams> = ({
 						<>
 							<Text>{profileTitle}</Text>
 							{isProfileSP ? <Text style={styles.editProfile}>Edit</Text> : null}
+							<Text style={styles.editProfile}>Edit</Text>
 						</>
 					) : (
 						<Link href={"/"} style={styles.editProfile}>
@@ -165,9 +166,16 @@ const styles = StyleSheet.create({
 	pageHeaderElementsContainer: {
 		flexDirection: "row",
 		alignItems: "center",
-		gap: 5,
+		gap: 2,
 		paddingHorizontal: 20,
 		paddingBottom: "5%",
+	},
+
+	profilePageHeaderContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 2,
+		paddingHorizontal: 20,
 	},
 
 	pageHeaderTitle: {
@@ -204,6 +212,7 @@ const styles = StyleSheet.create({
 	editProfile: {
 		textDecorationLine: "underline",
 		color: colors.greySecondaryShade,
+		marginTop: -25, //smh
 	},
 });
 

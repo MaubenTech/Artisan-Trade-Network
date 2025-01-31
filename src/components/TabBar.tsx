@@ -1,4 +1,4 @@
-import { Text } from "@components/Text";
+import { Text, TextInput } from "@components/Text";
 import colors from "@helpers/colors";
 import Jobs from "../../app/(tabs)/Jobs";
 import React, { ReactElement } from "react";
@@ -6,6 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Icon } from "@expo/vector-icons/build/createIconSet";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
+import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -15,7 +16,9 @@ type BottomTabProps = {
 	iconName: any;
 };
 
-export default function TabBar({ state, descriptors, navigation }: any, props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) {
+const TabBar = ({ state, descriptors, navigation }: any, props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+
 	const icons = {
 		Home: (props) => <Ionicons name="home" color={colors.whiteShade} size={25} {...props} />,
 	};
@@ -110,9 +113,11 @@ export default function TabBar({ state, descriptors, navigation }: any, props: O
 			})}
 		</View>
 	);
-}
+};
 
-const styles = StyleSheet.create({
+export default TabBar;
+
+const generalStyles = StyleSheet.create({
 	tabBarStyle: {
 		// flexDirection: "column",
 		flexDirection: "row",
@@ -154,5 +159,13 @@ const styles = StyleSheet.create({
 	},
 	iconText: {
 		color: colors.whiteShade,
+	},
+});
+
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({
+	tabBarItemStyle: {
+		alignItems: "center",
 	},
 });
