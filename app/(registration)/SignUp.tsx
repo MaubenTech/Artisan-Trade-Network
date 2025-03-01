@@ -10,6 +10,14 @@ import { useRouter } from "expo-router";
 
 const SignUp = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [dateOfBirth, setDateOfBirth] = useState("");
+	const [gender, setGender] = useState<"Male" | "Female">("Male");
+	const [address, setAddress] = useState("");
+	const [email, setEmail] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+	const [password, setPassword] = useState("");
 	const router = useRouter();
 
 	const [index, setIndex] = useState(0);
@@ -22,8 +30,13 @@ const SignUp = () => {
 		setIndex(2);
 	};
 
-	const submitPassword = (password: string) => {
+	const verifyOtp = (otp: string) => {
 		setIndex(3);
+	};
+
+	const submitPassword = (password: string) => {
+		// setIndex(4);
+		//TODO: After submitting the password, the onboarding screen shouldn't be stacked untop regular screens. It should replace the whole registration process, so back will go to the login screen directly.
 	};
 
 	BackHandler.addEventListener("hardwareBackPress", () => {
@@ -42,9 +55,9 @@ const SignUp = () => {
 		case 1:
 			return <ContactDetails onSubmit={submitContactDetails} />;
 		case 2:
-			return <Password onSubmit={submitPassword} />;
+			return <OtpVerification onVerifyOtp={verifyOtp} />;
 		case 3:
-			return <OtpVerification />;
+			return <Password onSubmit={submitPassword} />;
 		default:
 			return null;
 	}
