@@ -41,7 +41,12 @@ const Jobs = () => {
 
 	useEffect(() => {
 		// if (jobsStatus === "idle") dispatch(fetchJobs());
-	}, [jobsStatus, dispatch]);
+		dispatch(fetchJobs());
+	}, []);
+	// useEffect(() => {
+	// 	// if (jobsStatus === "idle") dispatch(fetchJobs());
+	// 	dispatch(fetchJobs());
+	// }, [jobsStatus, dispatch]);
 
 	const [filterOption, setFilterOption] = useState<string | number>("All");
 
@@ -95,7 +100,7 @@ const Jobs = () => {
 							<PostedJob job={job} key={job._id} isLastIndex={index === jobs.length - 1} />
 						))}
 					</ScrollView>
-				) : jobsStatus === "succeeded" && jobs.length === 0 ? (
+				) : jobsStatus === "succeeded" && jobs.length == 0 ? (
 					<EmptyJobs />
 				) : (
 					jobsStatus === "failed" && <Text>Error Loading Jobs</Text>

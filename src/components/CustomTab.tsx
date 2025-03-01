@@ -21,7 +21,7 @@ type BottomTabProps = {
 export const CustomTab = (props: Omit<BottomTabBarButtonProps & BottomTabProps, "focused">) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const { onPress, accessibilityState, iconName, text } = props;
-	const focused = accessibilityState.selected;
+	const focused = accessibilityState?.selected;
 	const { type: userType } = useAppSelector(selectCurrentUser);
 
 	const conditionalButtonStyles =
@@ -40,12 +40,6 @@ export const CustomTab = (props: Omit<BottomTabBarButtonProps & BottomTabProps, 
 				{focused ? <Text style={styles.iconText}>{text}</Text> : <></>}
 			</View>
 		</TouchableOpacity>
-		// <TouchableOpacity onPress={onPress} style={[styles.container, focused && styles.focusedContainer]} activeOpacity={1}>
-		// 	<View style={styles.content}>
-		// 		<Ionicons name={focused ? iconName : `${iconName}-outline`} color={focused ? "#fff" : "#808080"} size={moderateScale(20)} />
-		// 		{focused && <Text style={styles.text}>{text}</Text>}
-		// 	</View>
-		// </TouchableOpacity>
 	);
 };
 
@@ -54,7 +48,6 @@ const generalStyles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		borderRadius: 50,
-		// backgroundColor: "#f0f",
 	},
 
 	iconContainer: {
@@ -92,23 +85,6 @@ const androidStyles = StyleSheet.create({
 });
 
 const iosStyles = StyleSheet.create({
-	// container: {
-	// 	flex: 1,
-	// 	alignItems: "center",
-	// 	justifyContent: "center",
-	// 	paddingVertical: 8,
-	// },
-	// focusedContainer: {
-	// 	backgroundColor: "#0095ff",
-	// 	borderRadius: 20,
-	// 	marginHorizontal: 5,
-	// },
-	// content: {
-	// 	flexDirection: "row",
-	// 	alignItems: "center",
-	// 	justifyContent: "center",
-	// 	gap: 8,
-	// },
 	customTabBar: {
 		flex: 1,
 		paddingVertical: 8,
@@ -119,9 +95,9 @@ const iosStyles = StyleSheet.create({
 	iconContainer: {
 		flexDirection: "row",
 		alignItems: "center",
-		gap: 8,
 		justifyContent: "center",
-		marginHorizontal: 5,
+		gap: 8,
+		// marginHorizontal: 10,
 	},
 
 	iconText: {
@@ -129,4 +105,6 @@ const iosStyles = StyleSheet.create({
 		fontSize: 14,
 		fontWeight: "500",
 	},
+
+	activeContainer: {},
 });

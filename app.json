@@ -1,42 +1,59 @@
 {
-	"expo": {
-		"name": "ArtisanTradeNetwork",
-		"slug": "ArtisanTradeNetwork",
-		"version": "1.0.0",
-		"orientation": "portrait",
-		"icon": "./assets/images/icon.png",
-		"userInterfaceStyle": "light",
-		"splash": {
-			"image": "./assets/images/logo-4x.png",
-			"resizeMode": "native",
-			"backgroundColor": "#ffffff"
-		},
-		"ios": {
-			"supportsTablet": true
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/images/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
-			}
-		},
-		"web": {
-			"favicon": "./assets/images/favicon.png",
-			"bundler": "metro"
-		},
-		"scheme": "your-app-scheme",
-		"plugins": [
-			"expo-router",
-			["expo-document-picker", { "icloudContainerEnvironment": "Production" }],
-			[
-				"expo-image-picker",
-				{
-					"photosPermission": "The app access your photos to let you share them with your friends"
-				}
-			],
-			"expo-font",
-			"expo-secure-store"
-		],
-		"newArchEnabled": true
-	}
+  "expo": {
+    "name": "ArtisanTradeNetwork",
+    "slug": "ArtisanTradeNetwork",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/logo-4x.png",
+      "resizeMode": "native",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.noahvikoo.ArtisanTradeNetwork"
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
+    },
+    "scheme": "your-app-scheme",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-document-picker",
+        {
+          "icloudContainerEnvironment": "Production"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app access your photos to let you share them with your friends"
+        }
+      ],
+      "expo-font",
+      "expo-secure-store"
+    ],
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "05042e00-564e-4396-b5cd-274f173601b6"
+      }
+    }
+  }
 }

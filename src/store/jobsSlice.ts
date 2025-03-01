@@ -1,6 +1,6 @@
 import { getData } from "@helpers/APIFunction";
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@store";
+import { AppDispatch, RootState } from "@store";
 import { JobStatus } from "app/(tabs)/Jobs";
 import * as ImagePicker from "expo-image-picker";
 import { approveAcceptedBid } from "./bidsSlice";
@@ -26,22 +26,29 @@ export interface Job {
 
 export type JobType = "Installation" | "Maintainence";
 
-export const fetchJobs = createAsyncThunk<Job[], void>(
+export const fetchJobs = createAsyncThunk<Job[], void, { state: RootState; dispatch: AppDispatch }>(
 	"jobs/fetchJobs",
-	async () => {
-		const jobs = await getData<Job[]>("/jobs");
-		return jobs;
-	},
-	{
-		condition(arg, api) {
-			const jobsStatus = selectAllJobsStatus(api.getState() as RootState);
-			if (jobsStatus !== "idle") return false;
-		},
+	async ({}, { getState, dispatch }) => {
+		console.log("Fetching.....");
+		if (getState().auth.user.type === "NORMAL") {
+			const jobs = await getData<Job[]>(`/jobs?userId=${getState().auth.user._id}`);
+			jobs.forEach((job) => console.log(JSON.stringify(job, null, 2)));
+			return jobs;
+		} else if (getState().auth.user.type === "ARTISAN") {
+			console.log("User Type", getState().auth.user.type);
+			const jobs = await getData<Job[]>("/jobs");
+			console.log("The Jobs", jobs);
+			// jobs.forEach(job => console.log('Artisan Jobs', JSON.stringify(job, null, 2)))
+			return jobs;
+		}
 	}
+	// {
+	// 	condition(arg, api) {
+	// 		const jobsStatus = selectAllJobsStatus(api.getState() as RootState);
+	// 		if (jobsStatus !== "idle") return false;
+	// 	},
+	// }
 );
-
-// const jobs = getData("/jobs");
-// console.log("Jobs:", jobs);
 
 interface JobState {
 	jobList: Job[];
@@ -382,8 +389,8 @@ const jobSlice = createSlice({
 			})
 			.addCase(fetchJobs.rejected, (state, action) => {
 				state.status = "failed";
-				state.error = action.error.message || "Failed to fetch Jobs";
-				console.error("Failed to fetch Jobs");
+				state.error = action.error.message;
+				console.error(state.error);
 			});
 	},
 });

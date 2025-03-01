@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@store";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import { UserState } from "./usersSlice";
+import { User } from "./usersSlice";
 
 interface Message {
 	id: string;
@@ -14,8 +14,8 @@ interface Message {
 }
 
 interface ChatState {
-	currentUser: UserState;
-	receiver: UserState;
+	currentUser: User;
+	receiver: User;
 	messages: Message[];
 }
 

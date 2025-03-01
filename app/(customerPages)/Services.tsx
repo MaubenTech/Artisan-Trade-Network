@@ -1,7 +1,7 @@
 import colors from "@helpers/colors";
 import PageHeader from "@components/PageHeader";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import React, { FunctionComponent, ReactElement, ReactSVGElement } from "react";
+import React, { FunctionComponent, ReactElement, ReactSVGElement, useEffect } from "react";
 
 import TabBar from "@components/TabBar";
 import PlumberIcon from "@assets/icons/services/plumberIcon.svg";
@@ -10,14 +10,18 @@ import CleaningIcon from "@assets/icons/services/cleaningIcon.svg";
 import CarpenterIcon from "@assets/icons/services/carpenterIcon.svg";
 import ElectricianIcon from "@assets/icons/services/electricianIcon.svg";
 import InteriorDecorIcon from "@assets/icons/services/interiorDecorIcon.svg";
+import { useSelector } from "react-redux";
+import { fetchServices, selectServices } from "@store/servicesSlice";
+import useAppSelector from "@hooks/useAppSelector";
+import useAppDispatch from "@hooks/useAppDispatch";
 
-type Services = {
+type LocalServices = {
 	name: string;
 	icon: React.JSX.Element;
 	slug: string;
 };
 
-const services: Services[] = [
+const localServices: LocalServices[] = [
 	{
 		name: "Plumber",
 		icon: <PlumberIcon height={90} />,
@@ -53,12 +57,23 @@ const services: Services[] = [
 const { width, height } = Dimensions.get("window");
 
 export default function Services() {
+	const dispatch = useAppDispatch();
+	const services = useAppSelector(selectServices);
+
+	useEffect(() => {
+		console.log("About to dispatch services function");
+		dispatch(fetchServices())
+			.unwrap()
+			.then((result) => console.log("Services results fetched: ", result))
+			.catch((error) => console.log("Error fetching services here: ", error));
+	}, [dispatch]);
+
 	return (
 		<View style={styles.container}>
 			<PageHeader pageName="Services" />
 			<View style={styles.pageContentContainer}>
 				<View style={styles.serviceContentContainer}>
-					{services.map((item, index) => {
+					{localServices.map((item, index) => {
 						return (
 							<View style={styles.serviceItem} key={index}>
 								{item.icon}

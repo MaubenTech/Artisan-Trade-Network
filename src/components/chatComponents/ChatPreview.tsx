@@ -5,14 +5,14 @@ import { Text } from "@components/Text";
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import { compactStyles } from "@helpers/styles";
-import { UserState } from "@store/usersSlice";
+import { User } from "@store/usersSlice";
 import useAppSelector from "@hooks/useAppSelector";
 import { RootState } from "@store";
 import { selectMessages } from "@store/chatSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const ChatPreview = ({ item, chatPartnerID }: { item: UserState; chatPartnerID: string }) => {
+const ChatPreview = ({ item, chatPartnerID }: { item: User; chatPartnerID: string }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 
 	const openChatRoom = () => {

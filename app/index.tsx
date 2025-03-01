@@ -295,7 +295,12 @@ const iosStyles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 		width: "80%",
-		marginBottom: 20,
+	},
+
+	socialButton: {
+		height: 35,
+		borderRadius: 50,
+		padding: 10,
 	},
 
 	signUpContainer: {

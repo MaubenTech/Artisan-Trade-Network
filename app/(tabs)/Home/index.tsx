@@ -1,4 +1,4 @@
-import { LinkProps, useNavigation } from "expo-router";
+import { Href, LinkProps, useNavigation } from "expo-router";
 import colors from "../../../src/helpers/colors";
 import { compactStyles } from "@helpers/styles";
 import { Text } from "../../../src/components/Text";
@@ -13,13 +13,15 @@ import { BidJob, PostedBid } from "../Bids";
 import { selectCurrentUser } from "@store/authSlice";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectRecommendedBidJobs } from "@store/bidsSlice";
+import { fetchUsers } from "@store/usersSlice";
+import { fetchServices } from "@store/servicesSlice";
 
 const HomeCard1 = require("@assets/images/homeCard1.png");
 const HomeCard2 = require("@assets/images/homeCard2.png");
 
 const { width, height } = Dimensions.get("window");
 
-export interface SwipeData extends LinkProps<string> {
+export interface SwipeData {
 	index: number;
 	img: ImageSourcePropType;
 	title: string;
@@ -28,6 +30,7 @@ export interface SwipeData extends LinkProps<string> {
 	buttonTitle?: string;
 	icon?: ReactElement<any, any>;
 	secondIcon?: ReactElement<any, any>;
+	href: Href;
 }
 
 export default function HomePage() {
@@ -35,7 +38,7 @@ export default function HomePage() {
 	const [notificationPresent, setNotificationPresent] = useState(false);
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
-	const { nickName, type: userType } = useAppSelector(selectCurrentUser);
+	const { firstname, type: userType } = useAppSelector(selectCurrentUser);
 
 	const navigation = useNavigation();
 
@@ -82,7 +85,7 @@ export default function HomePage() {
 				<View style={styles.contentSection}>
 					<View style={styles.salutationContainer}>
 						<Text style={styles.salutationText}>Hello</Text>
-						<Text style={styles.userName}>{nickName}</Text>
+						<Text style={styles.userName}>{firstname}</Text>
 					</View>
 
 					<View style={styles.cardSection}>

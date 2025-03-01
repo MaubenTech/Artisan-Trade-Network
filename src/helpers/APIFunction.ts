@@ -24,33 +24,49 @@ const BASE_URL = "https://api.artisantradesnetwork.com/api";
 
 /******MAKING THE DATA THAT THE CALL RETURNS MATCH THE EXPECTED STRUCUTRE */
 export const getData = async <T>(uri: string, jwt?: string): Promise<T> => {
+	const headers = new Headers();
+	headers.append("Content-Type", "application/json");
+	if (jwt) headers.append("Authorization", `Bearer ${jwt}`);
+
+	console.log("Headers: ");
+	console.log(headers);
+	const response = await fetch(`${BASE_URL}${uri}`, {
+		method: "GET",
+		headers,
+		redirect: "follow",
+	});
 	try {
-		const headers = new Headers();
-		headers.append("Content-Type", "application/json");
-		if (jwt) headers.append("Authorization", `Bearer ${jwt}`);
-
-		console.log("Headers: ");
-		console.log(headers);
-		const response = await fetch(`${BASE_URL}${uri}`, {
-			method: "GET",
-			headers,
-			redirect: "follow",
-		});
-
-		// console.log("Response: ");
-		// console.log(response);
-		// console.log("Response json: ");
-		// console.log(await response.json());
-
-		if (!response.ok) {
-			throw new Error(`Error : ${response.statusText}`);
+		const responseText = await response.text();
+		try {
+			const responseJson = JSON.parse(responseText);
+			return responseJson;
+		} catch (err) {
+			console.log("Error while jsoning response: " + err);
 		}
 
-		return (await response.json()) as T;
+		return responseText as T;
 	} catch (error) {
-		console.error("Fetch Error: ", JSON.stringify(error));
-		throw error;
+		console.log(`Error while texing response: ${error}`);
 	}
+
+	return null;
+	// 	try {
+
+	// 		// console.log("Response: ");
+	// 		// console.log(response);
+	// 		// console.log("Response json: ");
+	// 		// console.log(await response.json());
+
+	// 		// if (!response.ok) {
+	// 		// 	throw new Error(`Error : ${response.statusText}`);
+	// 		// }
+
+	// 		// return (await response.json()) as T;
+
+	// 	} catch (error) {
+	// 		console.error("Fetch Error: ", JSON.stringify(error));
+	// 		throw error;
+	// 	}
 };
 
 export const postData = async <T>(uri: string, body: Record<string, string>, jwt?: string): Promise<T | string> => {
