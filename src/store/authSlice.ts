@@ -50,12 +50,12 @@ interface User {
 	type: "NORMAL" | "ARTISAN";
 }
 
-type authUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
+type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
 
 export interface AuthState {
 	error: Record<string, string>;
 	status: "idle" | "loading" | "succeeded" | "failed";
-	user: authUser;
+	user: AuthUser;
 	token: string;
 	isAuthenticated: boolean;
 }
@@ -70,7 +70,8 @@ const initialState: AuthState = {
 
 export const loginUser = createAppAsyncThunk("auth/login", async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
 	// // type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
-	type UserLoginResult = { token: string } | string;
+	type ValidationError = { location?: string; msg?: string; path?: string; type?: string; value?: string };
+	type UserLoginResult = { token?: string; errors?: ValidationError[] } | string;
 	// try {
 	// 	const loggedInUser: UserLoginResult = await postData("/auth/signin", { email, password });
 	// 	console.log("Logged In User: ", loggedInUser);
@@ -96,10 +97,23 @@ export const loginUser = createAppAsyncThunk("auth/login", async ({ email, passw
 		dispatch(setStatus("loading"));
 		const response: UserLoginResult = await postData("/auth/signin", { email, password });
 
-		if (typeof response === "object" && response.token) {
-			const decoderUser = jwtDecode<authUser>(response.token);
-			dispatch(addUser({ ...decoderUser, token: response.token }));
-			dispatch(setStatus("succeeded"));
+		console.log();
+		console.log(response);
+		console.log();
+
+		if (typeof response === "object") {
+			if (response.token) {
+				const decoderUser = jwtDecode<AuthUser>(response.token);
+				dispatch(addUser({ ...decoderUser, token: response.token }));
+				dispatch(setStatus("succeeded"));
+			} else if (response.errors) {
+				const errorFields = ""; //TODO: Get the error fields and add them to the error message using a comma separating format. Eg error message: "Errors on email, firstname, gender fields".
+				const moreThanOneError = response.errors.length > 1;
+				const errorMessage = `Error${moreThanOneError && "s"} on ${errorFields} field${moreThanOneError && "s"}`;
+				response.errors.forEach((error) => {});
+				dispatch(setStatus("failed"));
+				return rejectWithValue(errorMessage);
+			}
 		} else if (typeof response === "string" && response.includes("Invalid")) {
 			dispatch(setStatus("failed"));
 			return rejectWithValue("Invalid Credentials");
@@ -171,7 +185,7 @@ const authSlice = createSlice({
 			};
 			state.user = NONSO_ALI;
 		},
-		addUser(state, action: PayloadAction<authUser & { token: string }>) {
+		addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
 			const { _id, email, firstname, lastname, token, type = "NORMAL" } = action.payload;
 			state.user = {
 				_id,
@@ -180,7 +194,7 @@ const authSlice = createSlice({
 				lastname,
 				token,
 				type,
-			} as authUser;
+			} as AuthUser;
 
 			state.token = token;
 			state.isAuthenticated = true;
