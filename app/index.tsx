@@ -1,34 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
-import Checkbox from "expo-checkbox";
 import colors from "@helpers/colors";
 import { compactStyles } from "@helpers/styles";
 import ButtonGroup from "@components/ButtonGroup";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import GoogleIcon from "@assets/images/google.svg";
 import AppleIcon from "@assets/images/apple-logo.svg";
 import { Text, TextInput } from "@components/Text";
 import FacebookIcon from "@assets/images/facebook.svg";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-	StyleSheet,
-	View,
-	TouchableWithoutFeedback,
-	TouchableOpacity,
-	Dimensions,
-	ScrollView,
-	SafeAreaView,
-	Platform,
-	StatusBar,
-	ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { addUser, AuthState, loginUser, selectLoginStatus, userLoggedIn } from "@store/authSlice";
+import { loginUser, selectLoginError, selectLoginStatus } from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
-import { fetchUsers } from "@store/usersSlice";
-import { getData } from "@helpers/APIFunction";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 
@@ -59,6 +44,7 @@ const index = () => {
 	};
 
 	const loginStatus = useSelector(selectLoginStatus);
+	const loginError = useSelector(selectLoginError);
 
 	const router = useRouter();
 	const dispatch = useAppDispatch();
@@ -76,7 +62,7 @@ const index = () => {
 					</View>
 					{loginStatus === "loading" && <LoadingIndicator visible />}
 					<View style={[styles.userInputContainer]}>
-						{loginStatus === "failed" && <Text style={styles.errorMessage}>Invalid Email or Password</Text>}
+						{loginStatus === "failed" && <Text style={styles.errorMessage}>{loginError.message}</Text>}
 						<View style={[styles.userInputSubContainer]}>
 							<Text style={[styles.userInputLabel]}>Email</Text>
 							<TextInput style={[styles.userInput]} value={email} onChangeText={setEmail} />
