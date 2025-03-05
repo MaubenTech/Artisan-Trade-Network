@@ -68,44 +68,38 @@ const initialState: AuthState = {
 	isAuthenticated: false,
 };
 
-export const loginUser = createAppAsyncThunk("auth/login", async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
+export const loginUser = createAppAsyncThunk<
+	{ user: authUser; token: string },
+	Login
+>("auth/login", async ({ email, password }: Login, { rejectWithValue }) => {
 	// // type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
 	type UserLoginResult = { token: string } | string;
-	// try {
-	// 	const loggedInUser: UserLoginResult = await postData("/auth/signin", { email, password });
-	// 	console.log("Logged In User: ", loggedInUser);
-	// 	if (typeof loggedInUser === "object" && loggedInUser.token) {
-	// 		const decodedUser = jwtDecode<authUser>(loggedInUser.token);
-	// 		console.log(decodedUser);
-	// 		console.log("User log in successful!");
-	// 		dispatch(addUser({ ...decodedUser, token: loggedInUser.token }));
-	// 		return { ...decodedUser, token: loggedInUser.token };
-	// 	} else if (typeof loggedInUser === "string" && loggedInUser.includes("Invalid credentials")) {
-	// 		console.log("Email or password invalid!");
-	// 		dispatch(addInvalidCredentialsPlaceholder());
-	// 	} else {
-	// 		console.log("Unknown result from login...");
-	// 		dispatch(addUnknownUser());
-	// 	}
-	// 	// return loggedInUser;
-	// } catch (error) {
-	// 	// console.log("Error while fetching: " + JSON.stringify(error));
-	// 	dispatch(addInvalidCredentialsPlaceholder());
-	// }
+
 	try {
-		dispatch(setStatus("loading"));
-		const response: UserLoginResult = await postData("/auth/signin", { email, password });
+		const response: UserLoginResult = await postData("/auth/signin", {
+			email,
+			password,
+		});
 
 		if (typeof response === "object" && response.token) {
-			const decoderUser = jwtDecode<authUser>(response.token);
-			dispatch(addUser({ ...decoderUser, token: response.token }));
-			dispatch(setStatus("succeeded"));
-		} else if (typeof response === "string" && response.includes("Invalid")) {
-			dispatch(setStatus("failed"));
-			return rejectWithValue("Invalid Credentials");
+			const decodedUser = jwtDecode<any>(response.token);
+			console.log("Decoded User information: ", decodedUser);
+			// dispatch(addUser({ ...decodedUser, token: response.token }));
+			// dispatch(setStatus("succeeded"));
+			const user: authUser = {
+				_id: decodedUser.userId,
+				email: decodedUser.email,
+				firstname: decodedUser.firstname,
+				lastname: decodedUser.lastname,
+				type: decodedUser.type || "NORMAL",
+			};
+			return {
+				user,
+				token: response.token,
+			};
 		}
+		return rejectWithValue("Invalid Credentials");
 	} catch (error) {
-		dispatch(setStatus("failed"));
 		return rejectWithValue("Login Failed");
 	}
 });
@@ -172,7 +166,14 @@ const authSlice = createSlice({
 			state.user = NONSO_ALI;
 		},
 		addUser(state, action: PayloadAction<authUser & { token: string }>) {
-			const { _id, email, firstname, lastname, token, type = "NORMAL" } = action.payload;
+			const {
+				_id,
+				email,
+				firstname,
+				lastname,
+				token,
+				type = "NORMAL",
+			} = action.payload;
 			state.user = {
 				_id,
 				email,
@@ -273,13 +274,39 @@ const authSlice = createSlice({
 			//TODO: Logic to verify otp
 		},
 	},
+	extraReducers: (builder) => {
+		builder
+			.addCase(loginUser.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(loginUser.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.user = action.payload.user;
+				state.token = action.payload.token;
+				state.isAuthenticated = true;
+				state.error = null;
+			})
+			.addCase(loginUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = { message: action.payload as string };
+			});
+	},
 	selectors: {
 		selectCurrentUser: (state: AuthState) => state.user,
 		selectLoginStatus: (state: AuthState) => state.status,
 	},
 });
 
-export const { addUnknownUser, setStatus, addUser, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedIn, userLoggedOut } = authSlice.actions;
+export const {
+	addUnknownUser,
+	setStatus,
+	addUser,
+	addInvalidCredentialsPlaceholder,
+	addRandomUser,
+	userLoggedIn,
+	userLoggedOut,
+} = authSlice.actions;
 
 export const { selectCurrentUser, selectLoginStatus } = authSlice.selectors;
 
