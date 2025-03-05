@@ -97,17 +97,7 @@ const index = () => {
 							</TouchableOpacity>
 						</Link>
 					</View>
-					<ButtonGroup
-						positiveOption="Login"
-						//TODO: Converted onPress handler to async and awaited the dispatch, so it'll complete before navigating. Only downside is during the awaiting, the users won't know there's a process going on (no loader or identifier)
-						// onPress={async () => {
-						// 	await dispatch(loginUser({ email, password }));
-						// 	// dispatch(userLoggedIn({ email, password }));
-						// 	//TODO: Add the extra reducers to the auth slice and make sure there's no navigation till the user is logged in
-						// 	router.navigate("Home");
-						// }}
-						onPress={handleLogin}
-					/>
+					<ButtonGroup positiveOption="Login" onPress={handleLogin} />
 				</View>
 				<View style={[styles.componentContainer, styles.otherLoginContainer]}>
 					<Text style={[styles.infoText]}>Or Login with</Text>
