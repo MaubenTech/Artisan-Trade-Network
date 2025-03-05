@@ -13,23 +13,27 @@ interface Message {
 	timestamp: string;
 }
 
+type ChatUser = Pick<User, "_id" | "firstname" | "lastname" | "nickName" | "email" | "type">;
+
 interface ChatState {
-	currentUser: User;
-	receiver: User;
+	currentUser: ChatUser;
+	receiver: ChatUser;
 	messages: Message[];
 }
 
 const initialState: ChatState = {
 	currentUser: {
 		_id: "2",
-		name: "Janet Stones",
+		firstname: "Janet",
+		lastname: "Stones",
 		nickName: "Janet",
 		email: "janetstones@gmail.com",
 		type: "NORMAL",
 	},
 	receiver: {
 		_id: "1",
-		name: "John Doe",
+		firstname: "John",
+		lastname: "Doe",
 		nickName: "John",
 		email: "johndoe@gmail.com",
 		type: "ARTISAN",
@@ -139,7 +143,7 @@ const chatSlice = createSlice({
 
 			// state.messages.push({
 			// 	...action.payload,
-			// 	id: uuidv4(), //TODO: Don't use a randomizer function within the reducer. It makes it impure and defeats the standard practice of reducers!
+			// 	id: uuidv4(), //FIXME: Don't use a randomizer function within the reducer. It makes it impure and defeats the standard practice of reducers!
 			// 	chatPartnerID: action.payload.chatPartnerID,
 			// 	message: action.payload.message,
 			// 	senderId: action.payload.senderId,
