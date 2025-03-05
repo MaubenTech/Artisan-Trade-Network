@@ -91,11 +91,11 @@ export const loginUser = createAppAsyncThunk<{ user: AuthUser; token: string }, 
 					// dispatch(addUser({ ...decodedUser, token: response.token }));
 					const user: AuthUser = {
 						_id: decodedUser.userId,
+						type: decodedUser.type || "NORMAL",
 						...decodedUser,
 						// email: decodedUser.email,
 						// firstname: decodedUser.firstname,
 						// lastname: decodedUser.lastname,
-						// type: decodedUser.type || "NORMAL",
 					};
 					return {
 						user,
