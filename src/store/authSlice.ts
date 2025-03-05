@@ -50,12 +50,14 @@ interface User {
 	type: "NORMAL" | "ARTISAN";
 }
 
-type authUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
+type ApiAuthUser = Pick<User, "email" | "firstname" | "lastname" | "type"> & { userId: string };
+
+type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
 
 export interface AuthState {
-	error: Record<string, string>;
+	error: { message: string };
 	status: "idle" | "loading" | "succeeded" | "failed";
-	user: authUser;
+	user: AuthUser;
 	token: string;
 	isAuthenticated: boolean;
 }
@@ -68,41 +70,55 @@ const initialState: AuthState = {
 	isAuthenticated: false,
 };
 
-export const loginUser = createAppAsyncThunk<
-	{ user: authUser; token: string },
-	Login
->("auth/login", async ({ email, password }: Login, { rejectWithValue }) => {
-	// // type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
-	type UserLoginResult = { token: string } | string;
+export const loginUser = createAppAsyncThunk<{ user: AuthUser; token: string }, Login>(
+	"auth/login",
+	async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
+		// // type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
+		type ValidationError = { location?: string; msg?: string; path?: string; type?: string; value?: string };
+		type UserLoginResult = { token?: string; errors?: ValidationError[] } | string;
 
-	try {
-		const response: UserLoginResult = await postData("/auth/signin", {
-			email,
-			password,
-		});
+		try {
+			const response: UserLoginResult = await postData("/auth/signin", { email, password });
 
-		if (typeof response === "object" && response.token) {
-			const decodedUser = jwtDecode<any>(response.token);
-			console.log("Decoded User information: ", decodedUser);
-			// dispatch(addUser({ ...decodedUser, token: response.token }));
-			// dispatch(setStatus("succeeded"));
-			const user: authUser = {
-				_id: decodedUser.userId,
-				email: decodedUser.email,
-				firstname: decodedUser.firstname,
-				lastname: decodedUser.lastname,
-				type: decodedUser.type || "NORMAL",
-			};
-			return {
-				user,
-				token: response.token,
-			};
+			console.log();
+			console.log(response);
+			console.log();
+
+			if (typeof response === "object") {
+				if (response.token) {
+					const decodedUser = jwtDecode<ApiAuthUser>(response.token);
+					console.log("Decoded User information: ", decodedUser);
+					// dispatch(addUser({ ...decodedUser, token: response.token }));
+					const user: AuthUser = {
+						_id: decodedUser.userId,
+						...decodedUser,
+						// email: decodedUser.email,
+						// firstname: decodedUser.firstname,
+						// lastname: decodedUser.lastname,
+						// type: decodedUser.type || "NORMAL",
+					};
+					return {
+						user,
+						token: response.token,
+					};
+				} else if (response.errors) {
+					let errorFields = ""; //TODO: Get the error fields and add them to the error message using a comma separating format. Eg error message: "Errors on email, firstname, gender fields".
+					const moreThanOneError = response.errors.length > 1;
+					response.errors.forEach((error, index) => {
+						errorFields += error.path;
+						if (index < response.errors.length - 1) errorFields += ", ";
+					});
+					const errorMessage = `Error${moreThanOneError ? "s" : ""} on ${errorFields} field${moreThanOneError ? "s" : ""}`;
+					return rejectWithValue(errorMessage);
+				}
+			} else if (typeof response === "string" && response.includes("Invalid")) {
+				return rejectWithValue("Invalid Credentials");
+			}
+		} catch (error) {
+			return rejectWithValue("Login Failed");
 		}
-		return rejectWithValue("Invalid Credentials");
-	} catch (error) {
-		return rejectWithValue("Login Failed");
 	}
-});
+);
 
 const authSlice = createSlice({
 	name: "auth",
@@ -165,15 +181,9 @@ const authSlice = createSlice({
 			};
 			state.user = NONSO_ALI;
 		},
-		addUser(state, action: PayloadAction<authUser & { token: string }>) {
-			const {
-				_id,
-				email,
-				firstname,
-				lastname,
-				token,
-				type = "NORMAL",
-			} = action.payload;
+		addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
+			const { _id, email, firstname, lastname, token, type = "NORMAL" } = action.payload;
+			console.log("ID: " + _id);
 			state.user = {
 				_id,
 				email,
@@ -181,80 +191,12 @@ const authSlice = createSlice({
 				lastname,
 				token,
 				type,
-			} as authUser;
+			} as AuthUser;
 
 			state.token = token;
 			state.isAuthenticated = true;
 			state.status = "succeeded";
 			console.log("Token is : ", token);
-		},
-		userLoggedIn(state, action: PayloadAction<Login>) {
-			const { email, password } = action.payload;
-			//TODO: Login functionality
-
-			// //NOTE: Dummy login functionality
-			// const JOHN_DOE: User = {
-			// 	_id: "1",
-			// 	firstname: "John",
-			// 	email: "johndoe@gmail.com",
-			// 	type: "ARTISAN",
-			// 	lastname: "",
-			// 	dateofbirth: "",
-			// 	gender: "",
-			// 	address: "",
-			// 	phonenumber: "",
-			// 	password: "",
-			// 	isVerified: false,
-			// 	otp: "",
-			// 	otpExpires: ""
-			// };
-			// const JANET_STONES: User = {
-			// 	_id: "2",
-			// 	name: "Janet Stones",
-			// 	nickName: "Janet",
-			// 	email: "janetstones@gmail.com",
-			// 	type: "NORMAL",
-			// };
-			// const NONSO_ALI: User = {
-			// 	_id: "3",
-			// 	name: "Nonso Ali",
-			// 	nickName: "Nonso",
-			// 	email: "nonsoali@gmail.com",
-			// 	type: "NORMAL",
-			// };
-			// const DREW_BERRY: User = {
-			// 	_id: "4",
-			// 	name: "Drew Berry",
-			// 	nickName: "Drew",
-			// 	email: "drewberry@gmail.com",
-			// 	type: "ARTISAN",
-			// };
-			// const DEFAULT: User = {
-			// 	_id: "-1",
-			// 	name: "Unknown",
-			// 	nickName: "Unknown",
-			// 	email: "unknown",
-			// 	type: "NORMAL",
-			// };
-
-			// switch (email) {
-			// 	case "johndoe@gmail.com":
-			// 		state.user = JOHN_DOE;
-			// 		break;
-			// 	case "janetstones@gmail.com":
-			// 		state.user = JANET_STONES;
-			// 		break;
-			// 	case "nonsoali@gmail.com":
-			// 		state.user = NONSO_ALI;
-			// 		break;
-			// 	case "drewberry@gmail.com":
-			// 		state.user = DREW_BERRY;
-			// 		break;
-			// 	default:
-			// 		state.user = DEFAULT;
-			// }
-			state.isAuthenticated = true;
-			state.token = "user.token";
 		},
 		userLoggedOut(state) {
 			//TODO: Logout functionality, add logic to clear information from other slices and states
@@ -295,19 +237,12 @@ const authSlice = createSlice({
 	selectors: {
 		selectCurrentUser: (state: AuthState) => state.user,
 		selectLoginStatus: (state: AuthState) => state.status,
+		selectLoginError: (state: AuthState) => state.error,
 	},
 });
 
-export const {
-	addUnknownUser,
-	setStatus,
-	addUser,
-	addInvalidCredentialsPlaceholder,
-	addRandomUser,
-	userLoggedIn,
-	userLoggedOut,
-} = authSlice.actions;
+export const { addUnknownUser, setStatus, addUser, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedOut } = authSlice.actions;
 
-export const { selectCurrentUser, selectLoginStatus } = authSlice.selectors;
+export const { selectCurrentUser, selectLoginStatus, selectLoginError } = authSlice.selectors;
 
 export default authSlice.reducer;
