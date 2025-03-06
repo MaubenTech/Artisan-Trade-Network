@@ -40,13 +40,14 @@ const Jobs = () => {
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
 	useEffect(() => {
-		// if (jobsStatus === "idle") dispatch(fetchJobs());
-		dispatch(fetchJobs());
-	}, []);
-	// useEffect(() => {
-	// 	// if (jobsStatus === "idle") dispatch(fetchJobs());
-	// 	dispatch(fetchJobs());
-	// }, [jobsStatus, dispatch]);
+		console.log("Use effect on fetch...");
+		if (jobsStatus === "idle") {
+			const result = dispatch(fetchJobs());
+			console.log("Result: " + JSON.stringify(result));
+		}
+		// dispatch(fetchJobs());
+		console.log("End of fetch...");
+	}, [jobsStatus, dispatch]);
 
 	const [filterOption, setFilterOption] = useState<string | number>("All");
 

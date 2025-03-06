@@ -42,6 +42,7 @@ export const getData = async <T>(uri: string, jwt?: string): Promise<T> => {
 			return responseJson;
 		} catch (err) {
 			console.log("Error while jsoning response: " + err);
+			console.log(`Response text: ${responseText}`);
 		}
 
 		return responseText as T;

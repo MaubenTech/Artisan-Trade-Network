@@ -7,13 +7,7 @@ import RewardIcon from "@assets/images/reward.svg";
 import MenuHeader from "@components/MenuHeader";
 import HomeCarousel from "@components/HomeCarousel";
 import React, { ReactElement, useEffect, useState } from "react";
-import {
-	View,
-	StyleSheet,
-	ScrollView,
-	Dimensions,
-	ImageSourcePropType,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Dimensions, ImageSourcePropType } from "react-native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { BidJob, PostedBid } from "../Bids";
 import { selectCurrentUser } from "@store/authSlice";
@@ -44,11 +38,7 @@ export default function HomePage() {
 	const [notificationPresent, setNotificationPresent] = useState(false);
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
-	const {
-		firstname,
-		type: userType,
-		_id,
-	} = useAppSelector(selectCurrentUser);
+	const { firstname, type: userType, _id } = useAppSelector(selectCurrentUser);
 
 	console.log("Current User ID: ", _id);
 
@@ -58,7 +48,7 @@ export default function HomePage() {
 
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (event) => {
-			event.preventDefault();
+			// event.preventDefault();
 			console.log("tried to go back");
 			navigation.dispatch(event.data.action);
 		});
@@ -69,17 +59,10 @@ export default function HomePage() {
 			index: 0,
 			img: HomeCard1,
 			title: "Hire a service provider",
-			subtitle:
-				"With the click of a button, hire a service provider today",
+			subtitle: "With the click of a button, hire a service provider today",
 			buttonTitle: "Start Now",
 			buttonColor: colors.greenShade,
-			icon: (
-				<Ionicons
-					name="arrow-forward-outline"
-					style={styles.cardIcon}
-					size={20}
-				/>
-			),
+			icon: <Ionicons name="arrow-forward-outline" style={styles.cardIcon} size={20} />,
 			href: "/Services",
 		},
 		{
@@ -89,16 +72,8 @@ export default function HomePage() {
 			subtitle: "With the click of a button, view available jobs today",
 			buttonTitle: "Unlock",
 			buttonColor: colors.listItemBorderColor,
-			secondIcon: (
-				<Ionicons name="lock-open" style={styles.cardIcon} size={15} />
-			),
-			icon: (
-				<Ionicons
-					name="arrow-forward-outline"
-					style={styles.cardIcon}
-					size={18}
-				/>
-			),
+			secondIcon: <Ionicons name="lock-open" style={styles.cardIcon} size={15} />,
+			icon: <Ionicons name="arrow-forward-outline" style={styles.cardIcon} size={18} />,
 			href: "/NewJob",
 		},
 	];
@@ -128,25 +103,13 @@ export default function HomePage() {
 					{userType === "ARTISAN" && (
 						<View style={styles.recommendedContainer}>
 							<View style={styles.recommendedHeader}>
-								<Text style={styles.recommendedTitle}>
-									Recommended
-								</Text>
-								<Text style={styles.recommendedViewAll}>
-									View all
-								</Text>
+								<Text style={styles.recommendedTitle}>Recommended</Text>
+								<Text style={styles.recommendedViewAll}>View all</Text>
 							</View>
 							<View style={styles.recommendedJobContainer}>
-								{recommendedJobs.map(
-									(recommendedJob, index) => (
-										<PostedBid
-											bidJob={recommendedJob}
-											key={index}
-											containerStyle={
-												styles.recommendedJob
-											}
-										/>
-									)
-								)}
+								{recommendedJobs.map((recommendedJob, index) => (
+									<PostedBid bidJob={recommendedJob} key={index} containerStyle={styles.recommendedJob} />
+								))}
 							</View>
 						</View>
 					)}
@@ -156,17 +119,11 @@ export default function HomePage() {
 							<RewardIcon width={40} />
 							<View style={styles.rewardTextContainer}>
 								<Text style={styles.rewardTitle}>Reward!</Text>
-								<Text style={styles.rewardSubtitle}>
-									Invite your friends today and earn a reward
-								</Text>
+								<Text style={styles.rewardSubtitle}>Invite your friends today and earn a reward</Text>
 							</View>
 						</View>
 						<View style={styles.rewardContentIcon}>
-							<Ionicons
-								name="chevron-forward"
-								size={25}
-								color={"white"}
-							/>
+							<Ionicons name="chevron-forward" size={25} color={"white"} />
 						</View>
 					</View>
 				</View>
