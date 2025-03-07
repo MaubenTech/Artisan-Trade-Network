@@ -50,7 +50,9 @@ interface User {
 	type: "NORMAL" | "ARTISAN";
 }
 
-type ApiAuthUser = Pick<User, "email" | "firstname" | "lastname" | "type"> & { userId: string };
+type ApiAuthUser = Pick<User, "email" | "firstname" | "lastname" | "type"> & {
+	userId: string;
+};
 
 type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
 
@@ -70,52 +72,98 @@ const initialState: AuthState = {
 	isAuthenticated: false,
 };
 
-export const loginUser = createAppAsyncThunk<{ user: AuthUser; token: string }, Login>(
+type ValidationError = {
+	location?: string;
+	msg?: string;
+	path?: string;
+	type?: string;
+	value?: string;
+};
+
+type UserLoginResult =
+	| string
+	| { token: string }
+	| { error: string }
+	| { errors: ValidationError[] };
+
+export const loginUser = createAppAsyncThunk<
+	{ user: AuthUser; token: string },
+	Login
+>(
 	"auth/login",
-	async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
-		// // type UserLoginResult = { token: string } | string; //NOTE: All these won't be necessary when the api is fixed and starts returning json objects for invalid credentials
-		type ValidationError = { location?: string; msg?: string; path?: string; type?: string; value?: string };
-		type UserLoginResult = { token?: string; errors?: ValidationError[] } | string;
-
+	async (
+		{ email, password }: Login,
+		{ getState, dispatch, rejectWithValue }
+	) => {
 		try {
-			const response: UserLoginResult = await postData("/auth/signin", { email, password });
+			const response: UserLoginResult = await postData("/auth/signin", {
+				email,
+				password,
+			});
 
-			console.log();
-			console.log(response);
-			console.log();
-
-			if (typeof response === "object") {
-				if (response.token) {
-					const decodedUser = jwtDecode<ApiAuthUser>(response.token);
-					console.log("Decoded User information: ", decodedUser);
-					// dispatch(addUser({ ...decodedUser, token: response.token }));
-					const user: AuthUser = {
-						_id: decodedUser.userId,
-						type: decodedUser.type || "NORMAL",
-						...decodedUser,
-						// email: decodedUser.email,
-						// firstname: decodedUser.firstname,
-						// lastname: decodedUser.lastname,
-					};
-					return {
-						user,
-						token: response.token,
-					};
-				} else if (response.errors) {
-					let errorFields = ""; //TODO: Get the error fields and add them to the error message using a comma separating format. Eg error message: "Errors on email, firstname, gender fields".
-					const moreThanOneError = response.errors.length > 1;
-					response.errors.forEach((error, index) => {
-						errorFields += error.path;
-						if (index < response.errors.length - 1) errorFields += ", ";
-					});
-					const errorMessage = `Error${moreThanOneError ? "s" : ""} on ${errorFields} field${moreThanOneError ? "s" : ""}`;
-					return rejectWithValue(errorMessage);
-				}
-			} else if (typeof response === "string" && response.includes("Invalid")) {
-				return rejectWithValue("Invalid Credentials");
+			if (typeof response === "string") {
+				return rejectWithValue(response);
 			}
+
+			if ("token" in response) {
+				const decodedUser = jwtDecode<ApiAuthUser>(response.token);
+				const user: AuthUser = {
+					_id: decodedUser.userId,
+					type: decodedUser.type,
+					...decodedUser,
+				};
+				return {
+					user,
+					token: response.token,
+				};
+			}
+
+			if ("error" in response) {
+				return rejectWithValue(response.error);
+			}
+
+			if ("errors" in response) {
+				const errorFields = response.errors
+					.map((specificError) => specificError.path)
+					.join(",");
+				return rejectWithValue(`Errors on ${errorFields} fields`);
+			}
+
+			// if (typeof response === "object") {
+			// 	if (response.token) {
+			// 		const decodedUser = jwtDecode<ApiAuthUser>(response.token);
+			// 		console.log("Decoded User information: ", decodedUser);
+			// 		// dispatch(addUser({ ...decodedUser, token: response.token }));
+			// 		const user: AuthUser = {
+			// 			_id: decodedUser.userId,
+			// 			type: decodedUser.type || "NORMAL",
+			// 			...decodedUser,
+			// 			// email: decodedUser.email,
+			// 			// firstname: decodedUser.firstname,
+			// 			// lastname: decodedUser.lastname,
+			// 		};
+			// 		return {
+			// 			user,
+			// 			token: response.token,
+			// 		};
+			// 	} else if (response.errors) {
+			// 		let errorFields = ""; //TODO: Get the error fields and add them to the error message using a comma separating format. Eg error message: "Errors on email, firstname, gender fields".
+			// 		const moreThanOneError = response.errors.length > 1;
+			// 		response.errors.forEach((error, index) => {
+			// 			errorFields += error.path;
+			// 			if (index < response.errors.length - 1)
+			// 				errorFields += ", ";
+			// 		});
+			// 		const errorMessage = `Error${
+			// 			moreThanOneError ? "s" : ""
+			// 		} on ${errorFields} field${moreThanOneError ? "s" : ""}`;
+			// 		return rejectWithValue(errorMessage);
+			// 	}
+
+			return rejectWithValue("An unexpected error occured");
 		} catch (error) {
-			return rejectWithValue("Login Failed");
+			console.error("Login Error", error);
+			return rejectWithValue(error.message || "Login Failed");
 		}
 	}
 );
@@ -182,7 +230,14 @@ const authSlice = createSlice({
 			state.user = NONSO_ALI;
 		},
 		addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
-			const { _id, email, firstname, lastname, token, type = "NORMAL" } = action.payload;
+			const {
+				_id,
+				email,
+				firstname,
+				lastname,
+				token,
+				type = "NORMAL",
+			} = action.payload;
 			console.log("ID: " + _id);
 			state.user = {
 				_id,
@@ -241,8 +296,16 @@ const authSlice = createSlice({
 	},
 });
 
-export const { addUnknownUser, setStatus, addUser, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedOut } = authSlice.actions;
+export const {
+	addUnknownUser,
+	setStatus,
+	addUser,
+	addInvalidCredentialsPlaceholder,
+	addRandomUser,
+	userLoggedOut,
+} = authSlice.actions;
 
-export const { selectCurrentUser, selectLoginStatus, selectLoginError } = authSlice.selectors;
+export const { selectCurrentUser, selectLoginStatus, selectLoginError } =
+	authSlice.selectors;
 
 export default authSlice.reducer;

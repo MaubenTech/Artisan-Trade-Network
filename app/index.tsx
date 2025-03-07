@@ -10,9 +10,20 @@ import { Text, TextInput } from "@components/Text";
 import FacebookIcon from "@assets/images/facebook.svg";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform } from "react-native";
+import {
+	StyleSheet,
+	View,
+	TouchableOpacity,
+	Dimensions,
+	SafeAreaView,
+	Platform,
+} from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { loginUser, selectLoginError, selectLoginStatus } from "@store/authSlice";
+import {
+	loginUser,
+	selectLoginError,
+	selectLoginStatus,
+} from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
@@ -28,18 +39,36 @@ const index = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
+	const [validationError, setValidationError] = useState<string>("");
+
+	const isEmailValid = (email: string) => {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(email);
+	};
 
 	const handleLogin = async () => {
-		// dispatch(loginUser({ email, password })).then((result) => {
-		// 	if (result.payload) {
-		// 		setEmail("");
-		// 		setPassword("");
-		// 		router.navigate("Home");
-		// 	}
-		// });
-		const result = await dispatch(loginUser({ email, password }));
-		if (result.meta.requestStatus === "fulfilled") {
-			router.navigate("Home");
+		setValidationError("");
+
+		if (!email.trim() && !password.trim()) {
+			setValidationError("Email and Password are required");
+			return;
+		} else if (!email.trim()) {
+			setValidationError("Email is required");
+			return;
+		} else if (!password.trim()) {
+			setValidationError("Password is required");
+		} else if (!isEmailValid(email.trim())) {
+			setValidationError("Please enter a valid email address");
+			return;
+		}
+
+		try {
+			const result = await dispatch(loginUser({ email, password }));
+			if (result.meta.requestStatus === "fulfilled") {
+				router.navigate("Home");
+			}
+		} catch (error) {
+			setValidationError("An Error Occured, Please try again");
 		}
 	};
 
@@ -49,45 +78,113 @@ const index = () => {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 
+	const getErrorMessage = () => {
+		if (validationError) {
+			return validationError;
+		}
+		if (loginStatus === "failed" && loginError && loginError.message) {
+			return loginError.message;
+		}
+		return "";
+	};
+
 	return (
 		<CustomKeyboardView>
-			<SafeAreaView style={[styles.container, { paddingTop: android ? top : 0, paddingBottom: android ? bottom : 0 }]}>
+			<SafeAreaView
+				style={[
+					styles.container,
+					{
+						paddingTop: android ? top : 0,
+						paddingBottom: android ? bottom : 0,
+					},
+				]}
+			>
 				<View style={[styles.componentContainer, { marginBottom: 50 }]}>
 					<HeaderImage />
 				</View>
 				<View style={[styles.ctaComponentContainer]}>
 					<View style={[styles.ctaComponentHeader]}>
-						<Text style={styles.ctaHeader}>Login to your account</Text>
-						<Text style={styles.ctaSubtext}>Welcome back! Please enter your details</Text>
+						<Text style={styles.ctaHeader}>
+							Login to your account
+						</Text>
+						<Text style={styles.ctaSubtext}>
+							Welcome back! Please enter your details
+						</Text>
 					</View>
 					{loginStatus === "loading" && <LoadingIndicator visible />}
 					<View style={[styles.userInputContainer]}>
-						{loginStatus === "failed" && <Text style={styles.errorMessage}>{loginError.message}</Text>}
+						{getErrorMessage() ? (
+							<Text style={styles.errorMessage}>
+								{getErrorMessage()}
+							</Text>
+						) : null}
 						<View style={[styles.userInputSubContainer]}>
 							<Text style={[styles.userInputLabel]}>Email</Text>
-							<TextInput style={[styles.userInput]} value={email} onChangeText={setEmail} />
+							<TextInput
+								style={[styles.userInput]}
+								value={email}
+								onChangeText={(text) => {
+									setEmail(text);
+									if (validationError) setValidationError("");
+								}}
+								keyboardType="email-address"
+								autoCapitalize="none"
+								placeholder="Enter your email"
+							/>
 						</View>
 						<View style={[styles.userInputSubContainer]}>
-							<Text style={[styles.userInputLabel]}>Password</Text>
-							<TextInput style={[styles.userInput]} value={password} onChangeText={setPassword} secureTextEntry />
+							<Text style={[styles.userInputLabel]}>
+								Password
+							</Text>
+							<TextInput
+								style={[styles.userInput]}
+								value={password}
+								secureTextEntry
+								onChangeText={(text) => {
+									setPassword(text);
+									if (validationError) setValidationError("");
+								}}
+								placeholder="Enter your password"
+							/>
 						</View>
 					</View>
 					<View style={[styles.optionsContainer]}>
-						<TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
-							<View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
+						<TouchableOpacity
+							onPress={() => setRememberMe(!rememberMe)}
+							style={styles.checkboxContainer}
+						>
+							<View
+								style={
+									rememberMe
+										? styles.checkboxChecked
+										: styles.checkboxUnchecked
+								}
+							></View>
 							<Text>Remember Me</Text>
 						</TouchableOpacity>
 						<Link href={"/(forgotPassword)/ForgotPassword"} asChild>
 							<TouchableOpacity>
-								<Text style={[styles.infoText]}>Forgot Password</Text>
+								<Text style={[styles.infoText]}>
+									Forgot Password
+								</Text>
 							</TouchableOpacity>
 						</Link>
 					</View>
 					<ButtonGroup positiveOption="Login" onPress={handleLogin} />
 				</View>
-				<View style={[styles.componentContainer, styles.otherLoginContainer]}>
+				<View
+					style={[
+						styles.componentContainer,
+						styles.otherLoginContainer,
+					]}
+				>
 					<Text style={[styles.infoText]}>Or Login with</Text>
-					<View style={[styles.componentContainer, styles.socialLoginContainer]}>
+					<View
+						style={[
+							styles.componentContainer,
+							styles.socialLoginContainer,
+						]}
+					>
 						<TouchableOpacity style={styles.socialButton}>
 							<FacebookIcon />
 						</TouchableOpacity>
@@ -99,8 +196,12 @@ const index = () => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View style={[styles.componentContainer, styles.signUpContainer]}>
-					<Text style={[styles.noAccount]}>Don't have an account?</Text>
+				<View
+					style={[styles.componentContainer, styles.signUpContainer]}
+				>
+					<Text style={[styles.noAccount]}>
+						Don't have an account?
+					</Text>
 					<Link href={"/SignUp"} asChild style={[styles.signUp]}>
 						<TouchableOpacity>
 							<Text style={styles.signUpText}>Sign Up</Text>
