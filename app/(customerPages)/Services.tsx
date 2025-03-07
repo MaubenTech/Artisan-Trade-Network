@@ -1,7 +1,18 @@
 import colors from "@helpers/colors";
 import PageHeader from "@components/PageHeader";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import React, { FunctionComponent, ReactElement, ReactSVGElement, useEffect } from "react";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Dimensions,
+	ActivityIndicator,
+} from "react-native";
+import React, {
+	FunctionComponent,
+	ReactElement,
+	ReactSVGElement,
+	useEffect,
+} from "react";
 
 import TabBar from "@components/TabBar";
 import PlumberIcon from "@assets/icons/services/plumberIcon.svg";
@@ -11,7 +22,12 @@ import CarpenterIcon from "@assets/icons/services/carpenterIcon.svg";
 import ElectricianIcon from "@assets/icons/services/electricianIcon.svg";
 import InteriorDecorIcon from "@assets/icons/services/interiorDecorIcon.svg";
 import { useSelector } from "react-redux";
-import { fetchServices, selectServices } from "@store/servicesSlice";
+import {
+	fetchServices,
+	selectServices,
+	selectServicesError,
+	selectServicesStatus,
+} from "@store/servicesSlice";
 import useAppSelector from "@hooks/useAppSelector";
 import useAppDispatch from "@hooks/useAppDispatch";
 
@@ -59,30 +75,67 @@ const { width, height } = Dimensions.get("window");
 export default function Services() {
 	const dispatch = useAppDispatch();
 	const services = useAppSelector(selectServices);
+	const status = useAppSelector(selectServicesStatus);
+	const error = useAppSelector(selectServicesError);
 
 	useEffect(() => {
-		console.log("About to dispatch services function");
-		dispatch(fetchServices())
-			.unwrap()
-			.then((result) => console.log("Services results fetched: ", result))
-			.catch((error) => console.log("Error fetching services here: ", error));
+		if (status === "idle") {
+			console.log("Dispatching Services in Service Component:");
+			dispatch(fetchServices());
+		}
 	}, [dispatch]);
 
 	return (
 		<View style={styles.container}>
 			<PageHeader pageName="Services" />
 			<View style={styles.pageContentContainer}>
-				<View style={styles.serviceContentContainer}>
-					{localServices.map((item, index) => {
-						return (
-							<View style={styles.serviceItem} key={index}>
-								{item.icon}
-								<Text style={styles.serviceItemTitle}>{item.name}</Text>
-								<Text style={styles.serviceItemSubTitle}>{item.slug}</Text>
+				{status === "loading" && (
+					<View style={styles.loadingContainer}>
+						<ActivityIndicator
+							size="large"
+							color={colors.mainColor}
+						/>
+						<Text style={styles.loadingText}>
+							Loading Services...
+						</Text>
+					</View>
+				)}
+				{status === "failed" && error && (
+					<View style={styles.errorContainer}>
+						<Text style={styles.errorText}>
+							Failed to load services: {error}
+						</Text>
+					</View>
+				)}
+
+				{status === "succeeded" && (
+					<View style={styles.serviceContentContainer}>
+						{services.map((service, index) => (
+							<View style={styles.serviceItem} key={service._id}>
+								{/* {service.image} */}
+								<Text style={styles.serviceItemTitle}>
+									{service.name}
+								</Text>
+								<Text style={styles.serviceItemSubTitle}>
+									{service.description}
+								</Text>
 							</View>
-						);
-					})}
-				</View>
+						))}
+						{/* {localServices.map((item, index) => {
+							return (
+								<View style={styles.serviceItem} key={index}>
+									{item.icon}
+									<Text style={styles.serviceItemTitle}>
+										{item.name}
+									</Text>
+									<Text style={styles.serviceItemSubTitle}>
+										{item.slug}
+									</Text>
+								</View>
+							);
+						})} */}
+					</View>
+				)}
 			</View>
 		</View>
 	);
@@ -129,5 +182,30 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		fontSize: 7,
 		color: colors.subTitlesColor,
+	},
+
+	loadingContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		height: height * 0.5,
+	},
+
+	loadingText: {
+		marginTop: 10,
+		color: colors.mainColor,
+	},
+
+	errorContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		height: height * 0.5,
+		padding: 20,
+	},
+
+	errorText: {
+		color: colors.red,
+		textAlign: "center",
 	},
 });
