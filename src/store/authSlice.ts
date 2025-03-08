@@ -34,6 +34,8 @@ interface Register {
 	phoneNumber: string;
 }
 
+export type Role = "user" | "artisan" | "admin";
+
 interface User {
 	_id: string;
 	email: string;
@@ -47,14 +49,13 @@ interface User {
 	isVerified: boolean;
 	otp: string;
 	otpExpires: string;
-	type: "NORMAL" | "ARTISAN";
+	roles: Role[];
+	// type: "NORMAL" | "ARTISAN";
 }
 
-type ApiAuthUser = Pick<User, "email" | "firstname" | "lastname" | "type"> & {
-	userId: string;
-};
+type JwtDecodedUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "roles"> & { iat: number; exp: number };
 
-type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "type">;
+type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "roles">;
 
 export interface AuthState {
 	error: { message: string };
@@ -80,23 +81,22 @@ type ValidationError = {
 	value?: string;
 };
 
-type UserLoginResult =
-	| string
-	| { token: string }
-	| { error: string }
-	| { errors: ValidationError[] };
+type ApiUser = {
+	token: string;
+	user: {
+		_id: string;
+		email: string;
+		roles: string[];
+	};
+};
 
-export const loginUser = createAppAsyncThunk<
-	{ user: AuthUser; token: string },
-	Login
->(
+type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] };
+
+export const loginUser = createAppAsyncThunk<{ user: AuthUser; token: string }, Login>(
 	"auth/login",
-	async (
-		{ email, password }: Login,
-		{ getState, dispatch, rejectWithValue }
-	) => {
+	async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
 		try {
-			const response: UserLoginResult = await postData("/auth/signin", {
+			const response = await postData<UserLoginResult>("/auth/signin", {
 				email,
 				password,
 			});
@@ -106,12 +106,8 @@ export const loginUser = createAppAsyncThunk<
 			}
 
 			if ("token" in response) {
-				const decodedUser = jwtDecode<ApiAuthUser>(response.token);
-				const user: AuthUser = {
-					_id: decodedUser.userId,
-					type: decodedUser.type,
-					...decodedUser,
-				};
+				const decodedUser = jwtDecode<JwtDecodedUser>(response.token);
+				const user: AuthUser = { ...decodedUser };
 				return {
 					user,
 					token: response.token,
@@ -123,9 +119,7 @@ export const loginUser = createAppAsyncThunk<
 			}
 
 			if ("errors" in response) {
-				const errorFields = response.errors
-					.map((specificError) => specificError.path)
-					.join(",");
+				const errorFields = response.errors.map((specificError) => specificError.path).join(", ");
 				return rejectWithValue(`Errors on ${errorFields} fields`);
 			}
 
@@ -134,14 +128,7 @@ export const loginUser = createAppAsyncThunk<
 			// 		const decodedUser = jwtDecode<ApiAuthUser>(response.token);
 			// 		console.log("Decoded User information: ", decodedUser);
 			// 		// dispatch(addUser({ ...decodedUser, token: response.token }));
-			// 		const user: AuthUser = {
-			// 			_id: decodedUser.userId,
-			// 			type: decodedUser.type || "NORMAL",
-			// 			...decodedUser,
-			// 			// email: decodedUser.email,
-			// 			// firstname: decodedUser.firstname,
-			// 			// lastname: decodedUser.lastname,
-			// 		};
+			// 		const user: AuthUser = { ...decodedUser };
 			// 		return {
 			// 			user,
 			// 			token: response.token,
@@ -162,7 +149,7 @@ export const loginUser = createAppAsyncThunk<
 
 			return rejectWithValue("An unexpected error occured");
 		} catch (error) {
-			console.error("Login Error", error);
+			console.error("Login Error:", error);
 			return rejectWithValue(error.message || "Login Failed");
 		}
 	}
@@ -172,15 +159,18 @@ const authSlice = createSlice({
 	name: "auth",
 	initialState: initialState,
 	reducers: {
-		setStatus(state, action: PayloadAction<AuthState["status"]>) {
-			state.status = action.payload;
+		resetAuthError(state) {
+			state.error = null;
+		},
+		resetAuthStatus(state) {
+			state.status = "idle";
 		},
 		addUnknownUser(state) {
 			const DEFAULT: User = {
 				_id: "-1",
 				firstname: "Unknown",
 				email: "unknown",
-				type: "NORMAL",
+				roles: ["user"],
 				lastname: "",
 				dateofbirth: "",
 				gender: "",
@@ -198,7 +188,7 @@ const authSlice = createSlice({
 				_id: "-1",
 				firstname: "Invalid",
 				email: "invalidcredentials@gmail.com",
-				type: "ARTISAN",
+				roles: ["user", "artisan"],
 				lastname: "",
 				dateofbirth: "",
 				gender: "",
@@ -225,34 +215,19 @@ const authSlice = createSlice({
 				isVerified: action.payload.isVerified,
 				password: action.payload.password,
 				email: action.payload.email,
-				type: "NORMAL",
+				roles: ["user"],
 			};
 			state.user = NONSO_ALI;
 		},
-		addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
-			const {
-				_id,
-				email,
-				firstname,
-				lastname,
-				token,
-				type = "NORMAL",
-			} = action.payload;
-			console.log("ID: " + _id);
-			state.user = {
-				_id,
-				email,
-				firstname,
-				lastname,
-				token,
-				type,
-			} as AuthUser;
-
-			state.token = token;
-			state.isAuthenticated = true;
-			state.status = "succeeded";
-			console.log("Token is : ", token);
-		},
+		// addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
+		// 	const { _id, token} = action.payload;
+		// 	console.log("ID: " + _id);
+		//     state.user = action.payload;
+		// 	state.token = token;
+		// 	state.isAuthenticated = true;
+		// 	state.status = "succeeded";
+		// 	console.log("Token is : ", token);
+		// },
 		userLoggedOut(state) {
 			//TODO: Logout functionality, add logic to clear information from other slices and states
 			state.token = null;
@@ -291,21 +266,13 @@ const authSlice = createSlice({
 	},
 	selectors: {
 		selectCurrentUser: (state: AuthState) => state.user,
-		selectLoginStatus: (state: AuthState) => state.status,
-		selectLoginError: (state: AuthState) => state.error,
+		selectAuthStatus: (state: AuthState) => state.status,
+		selectAuthError: (state: AuthState) => state.error,
 	},
 });
 
-export const {
-	addUnknownUser,
-	setStatus,
-	addUser,
-	addInvalidCredentialsPlaceholder,
-	addRandomUser,
-	userLoggedOut,
-} = authSlice.actions;
+export const { addUnknownUser, resetAuthError, resetAuthStatus, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedOut } = authSlice.actions;
 
-export const { selectCurrentUser, selectLoginStatus, selectLoginError } =
-	authSlice.selectors;
+export const { selectCurrentUser, selectAuthStatus, selectAuthError } = authSlice.selectors;
 
 export default authSlice.reducer;
