@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import { approveAcceptedBid } from "./bidsSlice";
 import createAppSelector from "@hooks/createAppSelector";
 import { selectCurrentUser } from "./authSlice";
+import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 
 export type PartialPickerAsset = Partial<ImagePicker.ImagePickerAsset>;
 
@@ -26,25 +27,34 @@ export interface Job {
 
 export type JobType = "Installation" | "Maintainence";
 
-export const fetchJobs = createAsyncThunk<Job[], void, { state: RootState; dispatch: AppDispatch }>(
+type ApiJob = {
+	jobs: Job[];
+	currentPage: number;
+	totalPages: number;
+	totalJobs: number;
+};
+
+export const fetchJobs = createAppAsyncThunk<Job[], void>(
 	"jobs/fetchJobs",
-	async ({}, { getState, dispatch }) => {
-		console.log("Fetching.....");
-		if (getState().auth.user.type === "NORMAL") {
-			const jobs = await getData<Job[]>(`/jobs?userId=${getState().auth.user._id}`);
-			jobs.forEach((job) => console.log(JSON.stringify(job, null, 2)));
+	async (undefined, { getState, dispatch }) => {
+		if (getState().auth.user.roles.includes("user") && getState().auth.user.roles.length === 1) {
+			const result = await getData<ApiJob>(`/jobs?userId=${getState().auth.user._id}`, getState().auth.token);
+			console.log("The Jobs: ", JSON.stringify(result));
+			const jobs = result.jobs;
+			if (jobs) jobs.forEach((job) => console.log(JSON.stringify(job, null, 2)));
 			return jobs;
-		} else if (getState().auth.user.type === "ARTISAN") {
-			console.log("User Type", getState().auth.user.type);
-			const jobs = await getData<Job[]>("/jobs");
-			console.log("The Jobs", jobs);
-			// jobs.forEach(job => console.log('Artisan Jobs', JSON.stringify(job, null, 2)))
+		} else if (getState().auth.user.roles.includes("artisan")) {
+			// console.log("User Type", getState().auth.user.type);
+			const result = await getData<ApiJob>("/jobs", getState().auth.token);
+			console.log("The Jobs: ", JSON.stringify(result));
+			const jobs = result.jobs;
+			if (jobs) jobs.forEach((job) => console.log("Artisan Jobs", JSON.stringify(job, null, 2)));
 			return jobs;
 		}
 	}
 	// {
 	// 	condition(arg, api) {
-	// 		const jobsStatus = selectAllJobsStatus(api.getState() as RootState);
+	// 		const jobsStatus = selectAllJobsStatus(api.getState());
 	// 		if (jobsStatus !== "idle") return false;
 	// 	},
 	// }
@@ -382,12 +392,16 @@ const jobSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(fetchJobs.fulfilled, (state, action) => {
+				console.log("Fulfilled:");
+				console.log(action.payload);
 				state.status = "succeeded";
 				// state.error = null;
 				console.info("Jobs From API", ...action.payload);
 				state.jobList.push(...action.payload);
 			})
 			.addCase(fetchJobs.rejected, (state, action) => {
+				console.log("Rejected:");
+				console.log(action.error.message);
 				state.status = "failed";
 				state.error = action.error.message;
 				console.error(state.error);
@@ -435,7 +449,7 @@ export const selectAllJobsError = (state: RootState) => state.jobs.error;
 
 export const selectJobsPageJobs = createAppSelector([selectJobsState, selectCurrentUser], (jobs, currentUser) => {
 	//If user is a regular user, return their jobs
-	return currentUser.type === "NORMAL"
+	return currentUser.roles.includes("user") && currentUser.roles.length === 1
 		? jobs
 		: {
 				...jobs,
