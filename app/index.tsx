@@ -10,23 +10,13 @@ import { Text, TextInput } from "@components/Text";
 import FacebookIcon from "@assets/images/facebook.svg";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-	StyleSheet,
-	View,
-	TouchableOpacity,
-	Dimensions,
-	SafeAreaView,
-	Platform,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import {
-	loginUser,
-	selectLoginError,
-	selectLoginStatus,
-} from "@store/authSlice";
+import { loginUser, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus } from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
+import { isEmailValid } from "@helpers/utils";
 
 const { width, height } = Dimensions.get("window");
 
@@ -41,11 +31,6 @@ const index = () => {
 	const [rememberMe, setRememberMe] = useState(false);
 	const [validationError, setValidationError] = useState<string>("");
 
-	const isEmailValid = (email: string) => {
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return emailRegex.test(email);
-	};
-
 	const handleLogin = async () => {
 		setValidationError("");
 
@@ -57,6 +42,7 @@ const index = () => {
 			return;
 		} else if (!password.trim()) {
 			setValidationError("Password is required");
+			return;
 		} else if (!isEmailValid(email.trim())) {
 			setValidationError("Please enter a valid email address");
 			return;
@@ -65,15 +51,16 @@ const index = () => {
 		try {
 			const result = await dispatch(loginUser({ email, password }));
 			if (result.meta.requestStatus === "fulfilled") {
+				dispatch(resetAuthStatus());
 				router.navigate("Home");
 			}
 		} catch (error) {
-			setValidationError("An Error Occured, Please try again");
+			setValidationError("An error occured, please try again later.");
 		}
 	};
 
-	const loginStatus = useSelector(selectLoginStatus);
-	const loginError = useSelector(selectLoginError);
+	const loginStatus = useSelector(selectAuthStatus);
+	const loginError = useSelector(selectAuthError);
 
 	const router = useRouter();
 	const dispatch = useAppDispatch();
@@ -104,20 +91,12 @@ const index = () => {
 				</View>
 				<View style={[styles.ctaComponentContainer]}>
 					<View style={[styles.ctaComponentHeader]}>
-						<Text style={styles.ctaHeader}>
-							Login to your account
-						</Text>
-						<Text style={styles.ctaSubtext}>
-							Welcome back! Please enter your details
-						</Text>
+						<Text style={styles.ctaHeader}>Login to your account</Text>
+						<Text style={styles.ctaSubtext}>Welcome back! Please enter your details</Text>
 					</View>
 					{loginStatus === "loading" && <LoadingIndicator visible />}
 					<View style={[styles.userInputContainer]}>
-						{getErrorMessage() ? (
-							<Text style={styles.errorMessage}>
-								{getErrorMessage()}
-							</Text>
-						) : null}
+						{getErrorMessage() ? <Text style={styles.errorMessage}>{getErrorMessage()}</Text> : null}
 						<View style={[styles.userInputSubContainer]}>
 							<Text style={[styles.userInputLabel]}>Email</Text>
 							<TextInput
@@ -126,6 +105,7 @@ const index = () => {
 								onChangeText={(text) => {
 									setEmail(text);
 									if (validationError) setValidationError("");
+									if (loginError && loginError.message) dispatch(resetAuthError());
 								}}
 								keyboardType="email-address"
 								autoCapitalize="none"
@@ -133,9 +113,7 @@ const index = () => {
 							/>
 						</View>
 						<View style={[styles.userInputSubContainer]}>
-							<Text style={[styles.userInputLabel]}>
-								Password
-							</Text>
+							<Text style={[styles.userInputLabel]}>Password</Text>
 							<TextInput
 								style={[styles.userInput]}
 								value={password}
@@ -143,48 +121,28 @@ const index = () => {
 								onChangeText={(text) => {
 									setPassword(text);
 									if (validationError) setValidationError("");
+									if (loginError && loginError.message) dispatch(resetAuthError());
 								}}
 								placeholder="Enter your password"
 							/>
 						</View>
 					</View>
 					<View style={[styles.optionsContainer]}>
-						<TouchableOpacity
-							onPress={() => setRememberMe(!rememberMe)}
-							style={styles.checkboxContainer}
-						>
-							<View
-								style={
-									rememberMe
-										? styles.checkboxChecked
-										: styles.checkboxUnchecked
-								}
-							></View>
+						<TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
+							<View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
 							<Text>Remember Me</Text>
 						</TouchableOpacity>
 						<Link href={"/(forgotPassword)/ForgotPassword"} asChild>
 							<TouchableOpacity>
-								<Text style={[styles.infoText]}>
-									Forgot Password
-								</Text>
+								<Text style={[styles.infoText]}>Forgot Password</Text>
 							</TouchableOpacity>
 						</Link>
 					</View>
 					<ButtonGroup positiveOption="Login" onPress={handleLogin} />
 				</View>
-				<View
-					style={[
-						styles.componentContainer,
-						styles.otherLoginContainer,
-					]}
-				>
+				<View style={[styles.componentContainer, styles.otherLoginContainer]}>
 					<Text style={[styles.infoText]}>Or Login with</Text>
-					<View
-						style={[
-							styles.componentContainer,
-							styles.socialLoginContainer,
-						]}
-					>
+					<View style={[styles.componentContainer, styles.socialLoginContainer]}>
 						<TouchableOpacity style={styles.socialButton}>
 							<FacebookIcon />
 						</TouchableOpacity>
@@ -196,12 +154,8 @@ const index = () => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<View
-					style={[styles.componentContainer, styles.signUpContainer]}
-				>
-					<Text style={[styles.noAccount]}>
-						Don't have an account?
-					</Text>
+				<View style={[styles.componentContainer, styles.signUpContainer]}>
+					<Text style={[styles.noAccount]}>Don't have an account?</Text>
 					<Link href={"/SignUp"} asChild style={[styles.signUp]}>
 						<TouchableOpacity>
 							<Text style={styles.signUpText}>Sign Up</Text>
