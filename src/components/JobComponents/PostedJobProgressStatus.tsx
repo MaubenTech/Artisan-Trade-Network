@@ -9,17 +9,17 @@ import { selectCurrentUser } from "@store/authSlice";
 import { selectJobById, selectJobsState } from "@store/jobsSlice";
 import { RootState } from "@store";
 import { selectFirstBidByJobId } from "@store/bidsSlice";
+import useRoles from "@hooks/useRoles";
 
 const PostedJobProgressStatus = ({ jobStage, bidStage, jobId }: { jobStage?: JobStatus; bidStage?: BidStatus | JobStatus; jobId: string }) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const { type: userType } = useAppSelector(selectCurrentUser);
-	const isServiceProvider = userType === "ARTISAN";
+	const { isArtisan } = useRoles();
 
 	let numerator = -1;
 
-	const denominator = isServiceProvider ? 4 : 3;
+	const denominator = isArtisan ? 4 : 3;
 
-	if (!isServiceProvider) {
+	if (!isArtisan) {
 		switch (jobStage) {
 			case "Posted":
 				numerator = 1;
@@ -53,7 +53,7 @@ const PostedJobProgressStatus = ({ jobStage, bidStage, jobId }: { jobStage?: Job
 				return <></>;
 		}
 	}
-	return <ProgressBar status={isServiceProvider ? bidStage : jobStage} numerator={numerator} denominator={denominator} showCompleteLevel />;
+	return <ProgressBar status={isArtisan ? bidStage : jobStage} numerator={numerator} denominator={denominator} showCompleteLevel />;
 };
 
 export default PostedJobProgressStatus;

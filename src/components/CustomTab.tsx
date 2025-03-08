@@ -9,6 +9,7 @@ import { Text } from "@components/Text";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { compactStyles } from "@helpers/styles";
 import CustomTabBar from "./CustomTabBar";
+import useRoles from "@hooks/useRoles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,16 +23,17 @@ export const CustomTab = (props: Omit<BottomTabBarButtonProps & BottomTabProps, 
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const { onPress, accessibilityState, iconName, text } = props;
 	const focused = accessibilityState?.selected;
-	const { type: userType } = useAppSelector(selectCurrentUser);
+	const { isRegularUser, isArtisan } = useRoles();
 
-	const conditionalButtonStyles =
-		userType === "NORMAL"
-			? {
-					flex: focused ? 1.1 : 0.6,
-			  }
-			: {
-					flex: focused ? 1.1 : 0.5,
-			  };
+	const conditionalButtonStyles = isRegularUser
+		? {
+				flex: focused ? 1.1 : 0.6,
+		  }
+		: isArtisan
+		? {
+				flex: focused ? 1.1 : 0.5,
+		  }
+		: {};
 
 	return (
 		<TouchableOpacity onPress={onPress} style={[conditionalButtonStyles, styles.customTabBar]} activeOpacity={1}>

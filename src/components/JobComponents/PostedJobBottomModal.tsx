@@ -13,6 +13,7 @@ import { selectCurrentUser } from "@store/authSlice";
 import { Job, markJobCompleted } from "@store/jobsSlice";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { approveAcceptedBid, placeBid } from "@store/bidsSlice";
+import useRoles from "@hooks/useRoles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -116,7 +117,7 @@ const SPActive = () => (
 );
 
 const BottomModal = ({ jobStage, bidStage, jobId, bidId }: { jobStage?: JobStatus; bidStage?: BidStatus | JobStatus; jobId: string; bidId: string }) => {
-	const { type: userType } = useAppSelector(selectCurrentUser);
+	const { isRegularUser, isArtisan } = useRoles();
 
 	// console.log("Job Id in BOttom modal is: " + jobId);
 	// console.log("Job Stage in BotomModal is: " + jobStage);
@@ -125,7 +126,7 @@ const BottomModal = ({ jobStage, bidStage, jobId, bidId }: { jobStage?: JobStatu
 		console.log("Job Stage Updated");
 	}, [jobStage]);
 
-	if (userType == "NORMAL") {
+	if (isRegularUser) {
 		switch (jobStage) {
 			case "Posted":
 				return <Posted jobId={jobId} />;
@@ -136,7 +137,7 @@ const BottomModal = ({ jobStage, bidStage, jobId, bidId }: { jobStage?: JobStatu
 		}
 	}
 
-	if (userType === "ARTISAN") {
+	if (isArtisan) {
 		switch (
 			bidStage // bidStage here should be the status of the bid or the status of the job if there's no bid or the bid is confirmed and approved/rejected
 		) {

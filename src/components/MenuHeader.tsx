@@ -11,11 +11,12 @@ import NotificationPresent from "@assets/images/notificationPresent.svg";
 import { View, StyleSheet, Platform, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectCurrentUser } from "@store/authSlice";
+import useRoles from "@hooks/useRoles";
 
 const ios = Platform.OS == "ios";
 const MenuHeader = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const { type: userType } = useAppSelector(selectCurrentUser);
+	const { isRegularUser, isArtisan } = useRoles();
 
 	const { top } = useSafeAreaInsets();
 	return (
@@ -34,7 +35,7 @@ const MenuHeader = () => {
 					<Link
 						style={styles.profilePicContainer}
 						// href={"/(customerPages)/(profile)/Profile"}
-						href={userType === "NORMAL" ? "/Profile" : "/ProfilePageSP"}
+						href={isRegularUser ? "/Profile" : isArtisan ? "/ProfilePageSP" : ""}
 						asChild
 					>
 						<TouchableOpacity activeOpacity={1}>

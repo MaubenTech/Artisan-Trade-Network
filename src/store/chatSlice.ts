@@ -13,7 +13,7 @@ interface Message {
 	timestamp: string;
 }
 
-type ChatUser = Pick<User, "_id" | "firstname" | "lastname" | "nickName" | "email" | "type">;
+type ChatUser = Pick<User, "_id" | "firstname" | "lastname" | "nickName" | "email">;
 
 interface ChatState {
 	currentUser: ChatUser;
@@ -28,7 +28,6 @@ const initialState: ChatState = {
 		lastname: "Stones",
 		nickName: "Janet",
 		email: "janetstones@gmail.com",
-		type: "NORMAL",
 	},
 	receiver: {
 		_id: "1",
@@ -36,7 +35,6 @@ const initialState: ChatState = {
 		lastname: "Doe",
 		nickName: "John",
 		email: "johndoe@gmail.com",
-		type: "ARTISAN",
 	},
 	messages: [
 		{

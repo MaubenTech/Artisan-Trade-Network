@@ -15,6 +15,7 @@ import useAppSelector from "@hooks/useAppSelector";
 import { selectRecommendedBidJobs } from "@store/bidsSlice";
 import { fetchUsers } from "@store/usersSlice";
 import { fetchServices } from "@store/servicesSlice";
+import useRoles from "@hooks/useRoles";
 
 const HomeCard1 = require("@assets/images/homeCard1.png");
 const HomeCard2 = require("@assets/images/homeCard2.png");
@@ -38,7 +39,9 @@ export default function HomePage() {
 	const [notificationPresent, setNotificationPresent] = useState(false);
 	const bottomTabBarHeight = useBottomTabBarHeight();
 
-	const { firstname, type: userType, _id } = useAppSelector(selectCurrentUser);
+	const { isArtisan } = useRoles();
+
+	const { firstname, _id } = useAppSelector(selectCurrentUser);
 
 	console.log("Current User ID: ", _id);
 
@@ -100,7 +103,7 @@ export default function HomePage() {
 						<HomeCarousel data={swipeData} />
 					</View>
 
-					{userType === "ARTISAN" && (
+					{isArtisan && (
 						<View style={styles.recommendedContainer}>
 							<View style={styles.recommendedHeader}>
 								<Text style={styles.recommendedTitle}>Recommended</Text>

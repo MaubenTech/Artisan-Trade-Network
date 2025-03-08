@@ -12,6 +12,7 @@ import { selectCurrentUser } from "@store/authSlice";
 import { CustomTab } from "@components/CustomTab";
 import CustomTabBar from "@components/CustomTabBar";
 import { horizontalScale } from "@helpers/metrics";
+import useRoles from "@hooks/useRoles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,14 +21,13 @@ export default function Layout() {
 	const navigation = useNavigation();
 	const router = useRouter();
 	// const [activeIndex, setActiveIndex] = useState(0);
-	const { type: userType } = useAppSelector(selectCurrentUser);
+	const { isRegularUser, isArtisan } = useRoles();
 
-	const conditionalTabBarStyles =
-		userType === "NORMAL"
-			? {}
-			: {
-					paddingHorizontal: 10,
-			  };
+	const conditionalTabBarStyles = isRegularUser
+		? {}
+		: {
+				paddingHorizontal: 10,
+		  };
 
 	const normalOptions = {
 		href: null,
@@ -69,7 +69,7 @@ export default function Layout() {
 					tabBarButton: (props) => <CustomTab {...props} iconName="briefcase" text="Jobs" />,
 				}}
 			/>
-			<Tabs.Screen name="Bids" options={userType === "NORMAL" ? normalOptions : serviceProviderOptions} />
+			<Tabs.Screen name="Bids" options={isRegularUser ? normalOptions : isArtisan ? serviceProviderOptions : {}} />
 			<Tabs.Screen
 				name="Chat"
 				options={{

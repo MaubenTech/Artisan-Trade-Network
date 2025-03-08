@@ -23,6 +23,7 @@ import { useSharedValue } from "react-native-reanimated";
 import SmartImage from "@components/SmartImage";
 import PostedJobProgressStatus from "@components/jobComponents/PostedJobProgressStatus";
 import BottomModal from "@components/jobComponents/PostedJobBottomModal";
+import useRoles from "@hooks/useRoles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -43,7 +44,7 @@ const PostedJobDetails = () => {
 
 	media.forEach((medium) => console.log("Current Media: " + medium.uri));
 
-	const { type: userType } = useAppSelector(selectCurrentUser);
+	const { isRegularUser, isArtisan } = useRoles();
 
 	const dispatch = useAppDispatch();
 
@@ -60,7 +61,7 @@ const PostedJobDetails = () => {
 			<PostedJobProgressStatus jobStage={selectedJob.status} bidStage={bidStage} jobId={jobId} />
 			<View style={[styles.container]}>
 				<ScrollView contentContainerStyle={styles.contentContainer}>
-					<View style={[styles.summaryTitleContainer, userType === "ARTISAN" && bidStage !== "Posted" && { paddingTop: 0 }]}>
+					<View style={[styles.summaryTitleContainer, isArtisan && bidStage !== "Posted" && { paddingTop: 0 }]}>
 						<View style={styles.summaryTitleSubContainer}>
 							<Text style={styles.summaryTitle}>Job Title</Text>
 							<Text style={styles.summarySubTitle}>{selectedJob.title}</Text>
@@ -101,7 +102,7 @@ const PostedJobDetails = () => {
 					</View>
 
 					<View>
-						{userType === "NORMAL" ? (
+						{isRegularUser ? (
 							<View style={styles.summaryTitleContainer}>
 								<View style={styles.summaryTitleSubContainer}>
 									<Text style={styles.summaryTitle}>Address</Text>
@@ -109,22 +110,24 @@ const PostedJobDetails = () => {
 								</View>
 							</View>
 						) : (
-							<View style={[styles.summaryTitleContainer, styles.twoInOneTitleContainer, styles.lastSummaryTitleContainer]}>
-								<View style={styles.summaryTitleSubContainer}>
-									<Text style={styles.summaryTitle}>Budget</Text>
-									<Text style={styles.summarySubTitle}>
-										<Text style={styles.nairaSymbol}>₦</Text> 50,000 - 70,000
-									</Text>
-								</View>
-								{bidStage && bidStage !== "Posted" && bidStage !== "Bid" && (
+							isArtisan && (
+								<View style={[styles.summaryTitleContainer, styles.twoInOneTitleContainer, styles.lastSummaryTitleContainer]}>
 									<View style={styles.summaryTitleSubContainer}>
-										<Text style={styles.summaryTitle}>Bid</Text>
+										<Text style={styles.summaryTitle}>Budget</Text>
 										<Text style={styles.summarySubTitle}>
-											<Text style={styles.nairaSymbol}>₦</Text> 50,000
+											<Text style={styles.nairaSymbol}>₦</Text> 50,000 - 70,000
 										</Text>
 									</View>
-								)}
-							</View>
+									{bidStage && bidStage !== "Posted" && bidStage !== "Bid" && (
+										<View style={styles.summaryTitleSubContainer}>
+											<Text style={styles.summaryTitle}>Bid</Text>
+											<Text style={styles.summarySubTitle}>
+												<Text style={styles.nairaSymbol}>₦</Text> 50,000
+											</Text>
+										</View>
+									)}
+								</View>
+							)
 						)}
 					</View>
 				</ScrollView>
