@@ -63,6 +63,7 @@ export interface AuthState {
 	user: AuthUser;
 	token: string;
 	isAuthenticated: boolean;
+	forgotPasswordEmail: string;
 }
 
 const initialState: AuthState = {
@@ -71,6 +72,7 @@ const initialState: AuthState = {
 	user: null,
 	token: null,
 	isAuthenticated: false,
+	forgotPasswordEmail: null,
 };
 
 type ValidationError = {
@@ -154,6 +156,34 @@ export const loginUser = createAppAsyncThunk<{ user: AuthUser; token: string }, 
 		}
 	}
 );
+
+type ForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
+
+export const forgotPassword = createAppAsyncThunk<{ email: string }, string>("auth/forgotPassword", async (email, { getState, dispatch, rejectWithValue }) => {
+	try {
+		const result = await postData<ForgotPasswordResult>("/auth/forgot-password", { email });
+
+		if (typeof result === "string") {
+			return rejectWithValue(result);
+		}
+
+		if ("message" in result) {
+			return { email };
+		}
+
+		if ("error" in result) {
+			return rejectWithValue(result.error);
+		}
+
+		if ("errors" in result) {
+			const errorFields = result.errors.map((specificError) => specificError.path).join(", ");
+			return rejectWithValue(`Errors on ${errorFields} fields`);
+		}
+	} catch (error) {
+		console.error("Forgot Password Error:", error);
+		return rejectWithValue(error.message || "Forgot password failed");
+	}
+});
 
 const authSlice = createSlice({
 	name: "auth",
@@ -260,6 +290,18 @@ const authSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(loginUser.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = { message: action.payload as string };
+			})
+			.addCase(forgotPassword.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(forgotPassword.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.forgotPasswordEmail = action.payload.email;
+			})
+			.addCase(forgotPassword.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = { message: action.payload as string };
 			});

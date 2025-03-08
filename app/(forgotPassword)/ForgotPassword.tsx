@@ -1,20 +1,63 @@
 import { StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Platform } from "react-native";
-import { Link, useNavigation } from "expo-router";
+import { Link, useNavigation, useRouter } from "expo-router";
 
 import HeaderImage from "@assets/images/forgotPasswordHeader.svg";
-import React from "react";
+import React, { useState } from "react";
 import colors from "@helpers/colors";
 import { Text } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useKeyboardHeight from "@helpers/useKeyboardHeight";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { forgotPassword, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus } from "@store/authSlice";
+import useAppSelector from "@hooks/useAppSelector";
+import { isEmailValid } from "@helpers/utils";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 
 const ForgotPassword = (): JSX.Element => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	// console.log(styles.container);
-	const navigation = useNavigation();
+	const router = useRouter();
 	const { top } = useSafeAreaInsets();
 	const keyboardHeight = useKeyboardHeight();
+	const dispatch = useAppDispatch();
+	const [email, setEmail] = useState("");
+	const [validationError, setValidationError] = useState("");
+
+	const forgotPasswordStatus = useAppSelector(selectAuthStatus);
+	const forgotPasswordError = useAppSelector(selectAuthError);
+
+	const handleForgotPassword = async (email: string) => {
+		setValidationError("");
+
+		if (!email.trim()) {
+			setValidationError("Email is required");
+			return;
+		} else if (!isEmailValid(email.trim())) {
+			setValidationError("Please enter a valid email address");
+			return;
+		}
+		try {
+			const result = await dispatch(forgotPassword(email));
+			if (result.meta.requestStatus === "fulfilled") {
+				dispatch(resetAuthStatus());
+				router.navigate("ResetPassword");
+			}
+		} catch (error) {
+			setValidationError("An error occurred, please try again later.");
+		}
+	};
+
+	const getErrorMessage = () => {
+		if (validationError) {
+			return validationError;
+		}
+		if (forgotPasswordStatus === "failed" && forgotPasswordError && forgotPasswordError.message) {
+			return forgotPasswordError.message;
+		}
+		return "";
+	};
+
 	return (
 		<ScrollView style={{ marginTop: top }} contentContainerStyle={styles.container}>
 			<View style={styles.imageContainer}>
@@ -25,24 +68,30 @@ const ForgotPassword = (): JSX.Element => {
 					<Text style={styles.lchHeader}>Forgot Password?</Text>
 					<Text style={styles.lchText}>No worries, we'll send you reset instruction</Text>
 				</View>
+				{forgotPasswordStatus === "loading" && <LoadingIndicator visible />}
 				<View style={styles.forgotPasswordFormContainer}>
+					{getErrorMessage() ? <Text style={styles.errorMessage}>{getErrorMessage()}</Text> : null}
 					<Text style={styles.formText}>Email or Username</Text>
 					<TextInput
+						value={email}
+						onChangeText={(text) => {
+							setEmail(text);
+							if (validationError) setValidationError("");
+							if (forgotPasswordError && forgotPasswordError.message) dispatch(resetAuthError());
+						}}
 						style={styles.forgotPasswordInput}
 						placeholder="example@gmail.com"
 						placeholderTextColor={"#8F8F8F"}
 					/>
 				</View>
 				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
-					<Link style={[styles.button, styles.primaryButton]} asChild href={"/ResetPassword"}>
-						<TouchableOpacity>
-							<Text style={[styles.buttonText, styles.primaryButtonText]}>Reset Password</Text>
-						</TouchableOpacity>
-					</Link>
+					<TouchableOpacity onPress={() => handleForgotPassword(email)} style={[styles.button, styles.primaryButton]}>
+						<Text style={[styles.buttonText, styles.primaryButtonText]}>Reset Password</Text>
+					</TouchableOpacity>
 					<TouchableOpacity
 						style={[styles.button, styles.secondaryButton]}
 						onPress={() => {
-							navigation.goBack();
+							router.back();
 						}}
 					>
 						<Text style={styles.buttonText}>Back to Login</Text>
@@ -150,6 +199,10 @@ const generalStyles = StyleSheet.create({
 		marginTop: "5%",
 		flexDirection: "row",
 		justifyContent: "center",
+	},
+
+	errorMessage: {
+		color: colors.red,
 	},
 });
 
