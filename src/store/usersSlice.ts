@@ -3,6 +3,7 @@ import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@store";
 import { Timestamp } from "react-native-reanimated/lib/typescript/commonTypes";
+import { Role } from "./authSlice";
 
 export interface User {
 	_id: string;
@@ -18,7 +19,8 @@ export interface User {
 	otp: string;
 	otpExpires: string;
 	nickName: string;
-	type: "NORMAL" | "ARTISAN";
+	roles: Role[];
+	// type: "NORMAL" | "ARTISAN";
 }
 
 export const fetchUsers = createAppAsyncThunk<User[], void>("users/fetchUsers", async () => {
@@ -33,30 +35,34 @@ const initialState = [
 	{
 		_id: "1",
 		email: "johndoe@gmail.com",
-		firstname: "John Doe",
+		firstname: "John",
+		lastname: "Doe",
 		nickName: "John",
-		type: "ARTISAN",
+		roles: ["user", "artisan"],
 	},
 	{
 		_id: "2",
-		name: "Janet Stones",
+		firstname: "Janet",
+		lastname: "Stones",
 		nickName: "Janet",
 		email: "janetstones@gmail.com",
-		type: "NORMAL",
+		roles: ["user"],
 	},
 	{
 		_id: "3",
-		name: "Nonso Ali",
+		firstname: "Nonso",
+		lastname: "Ali",
 		nickName: "Nonso",
 		email: "nonsoali@gmail.com",
-		type: "NORMAL",
+		roles: ["user"],
 	},
 	{
 		_id: "4",
-		name: "Drew Berry",
+		firstname: "Drew",
+		lastname: "Berry",
 		nickName: "Drew",
 		email: "drewberry@gmail.com",
-		type: "ARTISAN",
+		roles: ["user", "artisan"],
 	},
 ] as Partial<User>[];
 
