@@ -8,10 +8,11 @@ import colors from "@helpers/colors";
 import { router } from "expo-router";
 
 interface OtpVerificationProps {
+	email: string;
 	onVerifyOtp: (otp: string) => void;
 }
 
-const OtpVerification = ({ onVerifyOtp }: OtpVerificationProps) => {
+const OtpVerification = ({ email, onVerifyOtp }: OtpVerificationProps) => {
 	const [otp, setOtp] = useState("");
 	return (
 		<SafeAreaView style={styles.container}>
@@ -21,7 +22,7 @@ const OtpVerification = ({ onVerifyOtp }: OtpVerificationProps) => {
 			<View style={styles.headerContainer}>
 				<Text style={styles.header}>OTP Verification</Text>
 				<Text style={styles.subHeader}>Please enter your Verification code sent to</Text>
-				<Text style={styles.email}>nonsorob@yahoo.com</Text>
+				<Text style={styles.email}>{email}</Text>
 			</View>
 			<View style={styles.otpContainer}>
 				<OtpInput
