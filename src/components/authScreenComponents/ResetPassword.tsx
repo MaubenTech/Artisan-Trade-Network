@@ -13,7 +13,11 @@ import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 
 const { width, height } = Dimensions.get("window");
 
-const ResetPassword = (): JSX.Element => {
+interface ResetPasswordProps {
+	onResetPassword: (password: string) => void;
+}
+
+const ResetPassword = ({ onResetPassword: onSubmit }: ResetPasswordProps): JSX.Element => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const router = useRouter();
 	const keyboardHeight = useKeyboardHeight();
@@ -66,7 +70,8 @@ const ResetPassword = (): JSX.Element => {
 						href="/PasswordUpdated"
 						negativeOption="Back to Login"
 						negativeOnPress={() => {
-							router.navigate("/");
+							router.dismissAll();
+							router.replace("/");
 						}}
 						vertical
 					/>

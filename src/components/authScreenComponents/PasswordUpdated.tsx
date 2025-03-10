@@ -10,7 +10,11 @@ import { compactStyles } from "@helpers/styles";
 
 const { width, height } = Dimensions.get("window");
 
-const PasswordUpdated = (): JSX.Element => {
+interface PasswordUpdatedProps {
+	onProceed: () => void;
+}
+
+const PasswordUpdated = ({ onProceed }: PasswordUpdatedProps): JSX.Element => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const router = useRouter();
 	return (
@@ -25,14 +29,7 @@ const PasswordUpdated = (): JSX.Element => {
 				</View>
 
 				<View style={styles.buttonsContainer}>
-					<ButtonGroup
-						positiveOption="Back to Login"
-						onPress={() => {
-							router.navigate("/");
-						}}
-						positiveOptionTextStyle={styles.primaryButtonText}
-						vertical
-					/>
+					<ButtonGroup positiveOption="Back to Login" onPress={onProceed} positiveOptionTextStyle={styles.primaryButtonText} vertical />
 				</View>
 			</View>
 		</ScrollView>
