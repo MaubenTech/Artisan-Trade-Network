@@ -6,7 +6,7 @@ import JobRating from "@assets/images/JobRating.svg";
 import ProfilePicture from "@assets/components/chatList/images/profilePicture.svg";
 import useAppSelector from "@hooks/useAppSelector";
 import { selectAllReviews, updateReviewRating } from "@store/reviewsSlice";
-import Rating from "@components/Ratingt";
+import Rating from "@components/Rating";
 import useAppDispatch from "@hooks/useAppDispatch";
 
 const { height, width } = Dimensions.get("window");
