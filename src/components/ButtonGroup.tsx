@@ -10,6 +10,7 @@ import {
 	Dimensions,
 	GestureResponderEvent,
 	TextProps,
+	TouchableOpacityProps,
 } from "react-native";
 import React from "react";
 import { Text } from "./Text";
@@ -23,10 +24,14 @@ interface ButtonGroupParams {
 	positiveOptionStyle?: StyleProp<ViewStyle>;
 	positiveOptionTextStyle?: StyleProp<TextStyle>;
 	positiveOptionBg?: ColorValue;
+	positiveOptionTOProps?: TouchableOpacityProps;
+	positiveOptionDisabled?: boolean;
 	negativeOption?: string;
 	negativeOptionStyle?: StyleProp<ViewStyle>;
 	negativeOptionTextStyle?: StyleProp<TextStyle>;
 	negativeOptionBg?: ColorValue;
+	negativeOptionTOProps?: TouchableOpacityProps;
+	negativeOptionDisabled?: boolean;
 	// href?: Href;
 	href?: Href;
 	negativeHref?: Href;
@@ -45,10 +50,14 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 	positiveOptionStyle,
 	positiveOptionTextStyle,
 	positiveOptionBg,
+	positiveOptionTOProps,
+	positiveOptionDisabled,
 	negativeOption,
 	negativeOptionStyle,
 	negativeOptionTextStyle,
 	negativeOptionBg,
+	negativeOptionTOProps,
+	negativeOptionDisabled,
 	href,
 	negativeHref,
 	paddingHorizontal,
@@ -61,20 +70,33 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 	const isNop = negativeOption ? true : false;
 
 	const negativeStyle = isNop
-		? [styles.option, styles.negativeOption, negativeOptionStyle, negativeOptionBg && { backgroundColor: negativeOptionBg }]
+		? [
+				styles.option,
+				styles.negativeOption,
+				negativeOptionStyle,
+				{ backgroundColor: negativeOptionDisabled ? colors.greyLighterShade : negativeOptionBg },
+				negativeOptionDisabled && { borderWidth: 0 },
+		  ]
 		: { width: 0 };
 
+	const negativeTextStyle = [negativeOptionDisabled && { color: colors.greySecondaryShade }, negativeOptionTextStyle];
+
 	const NegativeOption = ({ addStyle }: { addStyle?: boolean }) => (
-		<TouchableOpacity style={addStyle && [negativeStyle, vertical && { width: "100%" }]} onPress={negativeOnPress}>
-			<Text style={negativeOptionTextStyle}>{negativeOption}</Text>
+		<TouchableOpacity
+			style={addStyle && [negativeStyle, vertical && { width: "100%" }]}
+			onPress={negativeOnPress}
+			disabled={negativeOptionDisabled}
+			{...negativeOptionTOProps}
+		>
+			<Text style={negativeTextStyle}>{negativeOption}</Text>
 		</TouchableOpacity>
 	);
 
 	const CompleteNegativeOption = () => {
 		return negativeHref && !negativeOnPress ? (
 			<Link href={negativeHref} asChild>
-				<TouchableOpacity style={[negativeStyle, vertical && { width: "100%" }]}>
-					<Text style={negativeOptionTextStyle}>{negativeOption}</Text>
+				<TouchableOpacity style={[negativeStyle, vertical && { width: "100%" }]} disabled={negativeOptionDisabled} {...negativeOptionTOProps}>
+					<Text style={negativeTextStyle}>{negativeOption}</Text>
 				</TouchableOpacity>
 			</Link>
 		) : (
@@ -86,25 +108,26 @@ const ButtonGroup: React.FC<ButtonGroupParams> = ({
 		const positiveStyle: StyleProp<ViewStyle> = [
 			styles.option,
 			styles.positiveOption,
-			{
-				backgroundColor: positiveOptionBg ?? colors.mainColor,
-			},
 			!isNop && {
 				width: "100%",
 			},
 			vertical && { width: "100%" },
 			positiveOptionStyle,
+			{
+				backgroundColor: positiveOptionDisabled ? colors.greyLighterShade : positiveOptionBg ?? colors.mainColor,
+			},
 		];
+		const positiveTextStyle = [positiveOptionDisabled && { color: colors.greySecondaryShade }, positiveOptionTextStyle];
 		return onPress ? (
 			// If onPress is provided, render TouchableOpacity without Link
-			<TouchableOpacity style={positiveStyle} onPress={onPress}>
-				<Text style={[styles.positiveOptionText, positiveOptionTextStyle]}>{positiveOption}</Text>
+			<TouchableOpacity style={positiveStyle} onPress={onPress} disabled={positiveOptionDisabled} {...positiveOptionTOProps}>
+				<Text style={[styles.positiveOptionText, ...positiveTextStyle]}>{positiveOption}</Text>
 			</TouchableOpacity>
 		) : (
 			// If onPress is not provided, render Link with TouchableOpacity inside
 			<Link href={href} asChild>
-				<TouchableOpacity style={positiveStyle}>
-					<Text style={[styles.positiveOptionText, positiveOptionTextStyle]}>{positiveOption}</Text>
+				<TouchableOpacity style={positiveStyle} disabled={positiveOptionDisabled} {...positiveOptionTOProps}>
+					<Text style={[styles.positiveOptionText, ...positiveTextStyle]}>{positiveOption}</Text>
 				</TouchableOpacity>
 			</Link>
 		);
