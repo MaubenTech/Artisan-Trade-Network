@@ -13,12 +13,14 @@ import { forgotPassword, resetAuthError, resetAuthStatus, selectAuthError, selec
 import useAppSelector from "@hooks/useAppSelector";
 import { isEmailValid } from "@helpers/utils";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
+import ButtonGroup from "@components/ButtonGroup";
 
 interface ForgotPasswordProps {
-	onProceed: (email: string) => void;
+	onEmailVerified: () => void;
+	onBack?: () => void;
 }
 
-const ForgotPassword = ({ onProceed }: ForgotPasswordProps): JSX.Element => {
+const ForgotPassword = ({ onEmailVerified, onBack }: ForgotPasswordProps): JSX.Element => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	// console.log(styles.container);
 	const router = useRouter();
@@ -45,7 +47,7 @@ const ForgotPassword = ({ onProceed }: ForgotPasswordProps): JSX.Element => {
 			const result = await dispatch(forgotPassword({ email }));
 			if (result.meta.requestStatus === "fulfilled") {
 				dispatch(resetAuthStatus());
-				onProceed(email);
+				onEmailVerified();
 			}
 		} catch (error) {
 			setValidationError("An error occurred, please try again later.");
@@ -89,17 +91,13 @@ const ForgotPassword = ({ onProceed }: ForgotPasswordProps): JSX.Element => {
 					/>
 				</View>
 				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
-					<TouchableOpacity onPress={() => handleForgotPassword(email)} style={[styles.button, styles.primaryButton]}>
-						<Text style={[styles.buttonText, styles.primaryButtonText]}>Reset Password</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={[styles.button, styles.secondaryButton]}
-						onPress={() => {
-							router.back();
-						}}
-					>
-						<Text style={styles.buttonText}>Back to Login</Text>
-					</TouchableOpacity>
+					<ButtonGroup
+						positiveOption="Reset Password"
+						onPress={() => handleForgotPassword(email)}
+						negativeOption="Back to Login"
+						negativeOnPress={onBack}
+						vertical
+					/>
 					<View style={styles.signUpOption}>
 						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
 						<Link href="/SignUp" style={{ textDecorationLine: "underline" }}>

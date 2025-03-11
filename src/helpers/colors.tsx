@@ -12,6 +12,7 @@ const colors = {
 	greyBorder: "#DDDDDD",
 	greyShade: "#848484",
 	greySecondaryShade: "#646464",
+	greyLighterShade: "#D1D5DC",
 	grey2: "#F8F8F8",
 	subTitlesColor: "#4D4D4D",
 	inputBorderColor: "#EBEBEB",

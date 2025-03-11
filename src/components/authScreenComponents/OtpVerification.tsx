@@ -1,30 +1,81 @@
-import { View, SafeAreaView, TextInput as RNTextInput } from "react-native";
+import { View, SafeAreaView, TextInput as RNTextInput, TouchableOpacity } from "react-native";
 import { StyleSheet, Image } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import ButtonGroup from "@components/ButtonGroup";
 import { Text, TextInput } from "@components/Text";
 import { OtpInput } from "react-native-otp-entry";
 import colors from "@helpers/colors";
+import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { router } from "expo-router";
+import useAppSelector from "@hooks/useAppSelector";
+import { forgotPassword, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, selectForgotPasswordEmail, verifyOtp } from "@store/authSlice";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
+import useAppDispatch from "@hooks/useAppDispatch";
+import { compactStyles } from "@helpers/styles";
 
 interface OtpVerificationProps {
-	email: string;
-	onVerifyOtp: (otp: string) => void;
+	onOtpVerified: () => void;
 }
 
-const OtpVerification = ({ email, onVerifyOtp }: OtpVerificationProps) => {
+const OtpVerification = ({ onOtpVerified }: OtpVerificationProps) => {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [otp, setOtp] = useState("");
+	const [validationError, setValidationError] = useState("");
+	const [disabled, setDisabled] = useState(true);
+
+	const email = useAppSelector(selectForgotPasswordEmail);
+
+	const dispatch = useAppDispatch();
+
+	const otpVerificationStatus = useAppSelector(selectAuthStatus);
+	const otpVerificationError = useAppSelector(selectAuthError);
+
+	const handleVerifyOtp = async (otp) => {
+		try {
+			const result = await dispatch(verifyOtp("forgotpassword")({ email, otp }));
+			console.log(result);
+			if (result.meta.requestStatus === "fulfilled") {
+				dispatch(resetAuthStatus());
+				onOtpVerified();
+			}
+		} catch (error) {
+			setValidationError("An error occurred, please try again later.");
+		}
+	};
+
+	const handleResendCode = async () => {
+		try {
+			const result = await dispatch(forgotPassword({ email }));
+			if (result.meta.requestStatus === "fulfilled") {
+				dispatch(resetAuthStatus());
+			}
+		} catch (error) {
+			setValidationError("An error occurred, please try again later.");
+		}
+	};
+
+	const getErrorMessage = () => {
+		if (validationError) return validationError;
+		if (otpVerificationStatus === "failed" && otpVerificationError && otpVerificationError.message) {
+			return otpVerificationError.message;
+		}
+		return "";
+	};
+
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.logo}>
-				<Image source={require("@assets/images/logo.png")} />
+				{/* <Image source={require("@assets/images/logo.png")} /> */}
+				<HeaderImage />
 			</View>
 			<View style={styles.headerContainer}>
 				<Text style={styles.header}>OTP Verification</Text>
 				<Text style={styles.subHeader}>Please enter your Verification code sent to</Text>
 				<Text style={styles.email}>{email}</Text>
 			</View>
-			<View style={styles.otpContainer}>
+			{otpVerificationStatus === "loading" && <LoadingIndicator visible />}
+			<View style={styles.otpSectionContainer}>
+				{getErrorMessage() ? <Text style={styles.errorMessage}>{getErrorMessage()}</Text> : null}
 				<OtpInput
 					numberOfDigits={6}
 					focusColor="#005B92"
@@ -38,10 +89,15 @@ const OtpVerification = ({ email, onVerifyOtp }: OtpVerificationProps) => {
 					focusStickBlinkingDuration={500}
 					onFocus={() => console.log("Focused")}
 					onBlur={() => console.log("Blurred")}
-					onTextChange={(text) => console.log(text)}
+					onTextChange={(text) => {
+						if (text.length !== 6) setDisabled(true);
+						if (validationError) setValidationError("");
+						if (otpVerificationError && otpVerificationError.message) dispatch(resetAuthError());
+					}}
 					onFilled={(text) => {
 						console.log(`OTP is ${text}`);
 						setOtp(text);
+						setDisabled(false);
 					}}
 					textInputProps={{
 						accessibilityLabel: "One-Time Password",
@@ -60,19 +116,15 @@ const OtpVerification = ({ email, onVerifyOtp }: OtpVerificationProps) => {
 			</View>
 			<View style={[styles.codeInfo, { flex: 1 }]}>
 				<Text style={styles.codeQuestion}>Didn't receive an OTP code?</Text>
-				<Text style={styles.resend}>Resend Code</Text>
+				<TouchableOpacity onPress={handleResendCode}>
+					<Text style={styles.resend}>Resend Code</Text>
+				</TouchableOpacity>
 			</View>
-			<ButtonGroup
-				onPress={() => {
-					onVerifyOtp(otp);
-				}}
-				positiveOption="Verify & Proceed"
-				paddingHorizontal={20}
-			/>
+			<ButtonGroup positiveOptionDisabled={disabled} onPress={() => handleVerifyOtp(otp)} positiveOption="Verify & Proceed" paddingHorizontal={20} />
 		</SafeAreaView>
 	);
 };
-const styles = StyleSheet.create({
+const generalStyles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
@@ -96,11 +148,11 @@ const styles = StyleSheet.create({
 	email: {
 		fontWeight: "bold",
 	},
+	otpSectionContainer: {
+		paddingHorizontal: "6%",
+	},
 	otpContainer: {
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "space-around",
-		paddingHorizontal: "3%",
+		// paddingHorizontal: "3%",
 	},
 	otpCodeContainer: {
 		// borderWidth: 1,
@@ -142,6 +194,11 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 16,
 	},
+
+	errorMessage: {
+		color: colors.red,
+	},
+
 	// loginButtonContainer: {
 	//     borderWidth: 1,
 	//     borderRadius: 10,
@@ -158,4 +215,6 @@ const styles = StyleSheet.create({
 	//     position: "relative",
 	// },
 });
+const androidStyles = StyleSheet.create({});
+const iosStyles = StyleSheet.create({});
 export default OtpVerification;

@@ -10,24 +10,58 @@ import ButtonGroup from "@components/ButtonGroup";
 import { compactStyles } from "@helpers/styles";
 import useKeyboardHeight from "@helpers/useKeyboardHeight";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
+import useAppSelector from "@hooks/useAppSelector";
+import { resetAuthStatus, resetPassword, selectAuthError, selectAuthStatus, selectForgotPasswordEmail, selectResetValidationCode } from "@store/authSlice";
+import useAppDispatch from "@hooks/useAppDispatch";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 
 const { width, height } = Dimensions.get("window");
 
 interface ResetPasswordProps {
-	onResetPassword: (password: string) => void;
+	onPasswordReset: () => void;
+	onBack?: () => void;
 }
 
-const ResetPassword = ({ onResetPassword: onSubmit }: ResetPasswordProps): JSX.Element => {
+const ResetPassword = ({ onPasswordReset, onBack }: ResetPasswordProps): JSX.Element => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const router = useRouter();
 	const keyboardHeight = useKeyboardHeight();
 	const { top } = useSafeAreaInsets();
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-
 	const [passwordsMatch, setPasswordsMatch] = useState(true);
 
 	const borderColorStyle = { borderColor: passwordsMatch ? colors.inputBorderColor : colors.red };
+
+	const [validationError, setValidationError] = useState("");
+	const dispatch = useAppDispatch();
+
+	const resetPasswordError = useAppSelector(selectAuthError);
+	const resetPasswordStatus = useAppSelector(selectAuthStatus);
+
+	const email = useAppSelector(selectForgotPasswordEmail);
+	const resetValidationCode = useAppSelector(selectResetValidationCode);
+
+	const handleResetPassword = async () => {
+		try {
+			const result = await dispatch(resetPassword({ email, resetValidationCode, newPassword: password }));
+			console.log(result);
+			if (result.meta.requestStatus === "fulfilled") {
+				dispatch(resetAuthStatus());
+				onPasswordReset();
+			}
+		} catch (error) {
+			setValidationError("An error occurred, please try again later.");
+		}
+	};
+
+	const getErrorMessage = () => {
+		if (validationError) return validationError;
+		if (resetPasswordStatus === "failed" && resetPasswordError && resetPasswordError.message) {
+			return resetPasswordError.message;
+		}
+		return "";
+	};
 
 	useEffect(() => {
 		if (password !== confirmPassword) setPasswordsMatch(false);
@@ -43,6 +77,7 @@ const ResetPassword = ({ onResetPassword: onSubmit }: ResetPasswordProps): JSX.E
 					<Text style={styles.lchHeader}>Reset Password?</Text>
 					<Text style={styles.lchText}>You have passed the verification, now you can change your password.</Text>
 				</View>
+				{resetPasswordStatus === "loading" && <LoadingIndicator visible />}
 				<View style={styles.resetPasswordFormContainer}>
 					<View style={styles.resetPasswordDetailContainer}>
 						<Text style={styles.formText}>Password</Text>
@@ -62,17 +97,16 @@ const ResetPassword = ({ onResetPassword: onSubmit }: ResetPasswordProps): JSX.E
 								<Text style={styles.unmatchedText}>Password doesn't match</Text>
 							</View>
 						)}
+						{getErrorMessage() ? <Text style={styles.unmatchedText}>{getErrorMessage()}</Text> : null}
 					</View>
 				</View>
 				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
 					<ButtonGroup
 						positiveOption="Reset Password"
-						href="/PasswordUpdated"
+						onPress={handleResetPassword}
+						positiveOptionDisabled={!passwordsMatch}
 						negativeOption="Back to Login"
-						negativeOnPress={() => {
-							router.dismissAll();
-							router.replace("/");
-						}}
+						negativeOnPress={onBack}
 						vertical
 					/>
 					<View style={styles.signUpOption}>
