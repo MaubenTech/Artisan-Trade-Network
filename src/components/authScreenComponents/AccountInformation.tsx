@@ -61,7 +61,7 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 				</View>
 				<View style={styles.componentContainer}>
 					<Text style={styles.header}> Create An Account</Text>
-					<Text style={styles.subHeader}>Welcome! please enter your personal details.</Text>
+					<Text style={styles.subHeader}>Welcome! Please enter your personal details.</Text>
 				</View>
 				<View style={styles.componentContainer}>
 					<View style={styles.subDetailsContainer}>
@@ -77,7 +77,7 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 						<View style={[styles.detailsInput, styles.dateOfBirthContainer]}>
 							<TextInput
 								style={styles.dateOfBirthInput}
-								placeholder="DD/MM/YYY"
+								placeholder="DD/MM/YYYY"
 								// value={date && date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
 								value={selectedDate}
 								readOnly={true}
