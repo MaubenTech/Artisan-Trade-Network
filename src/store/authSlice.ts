@@ -3,6 +3,7 @@ import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 import { fetchUsers } from "./usersSlice";
+import { generatePostAsyncThunk } from "@helpers/utils";
 
 interface Login {
 	email: string;
@@ -64,6 +65,7 @@ export interface AuthState {
 	token: string;
 	isAuthenticated: boolean;
 	forgotPasswordEmail: string;
+	resetValidationCode: string;
 }
 
 const initialState: AuthState = {
@@ -73,9 +75,10 @@ const initialState: AuthState = {
 	token: null,
 	isAuthenticated: false,
 	forgotPasswordEmail: null,
+	resetValidationCode: null,
 };
 
-type ValidationError = {
+export type ValidationError = {
 	location?: string;
 	msg?: string;
 	path?: string;
@@ -92,102 +95,153 @@ type ApiUser = {
 	};
 };
 
-type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] };
+type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
 
-export const loginUser = createAppAsyncThunk<{ user: AuthUser; token: string }, Login>(
-	"auth/login",
-	async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
-		try {
-			const response = await postData<UserLoginResult>("/auth/signin", {
-				email,
-				password,
-			});
+export const loginUser = generatePostAsyncThunk<ApiUser, { user: AuthUser; token: string }, Login>("auth/login", "/auth/signin", "token", (result) => {
+	const decodedUser = jwtDecode<JwtDecodedUser>(result.token);
+	const user: AuthUser = { ...decodedUser };
+	return {
+		user,
+		token: result.token,
+	};
+});
 
-			if (typeof response === "string") {
-				return rejectWithValue(response);
-			}
+// export const loginUser2 = createAppAsyncThunk<{ user: AuthUser; token: string }, Login>(
+// 	"auth/login",
+// 	async ({ email, password }: Login, { getState, dispatch, rejectWithValue }) => {
+// 		try {
+// 			const response = await postData<UserLoginResult>("/auth/signin", {
+// 				email,
+// 				password,
+// 			});
 
-			if ("token" in response) {
-				const decodedUser = jwtDecode<JwtDecodedUser>(response.token);
-				const user: AuthUser = { ...decodedUser };
-				return {
-					user,
-					token: response.token,
-				};
-			}
+// 			if (typeof response === "string") {
+// 				return rejectWithValue(response);
+// 			}
 
-			if ("error" in response) {
-				return rejectWithValue(response.error);
-			}
+// 			if ("token" in response) {
+// 				const decodedUser = jwtDecode<JwtDecodedUser>(response.token);
+// 				const user: AuthUser = { ...decodedUser };
+// 				return {
+// 					user,
+// 					token: response.token,
+// 				};
+// 			}
 
-			if ("errors" in response) {
-				const errorFields = response.errors.map((specificError) => specificError.path).join(", ");
-				return rejectWithValue(`Errors on ${errorFields} fields`);
-			}
+// 			if ("error" in response) {
+// 				return rejectWithValue(response.error);
+// 			}
 
-			// if (typeof response === "object") {
-			// 	if (response.token) {
-			// 		const decodedUser = jwtDecode<ApiAuthUser>(response.token);
-			// 		console.log("Decoded User information: ", decodedUser);
-			// 		// dispatch(addUser({ ...decodedUser, token: response.token }));
-			// 		const user: AuthUser = { ...decodedUser };
-			// 		return {
-			// 			user,
-			// 			token: response.token,
-			// 		};
-			// 	} else if (response.errors) {
-			// 		let errorFields = ""; //TODO: Get the error fields and add them to the error message using a comma separating format. Eg error message: "Errors on email, firstname, gender fields".
-			// 		const moreThanOneError = response.errors.length > 1;
-			// 		response.errors.forEach((error, index) => {
-			// 			errorFields += error.path;
-			// 			if (index < response.errors.length - 1)
-			// 				errorFields += ", ";
-			// 		});
-			// 		const errorMessage = `Error${
-			// 			moreThanOneError ? "s" : ""
-			// 		} on ${errorFields} field${moreThanOneError ? "s" : ""}`;
-			// 		return rejectWithValue(errorMessage);
-			// 	}
+// 			if ("errors" in response) {
+// 				const errorFields = response.errors.map((specificError) => specificError.path).join(", ");
+// 				return rejectWithValue(`Errors on ${errorFields} fields`);
+// 			}
 
-			return rejectWithValue("An unexpected error occured");
-		} catch (error) {
-			console.error("Login Error:", error);
-			return rejectWithValue(error.message || "Login Failed");
-		}
+// 			// if (typeof response === "object") {
+// 			// 	if (response.token) {
+// 			// 		const decodedUser = jwtDecode<ApiAuthUser>(response.token);
+// 			// 		console.log("Decoded User information: ", decodedUser);
+// 			// 		// dispatch(addUser({ ...decodedUser, token: response.token }));
+// 			// 		const user: AuthUser = { ...decodedUser };
+// 			// 		return {
+// 			// 			user,
+// 			// 			token: response.token,
+// 			// 		};
+// 			// 	} else if (response.errors) {
+// 			// 		let errorFields = ""; //TODO: Get the error fields and add them to the error message using a comma separating format. Eg error message: "Errors on email, firstname, gender fields".
+// 			// 		const moreThanOneError = response.errors.length > 1;
+// 			// 		response.errors.forEach((error, index) => {
+// 			// 			errorFields += error.path;
+// 			// 			if (index < response.errors.length - 1)
+// 			// 				errorFields += ", ";
+// 			// 		});
+// 			// 		const errorMessage = `Error${
+// 			// 			moreThanOneError ? "s" : ""
+// 			// 		} on ${errorFields} field${moreThanOneError ? "s" : ""}`;
+// 			// 		return rejectWithValue(errorMessage);
+// 			// 	}
+
+// 			return rejectWithValue("An unexpected error occured");
+// 		} catch (error) {
+// 			console.error("Login Error:", error);
+// 			return rejectWithValue(error.message || "Login Failed");
+// 		}
+// 	}
+// );
+
+type ForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
+type SuccessfulForgotPasswordResult = { message: string };
+
+export const forgotPassword = generatePostAsyncThunk<SuccessfulForgotPasswordResult, { email: string }, { email: string }>(
+	"auth/forgotPassword",
+	"/auth/forgot-password",
+	"message",
+	(result, params) => {
+		return params;
 	}
 );
 
-type ForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
+// export const forgotPassword2 = createAppAsyncThunk<{ email: string }, { email: string }>(
+// 	"auth/forgotPassword",
+// 	async ({ email }, { getState, dispatch, rejectWithValue }) => {
+// 		try {
+// 			const result = await postData<ForgotPasswordResult>("/auth/forgot-password", { email });
 
-export const forgotPassword = createAppAsyncThunk<{ email: string }, string>("auth/forgotPassword", async (email, { getState, dispatch, rejectWithValue }) => {
-	try {
-		const result = await postData<ForgotPasswordResult>("/auth/forgot-password", { email });
+// 			if (typeof result === "string") {
+// 				return rejectWithValue(result);
+// 			}
 
-		if (typeof result === "string") {
-			return rejectWithValue(result);
+// 			if ("message" in result) {
+// 				return { email };
+// 			}
+
+// 			if ("error" in result) {
+// 				return rejectWithValue(result.error);
+// 			}
+
+// 			if ("errors" in result) {
+// 				const errorFields = result.errors.map((specificError) => specificError.path).join(", ");
+// 				return rejectWithValue(`Errors on ${errorFields} fields`);
+// 			}
+// 		} catch (error) {
+// 			console.error("Forgot Password Error:", error);
+// 			return rejectWithValue(error.message || "Forgot password failed");
+// 		}
+// 	}
+// );
+
+// export const verifyOtpSignup = generatePostAsyncThunk("auth/verifyOtpSignup");
+
+type VerifyOtpType = "signup" | "forgotpassword";
+
+type VerifyOtpParams = { email: string; otp: string };
+type VerifyOtpResult = { resetValidationCode?: string; message: string };
+
+export const verifyOtp = (type: VerifyOtpType) =>
+	generatePostAsyncThunk<VerifyOtpResult, VerifyOtpResult, VerifyOtpParams>(
+		"auth/verifyOtp",
+		`/auth/verify-otp${type === "signup" ? "" : "-reset"}`,
+		"resetValidationCode",
+		(result, params) => {
+			return result;
 		}
+	);
 
-		if ("message" in result) {
-			return { email };
-		}
+type ResetPasswordParams = { email: string; resetValidationCode: string; newPassword: string };
+type ResetPasswordResult = { message: string };
 
-		if ("error" in result) {
-			return rejectWithValue(result.error);
-		}
-
-		if ("errors" in result) {
-			const errorFields = result.errors.map((specificError) => specificError.path).join(", ");
-			return rejectWithValue(`Errors on ${errorFields} fields`);
-		}
-	} catch (error) {
-		console.error("Forgot Password Error:", error);
-		return rejectWithValue(error.message || "Forgot password failed");
+export const resetPassword = generatePostAsyncThunk<ResetPasswordResult, ResetPasswordResult, ResetPasswordParams>(
+	"auth/resetPassword",
+	"/auth/reset-password",
+	"message",
+	(result, params) => {
+		return result;
 	}
-});
+);
 
 const authSlice = createSlice({
 	name: "auth",
-	initialState: initialState,
+	initialState,
 	reducers: {
 		resetAuthError(state) {
 			state.error = null;
@@ -195,60 +249,66 @@ const authSlice = createSlice({
 		resetAuthStatus(state) {
 			state.status = "idle";
 		},
-		addUnknownUser(state) {
-			const DEFAULT: User = {
-				_id: "-1",
-				firstname: "Unknown",
-				email: "unknown",
-				roles: ["user"],
-				lastname: "",
-				dateofbirth: "",
-				gender: "",
-				address: "",
-				phonenumber: "",
-				password: "",
-				isVerified: false,
-				otp: "",
-				otpExpires: "",
-			};
-			state.user = DEFAULT;
+		resetForgotPasswordFlow(state) {
+			state.forgotPasswordEmail = null;
+			state.resetValidationCode = null;
+			state.error = null;
+			state.status = "idle";
 		},
-		addInvalidCredentialsPlaceholder(state) {
-			const INVALID_CREDENTIALS: User = {
-				_id: "-1",
-				firstname: "Invalid",
-				email: "invalidcredentials@gmail.com",
-				roles: ["user", "artisan"],
-				lastname: "",
-				dateofbirth: "",
-				gender: "",
-				address: "",
-				phonenumber: "",
-				password: "",
-				isVerified: false,
-				otp: "",
-				otpExpires: "",
-			};
-			state.user = INVALID_CREDENTIALS;
-		},
-		addRandomUser(state, action: PayloadAction<User>) {
-			const NONSO_ALI: User = {
-				_id: action.payload._id,
-				firstname: action.payload.firstname,
-				lastname: action.payload.lastname,
-				gender: action.payload.gender,
-				dateofbirth: action.payload.dateofbirth,
-				otp: action.payload.otp,
-				otpExpires: action.payload.otpExpires,
-				phonenumber: action.payload.phonenumber,
-				address: action.payload.address,
-				isVerified: action.payload.isVerified,
-				password: action.payload.password,
-				email: action.payload.email,
-				roles: ["user"],
-			};
-			state.user = NONSO_ALI;
-		},
+		// addUnknownUser(state) {
+		// 	const DEFAULT: User = {
+		// 		_id: "-1",
+		// 		firstname: "Unknown",
+		// 		email: "unknown",
+		// 		roles: ["user"],
+		// 		lastname: "",
+		// 		dateofbirth: "",
+		// 		gender: "",
+		// 		address: "",
+		// 		phonenumber: "",
+		// 		password: "",
+		// 		isVerified: false,
+		// 		otp: "",
+		// 		otpExpires: "",
+		// 	};
+		// 	state.user = DEFAULT;
+		// },
+		// addInvalidCredentialsPlaceholder(state) {
+		// 	const INVALID_CREDENTIALS: User = {
+		// 		_id: "-1",
+		// 		firstname: "Invalid",
+		// 		email: "invalidcredentials@gmail.com",
+		// 		roles: ["user", "artisan"],
+		// 		lastname: "",
+		// 		dateofbirth: "",
+		// 		gender: "",
+		// 		address: "",
+		// 		phonenumber: "",
+		// 		password: "",
+		// 		isVerified: false,
+		// 		otp: "",
+		// 		otpExpires: "",
+		// 	};
+		// 	state.user = INVALID_CREDENTIALS;
+		// },
+		// addRandomUser(state, action: PayloadAction<User>) {
+		// 	const NONSO_ALI: User = {
+		// 		_id: action.payload._id,
+		// 		firstname: action.payload.firstname,
+		// 		lastname: action.payload.lastname,
+		// 		gender: action.payload.gender,
+		// 		dateofbirth: action.payload.dateofbirth,
+		// 		otp: action.payload.otp,
+		// 		otpExpires: action.payload.otpExpires,
+		// 		phonenumber: action.payload.phonenumber,
+		// 		address: action.payload.address,
+		// 		isVerified: action.payload.isVerified,
+		// 		password: action.payload.password,
+		// 		email: action.payload.email,
+		// 		roles: ["user"],
+		// 	};
+		// 	state.user = NONSO_ALI;
+		// },
 		// addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
 		// 	const { _id, token} = action.payload;
 		// 	console.log("ID: " + _id);
@@ -300,8 +360,38 @@ const authSlice = createSlice({
 			.addCase(forgotPassword.fulfilled, (state, action) => {
 				state.status = "succeeded";
 				state.forgotPasswordEmail = action.payload.email;
+				state.error = null;
 			})
 			.addCase(forgotPassword.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = { message: action.payload as string };
+			})
+			.addCase(verifyOtp("signup").pending, (state) => {
+				//NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(verifyOtp("signup").fulfilled, (state, action) => {
+				//NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
+				state.status = "succeeded";
+				const validationCode = action.payload.resetValidationCode;
+				if (validationCode) state.resetValidationCode = validationCode;
+				state.error = null;
+			})
+			.addCase(verifyOtp("signup").rejected, (state, action) => {
+				//NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
+				state.status = "failed";
+				state.error = { message: action.payload as string };
+			})
+			.addCase(resetPassword.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(resetPassword.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.error = null;
+			})
+			.addCase(resetPassword.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = { message: action.payload as string };
 			});
@@ -310,11 +400,13 @@ const authSlice = createSlice({
 		selectCurrentUser: (state: AuthState) => state.user,
 		selectAuthStatus: (state: AuthState) => state.status,
 		selectAuthError: (state: AuthState) => state.error,
+		selectForgotPasswordEmail: (state: AuthState) => state.forgotPasswordEmail,
+		selectResetValidationCode: (state: AuthState) => state.resetValidationCode,
 	},
 });
 
-export const { addUnknownUser, resetAuthError, resetAuthStatus, addInvalidCredentialsPlaceholder, addRandomUser, userLoggedOut } = authSlice.actions;
+export const { resetAuthError, resetAuthStatus, resetForgotPasswordFlow, userLoggedOut } = authSlice.actions;
 
-export const { selectCurrentUser, selectAuthStatus, selectAuthError } = authSlice.selectors;
+export const { selectCurrentUser, selectAuthStatus, selectAuthError, selectForgotPasswordEmail, selectResetValidationCode } = authSlice.selectors;
 
 export default authSlice.reducer;
