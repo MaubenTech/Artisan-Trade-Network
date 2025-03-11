@@ -39,7 +39,7 @@ const SignUp = () => {
     setIndex(2);
   };
 
-  const verifyOtp = (otp: string) => {
+  const verifyOtp = () => {
     setIndex(3);
   };
 
@@ -64,7 +64,7 @@ const SignUp = () => {
     case 1:
       return <ContactDetails onSubmit={submitContactDetails} />;
     case 2:
-      return <OtpVerification email={email} onVerifyOtp={verifyOtp} />;
+      return <OtpVerification onOtpVerified={verifyOtp} />;
     case 3:
       return <Password onSubmit={submitPassword} />;
     default:
