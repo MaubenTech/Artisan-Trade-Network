@@ -21,8 +21,8 @@ import useAppDispatch from "@hooks/useAppDispatch";
 import { hideTabBar, showTabBar } from "@store/miscellaneousSlice";
 import { useSharedValue } from "react-native-reanimated";
 import SmartImage from "@components/SmartImage";
-import PostedJobProgressStatus from "@components/jobComponents/PostedJobProgressStatus";
-import BottomModal from "@components/jobComponents/PostedJobBottomModal";
+import PostedJobProgressStatus from "@components/JobComponents/PostedJobProgressStatus";
+import BottomModal from "@components/JobComponents/PostedJobBottomModal";
 import useRoles from "@hooks/useRoles";
 
 const { width, height } = Dimensions.get("window");

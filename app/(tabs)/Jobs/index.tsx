@@ -3,7 +3,7 @@ import SearchBar from "@components/SearchBar";
 import MenuHeader from "@components/MenuHeader";
 import { compactStyles } from "@helpers/styles";
 import FilterComponent from "@components/FilterComponent";
-import PostedJob from "@components/jobComponents/PostedJob";
+import PostedJob from "@components/JobComponents/PostedJob";
 import { View, StyleSheet, Dimensions, Platform, ScrollView, ActivityIndicator } from "react-native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import useAppSelector from "@hooks/useAppSelector";
@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@store";
 import { Text } from "@components/Text";
 import { fetchJobs, selectAllJobs, selectJobsState, selectAllJobsStatus } from "@store/jobsSlice";
-import EmptyJobs from "@components/jobComponents/EmptyJobs";
+import EmptyJobs from "@components/JobComponents/EmptyJobs";
 
 const { width, height } = Dimensions.get("window");
 

@@ -6,57 +6,57 @@ import { fetchUsers } from "./usersSlice";
 import { generatePostAsyncThunk } from "@helpers/utils";
 
 interface Login {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 }
 
 interface ResetPassword {
-	email: string;
-	newPassword: string;
+  email: string;
+  newPassword: string;
 }
 
 interface ForgotPassword {
-	email: string;
+  email: string;
 }
 
 interface VerifyOtp {
-	email: string;
-	otp: string;
+  email: string;
+  otp: string;
 }
 
 interface Register {
-	email: string;
-	password: string;
-	firstName: string;
-	lastName: string;
-	dateOfBirth: string;
-	gender: string;
-	address: string;
-	phoneNumber: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: string;
+  address: string;
+  phoneNumber: string;
 }
 
-export type Role = "user" | "artisan" | "admin";
+export type Role = 'user' | 'artisan' | 'admin';
 
 interface User {
-	_id: string;
-	email: string;
-	firstname: string;
-	lastname: string;
-	dateofbirth: string;
-	gender: string;
-	address: string;
-	phonenumber: string;
-	password: string;
-	isVerified: boolean;
-	otp: string;
-	otpExpires: string;
-	roles: Role[];
-	// type: "NORMAL" | "ARTISAN";
+  _id: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+  dateofbirth: string;
+  gender: string;
+  address: string;
+  phonenumber: string;
+  password: string;
+  isVerified: boolean;
+  otp: string;
+  otpExpires: string;
+  roles: Role[];
+  // type: "NORMAL" | "ARTISAN";
 }
 
-type JwtDecodedUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "roles"> & { iat: number; exp: number };
+type JwtDecodedUser = Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'roles' > & { iat: number; exp: number };
 
-type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "roles">;
+type AuthUser = Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'roles'>;
 
 export interface AuthState {
 	error: { message: string };
@@ -87,12 +87,12 @@ export type ValidationError = {
 };
 
 type ApiUser = {
-	token: string;
-	user: {
-		_id: string;
-		email: string;
-		roles: string[];
-	};
+  token: string;
+  user: {
+    _id: string;
+    email: string;
+    roles: string[];
+  };
 };
 
 type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
