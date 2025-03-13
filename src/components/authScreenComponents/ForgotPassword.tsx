@@ -1,10 +1,10 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Platform } from "react-native";
+import { StyleSheet, View, TouchableOpacity, ScrollView, Platform } from "react-native";
 import { Link, useNavigation, useRouter } from "expo-router";
 
 import HeaderImage from "@assets/images/forgotPasswordHeader.svg";
 import React, { useState } from "react";
 import colors from "@helpers/colors";
-import { Text } from "@components/Text";
+import { Text, TextInput } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useKeyboardHeight from "@helpers/useKeyboardHeight";

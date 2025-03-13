@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import { Link, useNavigation, useRouter } from "expo-router";
 
 import HeaderImage from "@assets/images/passwordUpdatedHeader.svg";
