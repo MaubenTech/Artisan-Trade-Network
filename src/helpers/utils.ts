@@ -1,6 +1,7 @@
 import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 import { postData } from "./APIFunction";
 import { ValidationError } from "@store/authSlice";
+import { Platform } from "react-native";
 
 export const isEmailValid = (email: string) => {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,3 +71,6 @@ function toSentenceCase(str: string, capitalized?: boolean): string {
 	temp.replace(/^./, (match) => match.toUpperCase());
 	return temp;
 }
+
+export const isAndroid = () => Platform.OS === "android";
+export const isiOS = () => Platform.OS === "ios";
