@@ -1,7 +1,7 @@
 import { getData } from "@helpers/APIFunction";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Service {
+export interface Service {
 	_id: string;
 	name: string;
 	description: string;
@@ -16,27 +16,22 @@ interface ServiceState {
 	error: string | null;
 }
 
-export const fetchServices = createAsyncThunk<Service[], void>(
-	"services/fetchServices",
-	async (_, { rejectWithValue }) => {
-		try {
-			console.log("Starting services..!");
-			const services = await getData<Service[]>("/services");
+export const fetchServices = createAsyncThunk<Service[], void>("services/fetchServices", async (_, { rejectWithValue }) => {
+	try {
+		console.log("Starting services..!");
+		const services = await getData<Service[]>("/services");
 
-			if (!services || !Array.isArray(services)) {
-				console.log("No valid response from fetching services");
-				return rejectWithValue(
-					"Error fetching services: Invalid response format"
-				);
-			}
-
-			return services;
-		} catch (error) {
-			console.error("Error fetching services: ", error);
-			return rejectWithValue(error.message || "Failed to get services");
+		if (!services || !Array.isArray(services)) {
+			console.log("No valid response from fetching services");
+			return rejectWithValue("Error fetching services: Invalid response format");
 		}
+
+		return services;
+	} catch (error) {
+		console.error("Error fetching services: ", error);
+		return rejectWithValue(error.message || "Failed to get services");
 	}
-);
+});
 
 const initialState: ServiceState = {
 	services: [
@@ -88,7 +83,6 @@ const serviceSlice = createSlice({
 
 export const {} = serviceSlice.actions;
 
-export const { selectServices, selectServicesStatus, selectServicesError } =
-	serviceSlice.selectors;
+export const { selectServices, selectServicesStatus, selectServicesError } = serviceSlice.selectors;
 
 export default serviceSlice.reducer;

@@ -1,18 +1,7 @@
 import colors from "@helpers/colors";
 import PageHeader from "@components/PageHeader";
-import {
-	View,
-	Text,
-	StyleSheet,
-	Dimensions,
-	ActivityIndicator,
-} from "react-native";
-import React, {
-	FunctionComponent,
-	ReactElement,
-	ReactSVGElement,
-	useEffect,
-} from "react";
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity } from "react-native";
+import React, { FunctionComponent, ReactElement, ReactSVGElement, useEffect } from "react";
 
 import TabBar from "@components/TabBar";
 import PlumberIcon from "@assets/icons/services/plumberIcon.svg";
@@ -22,14 +11,11 @@ import CarpenterIcon from "@assets/icons/services/carpenterIcon.svg";
 import ElectricianIcon from "@assets/icons/services/electricianIcon.svg";
 import InteriorDecorIcon from "@assets/icons/services/interiorDecorIcon.svg";
 import { useSelector } from "react-redux";
-import {
-	fetchServices,
-	selectServices,
-	selectServicesError,
-	selectServicesStatus,
-} from "@store/servicesSlice";
+import { fetchServices, selectServices, selectServicesError, selectServicesStatus, Service } from "@store/servicesSlice";
 import useAppSelector from "@hooks/useAppSelector";
 import useAppDispatch from "@hooks/useAppDispatch";
+import { router } from "expo-router";
+import { setJobService } from "@store/jobsSlice";
 
 type LocalServices = {
 	name: string;
@@ -85,41 +71,35 @@ export default function Services() {
 		}
 	}, [dispatch]);
 
+	const handleServiceChoice = (serviceId: string) => {
+		dispatch(setJobService(serviceId));
+		router.navigate({ pathname: "/NewJob", params: { serviceId } });
+	};
+
 	return (
 		<View style={styles.container}>
 			<PageHeader pageName="Services" />
 			<View style={styles.pageContentContainer}>
 				{status === "loading" && (
 					<View style={styles.loadingContainer}>
-						<ActivityIndicator
-							size="large"
-							color={colors.mainColor}
-						/>
-						<Text style={styles.loadingText}>
-							Loading Services...
-						</Text>
+						<ActivityIndicator size="large" color={colors.mainColor} />
+						<Text style={styles.loadingText}>Loading Services...</Text>
 					</View>
 				)}
 				{status === "failed" && error && (
 					<View style={styles.errorContainer}>
-						<Text style={styles.errorText}>
-							Failed to load services: {error}
-						</Text>
+						<Text style={styles.errorText}>Failed to load services: {error}</Text>
 					</View>
 				)}
 
 				{status === "succeeded" && (
 					<View style={styles.serviceContentContainer}>
 						{services.map((service, index) => (
-							<View style={styles.serviceItem} key={service._id}>
+							<TouchableOpacity onPress={() => handleServiceChoice(service._id)} style={styles.serviceItem} key={service._id}>
 								{/* {service.image} */}
-								<Text style={styles.serviceItemTitle}>
-									{service.name}
-								</Text>
-								<Text style={styles.serviceItemSubTitle}>
-									{service.description}
-								</Text>
-							</View>
+								<Text style={styles.serviceItemTitle}>{service.name}</Text>
+								<Text style={styles.serviceItemSubTitle}>{service.description}</Text>
+							</TouchableOpacity>
 						))}
 						{/* {localServices.map((item, index) => {
 							return (
