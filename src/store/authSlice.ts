@@ -64,6 +64,7 @@ export interface AuthState {
 	user: AuthUser;
 	token: string;
 	isAuthenticated: boolean;
+	signupEmail: string;
 	forgotPasswordEmail: string;
 	resetValidationCode: string;
 }
@@ -74,6 +75,7 @@ const initialState: AuthState = {
 	user: null,
 	token: null,
 	isAuthenticated: false,
+	signupEmail: null,
 	forgotPasswordEmail: null,
 	resetValidationCode: null,
 };
@@ -400,6 +402,7 @@ const authSlice = createSlice({
 		selectCurrentUser: (state: AuthState) => state.user,
 		selectAuthStatus: (state: AuthState) => state.status,
 		selectAuthError: (state: AuthState) => state.error,
+		selectSignupEmail: (state: AuthState) => state.signupEmail,
 		selectForgotPasswordEmail: (state: AuthState) => state.forgotPasswordEmail,
 		selectResetValidationCode: (state: AuthState) => state.resetValidationCode,
 	},
@@ -407,6 +410,7 @@ const authSlice = createSlice({
 
 export const { resetAuthError, resetAuthStatus, resetForgotPasswordFlow, userLoggedOut } = authSlice.actions;
 
-export const { selectCurrentUser, selectAuthStatus, selectAuthError, selectForgotPasswordEmail, selectResetValidationCode } = authSlice.selectors;
+export const { selectCurrentUser, selectAuthStatus, selectAuthError, selectSignupEmail, selectForgotPasswordEmail, selectResetValidationCode } =
+	authSlice.selectors;
 
 export default authSlice.reducer;

@@ -1,6 +1,6 @@
 import { View, SafeAreaView, TextInput as RNTextInput, TouchableOpacity } from "react-native";
 import { StyleSheet, Image } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Children, useEffect, useRef, useState } from "react";
 import ButtonGroup from "@components/ButtonGroup";
 import { Text, TextInput } from "@components/Text";
 import { OtpInput } from "react-native-otp-entry";
@@ -8,22 +8,35 @@ import colors from "@helpers/colors";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { router } from "expo-router";
 import useAppSelector from "@hooks/useAppSelector";
-import { forgotPassword, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, selectForgotPasswordEmail, verifyOtp } from "@store/authSlice";
+import {
+	forgotPassword,
+	resetAuthError,
+	resetAuthStatus,
+	selectAuthError,
+	selectAuthStatus,
+	selectForgotPasswordEmail,
+	selectSignupEmail,
+	verifyOtp,
+} from "@store/authSlice";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { compactStyles } from "@helpers/styles";
+import LogoHeaderContainer from "@components/LogoHeaderContainer";
 
+type OtpVerificationType = "signup" | "forgotpassword";
 interface OtpVerificationProps {
+	type: OtpVerificationType;
 	onOtpVerified: () => void;
+	removeHeader?: boolean;
 }
 
-const OtpVerification = ({ onOtpVerified }: OtpVerificationProps) => {
+const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationProps) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [otp, setOtp] = useState("");
 	const [validationError, setValidationError] = useState("");
 	const [disabled, setDisabled] = useState(true);
 
-	const email = useAppSelector(selectForgotPasswordEmail);
+	const email = useAppSelector(type === "signup" ? selectSignupEmail : selectForgotPasswordEmail);
 
 	const dispatch = useAppDispatch();
 
@@ -62,15 +75,15 @@ const OtpVerification = ({ onOtpVerified }: OtpVerificationProps) => {
 		return "";
 	};
 
+	const Container = ({ children }: { children: React.ReactNode }): React.ReactNode =>
+		!removeHeader ? <LogoHeaderContainer>{children}</LogoHeaderContainer> : children;
+
 	return (
-		<SafeAreaView style={styles.container}>
-			<View style={styles.logo}>
-				{/* <Image source={require("@assets/images/logo.png")} /> */}
-				<HeaderImage />
-			</View>
+		<Container>
+			{/* TODO: Finish up the converting process. */}
 			<View style={styles.headerContainer}>
 				<Text style={styles.header}>OTP Verification</Text>
-				<Text style={styles.subHeader}>Please enter your Verification code sent to</Text>
+				<Text style={styles.subHeader}>Please enter your verification code sent to</Text>
 				<Text style={styles.email}>{email}</Text>
 			</View>
 			{otpVerificationStatus === "loading" && <LoadingIndicator visible />}
@@ -120,8 +133,8 @@ const OtpVerification = ({ onOtpVerified }: OtpVerificationProps) => {
 					<Text style={styles.resend}>Resend Code</Text>
 				</TouchableOpacity>
 			</View>
-			<ButtonGroup positiveOptionDisabled={disabled} onPress={() => handleVerifyOtp(otp)} positiveOption="Verify & Proceed" paddingHorizontal={20} />
-		</SafeAreaView>
+			<ButtonGroup positiveOptionDisabled={disabled} onPress={() => handleVerifyOtp(otp)} positiveOption="Verify & Proceed" />
+		</Container>
 	);
 };
 const generalStyles = StyleSheet.create({
@@ -130,26 +143,27 @@ const generalStyles = StyleSheet.create({
 		backgroundColor: "#fff",
 		gap: 30,
 	},
-	logo: {
-		paddingTop: 20,
-		flexDirection: "column",
-		alignItems: "center",
-	},
 	headerContainer: {
 		// paddingLeft: 25,
 		alignItems: "center",
-		gap: 5,
+		// gap: 5,
 	},
 	header: {
 		fontSize: 23,
 		fontWeight: "bold",
+		// backgroundColor: "#0ff",
 	},
-	subHeader: {},
+	subHeader: {
+		// backgroundColor: "#0f0",
+		fontSize: 11,
+	},
 	email: {
+		// backgroundColor: "#ff0",
 		fontWeight: "bold",
 	},
 	otpSectionContainer: {
-		paddingHorizontal: "6%",
+		marginTop: 30,
+		// paddingHorizontal: "6%",
 	},
 	otpContainer: {
 		// paddingHorizontal: "3%",
@@ -183,16 +197,18 @@ const generalStyles = StyleSheet.create({
 		paddingVertical: "25%",
 	},
 	codeInfo: {
-		marginTop: "10%",
+		flex: 1,
+		marginTop: "20%",
 		alignItems: "center",
+		// backgroundColor: "#f0f",
 	},
 	codeQuestion: {
-		fontSize: 16,
+		// fontSize: 16,
 	},
 	resend: {
-		marginTop: "8%",
+		marginTop: "5%",
 		fontWeight: "bold",
-		fontSize: 16,
+		// fontSize: 16,
 	},
 
 	errorMessage: {
