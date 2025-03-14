@@ -1,100 +1,137 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import ButtonGroup from "@components/ButtonGroup";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TextInput } from "@components/Text";
+import { compactStyles } from "@helpers/styles";
+import Entry from "@components/Entry";
+import colors from "@helpers/colors";
+import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
+import { isEmailValid } from "@helpers/utils";
 
 interface ContactDetailsProps {
 	onSubmit: (address: string, email: string, phoneNumber: string) => void;
 }
 
 export default function ContactDetails({ onSubmit }: ContactDetailsProps) {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [address, setAddress] = useState("");
 	const [email, setEmail] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
+	const [validationError, setValidationError] = useState<string>();
+
+	const handleChangeAddress = (text: string) => {
+		setAddress(text);
+		setValidationError("");
+	};
+
+	const handleChangeEmail = (text: string) => {
+		setEmail(text);
+		setValidationError("");
+	};
+
+	const handleChangePhoneNumber = (text: string) => {
+		setPhoneNumber(text);
+		setValidationError("");
+	};
+
+	const handleProceed = () => {
+		setValidationError("");
+
+		if (!address.trim()) {
+			setValidationError("Address is required");
+			return;
+		} else if (!email.trim()) {
+			setValidationError("Email is required");
+			return;
+		} else if (!isEmailValid(email)) {
+			setValidationError("Email is not valid");
+			return;
+		} else if (!phoneNumber.trim()) {
+			setValidationError("Phone number is required");
+			return;
+		}
+
+		// console.log("We passed!");
+		onSubmit(address, email, phoneNumber);
+	};
+
+	const getIsErred = (input: "p" | "c" | "p") => {
+		if (!validationError) {
+			return false;
+		}
+		switch (input) {
+			case "p":
+				return !address.trim() || validationError.includes("Address");
+			case "c":
+				return !email.trim() || validationError.includes("Email");
+			case "p":
+				return !phoneNumber.trim() || validationError.includes("Phone");
+		}
+	};
 
 	return (
-		<SafeAreaView style={styles.container}>
-			<View style={styles.logo}>
-				<Image source={require("@assets/images/logo.png")} />
+		<View style={styles.ctaComponentContainer}>
+			<View style={styles.ctaComponentHeader}>
+				<Text style={styles.ctaHeader}>Contact Details</Text>
+				<Text style={styles.ctaSubHeader}>Please enter your contact details.</Text>
 			</View>
-			<View style={styles.headerContainer}>
-				<Text style={styles.header}> Contact Details</Text>
-				<Text style={styles.subHeader}>Please enter your contact details.</Text>
+			<View style={[styles.userInputContainer]}>
+				<Entry label="Address" onChangeText={handleChangeAddress} inputErred={getIsErred("p")} />
+				<Entry
+					label="Email"
+					onChangeText={handleChangeEmail}
+					inputErred={getIsErred("c")}
+					inputProps={{
+						keyboardType: "email-address",
+						autoCapitalize: "none",
+					}}
+				/>
+				<Entry label="Phone Number" onChangeText={handleChangePhoneNumber} inputErred={getIsErred("p")} />
 			</View>
-			<View style={[styles.detailsContainer, { flex: 1 }]}>
-				<View style={styles.subDetailsContainer}>
-					<Text style={styles.text}>Address</Text>
-					<TextInput value={address} onChangeText={setAddress} style={styles.placeholder} placeholder="Enter Your Address" />
+			{validationError && (
+				<View style={styles.unmatchedContainer}>
+					<RedExclamationMark />
+					<Text style={styles.unmatchedText}>{validationError}</Text>
 				</View>
-				<View style={styles.subDetailsContainer}>
-					<Text style={styles.text}>Email</Text>
-					<TextInput value={email} onChangeText={setEmail} style={styles.placeholder} placeholder="example@gmail.com" />
-				</View>
-				<View style={styles.subDetailsContainer}>
-					<Text style={styles.text}>Phone Number</Text>
-					<TextInput value={phoneNumber} onChangeText={setPhoneNumber} style={styles.placeholder} placeholder="+234" />
-				</View>
-			</View>
-			<ButtonGroup onPress={() => onSubmit(address, email, phoneNumber)} positiveOption="Proceed" paddingHorizontal={20} />
-		</SafeAreaView>
+			)}
+			<ButtonGroup onPress={handleProceed} positiveOption="Proceed" />
+		</View>
 	);
 }
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		gap: 30,
-	},
-	logo: {
-		paddingTop: 20,
-		flexDirection: "column",
-		alignItems: "center",
-	},
-	headerContainer: {
-		paddingLeft: 25,
-		gap: 5,
-	},
-	header: {
-		fontSize: 23,
-		fontWeight: "bold",
-	},
-	subHeader: {},
-	detailsContainer: {
-		paddingLeft: 20,
-		paddingRight: 20,
+
+const generalStyles = StyleSheet.create({
+	ctaComponentContainer: {
 		gap: 20,
 	},
-	subDetailsContainer: {
+	ctaHeader: {
+		fontSize: 22,
+		fontWeight: "600",
+	},
+	ctaSubHeader: {
+		fontSize: 11,
+	},
+	userInputContainer: {
+		alignItems: "flex-start",
+		gap: 20,
+	},
+	unmatchedContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginTop: -5,
 		gap: 8,
 	},
-	text: {
-		color: "black",
-		fontSize: 17,
+	unmatchedText: {
+		fontSize: 12,
+		paddingTop: 2,
+		color: colors.red,
 	},
-	placeholder: {
-		borderWidth: 1,
-		borderRadius: 10,
-		paddingTop: "3%",
-		paddingBottom: "5%",
-		paddingLeft: "5%",
-		paddingRight: "2%",
-		alignItems: "center",
-		// height: "27%",
-		position: "relative",
-	},
-	loginButtonContainer: {
-		borderWidth: 1,
-		borderRadius: 10,
-		paddingTop: "3%",
-		paddingBottom: "5%",
-		paddingLeft: "7%",
-		paddingRight: "7%",
-		marginLeft: "7%",
-		marginRight: "7%",
-		alignItems: "center",
-		borderColor: "#52A2f2",
-		backgroundColor: "#52A2f2",
-		position: "relative",
+});
+
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({
+	ctaComponentHeader: {
+		gap: 5,
 	},
 });
