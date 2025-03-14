@@ -88,6 +88,8 @@ const ForgotPassword = ({ onEmailVerified, onBack }: ForgotPasswordProps): JSX.E
 						style={styles.forgotPasswordInput}
 						placeholder="example@gmail.com"
 						placeholderTextColor={"#8F8F8F"}
+						keyboardType="email-address"
+						autoCapitalize="none"
 					/>
 				</View>
 				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
@@ -100,7 +102,7 @@ const ForgotPassword = ({ onEmailVerified, onBack }: ForgotPasswordProps): JSX.E
 					/>
 					<View style={styles.signUpOption}>
 						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
-						<Link href="/SignUp" style={{ textDecorationLine: "underline" }}>
+						<Link href="/SignUp" replace style={{ textDecorationLine: "underline" }}>
 							<Text>Sign up</Text>
 						</Link>
 					</View>
