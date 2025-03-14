@@ -1,4 +1,4 @@
-import { Dimensions, Modal, StyleSheet, TextInputProps, TouchableOpacity, View } from "react-native";
+import { Dimensions, Modal, StyleProp, StyleSheet, TextInputProps, TextStyle, TouchableOpacity, View } from "react-native";
 import { Text, TextInput } from "@components/Text";
 import React, { useState } from "react";
 import { compactStyles } from "@helpers/styles";
@@ -14,6 +14,7 @@ interface EntryProps {
 	label: string;
 	inputType?: EntryInputType;
 	inputProps?: TextInputProps;
+	inputStyle?: StyleProp<TextStyle>;
 	radioData?: RadioOption[];
 	onChangeDate?: (date: string) => void;
 	onChangeText?: (text: string) => void;
@@ -21,7 +22,17 @@ interface EntryProps {
 	customTextInputComponent?: React.ReactNode;
 }
 
-const Entry = ({ label, inputType = "text", inputProps, radioData, onChangeText, onChangeDate, onChangeRadio, customTextInputComponent }: EntryProps) => {
+const Entry = ({
+	label,
+	inputType = "text",
+	inputProps,
+	inputStyle,
+	radioData,
+	onChangeText,
+	onChangeDate,
+	onChangeRadio,
+	customTextInputComponent,
+}: EntryProps) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [text, setText] = useState("");
 	const [dateOfBirth, setDateOfBirth] = useState("");
@@ -55,7 +66,7 @@ const Entry = ({ label, inputType = "text", inputProps, radioData, onChangeText,
 				<TextInput
 					value={text}
 					onChangeText={handleChangeText}
-					style={[styles.userInput]}
+					style={[styles.userInput, inputStyle]}
 					secureTextEntry={(inputProps && inputProps.secureTextEntry) || label.toLowerCase().includes("password")}
 					// placeholder={(inputProps && inputProps.placeholder) || `Enter your ${label.replace(/^./, (match) => match.toLowerCase())}`}
 					placeholder={(inputProps && inputProps.placeholder) || `Enter your ${label.toLowerCase()}`}
