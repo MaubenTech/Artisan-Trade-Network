@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text } from "@components/Text";
 import colors from "@helpers/colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -32,6 +32,14 @@ export default function RadioGroup({ options, selectedOption, onChangeOption, st
 		);
 	};
 
+	useEffect(() => {
+		let option: RadioData = null;
+		const rawOption = options[0];
+		if (typeof rawOption === "string") option = { label: rawOption, value: rawOption };
+		if (!selectedOption || (selectedOption && !hasOption(selectedOption))) onChangeOption && onChangeOption(option.value);
+		//Basically, if selectedOption is provided and it's not part of the options, or if it's not provided at all, call the onChangeOption function and pass the first item in the options group as it's going to be "changing" the selected option to the first one.
+	}, [selectedOption]);
+
 	// console.log(`Selected option: ${selectedOption}`);
 	// console.log(`HasOption?: ${hasOption(selectedOption)}`);
 
@@ -42,8 +50,6 @@ export default function RadioGroup({ options, selectedOption, onChangeOption, st
 					let option: RadioData = null;
 					if (typeof rawOption === "string") option = { label: rawOption, value: rawOption };
 					else option = rawOption;
-
-					if ((!selectedOption || (selectedOption && !hasOption(selectedOption))) && _ === 0) onChangeOption && onChangeOption(option.value); //If selectedOption is provided and it's not part of the options, or if it's not provided at all, call the onChangeOption function and pass the first item in the options group as it's going to be "changing" the selected option to the first one.
 
 					const activeOption = selectedOption && hasOption(selectedOption) ? selectedOption === option.value : _ === 0; // Option is active if selectedOption is provided, it exists in the options array, and is current option, otherwise if current option is the first one, then it's active as first option is considered active by default.
 					const color = activeOption ? colors.inputBorderColor : colors.greyShade;
