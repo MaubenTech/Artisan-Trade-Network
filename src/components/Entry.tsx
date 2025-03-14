@@ -15,6 +15,7 @@ interface EntryProps {
 	inputType?: EntryInputType;
 	inputProps?: TextInputProps;
 	inputStyle?: StyleProp<TextStyle>;
+	inputErred?: boolean;
 	radioData?: RadioOption[];
 	onChangeDate?: (date: string) => void;
 	onChangeText?: (text: string) => void;
@@ -27,6 +28,7 @@ const Entry = ({
 	inputType = "text",
 	inputProps,
 	inputStyle,
+	inputErred,
 	radioData,
 	onChangeText,
 	onChangeDate,
@@ -66,7 +68,7 @@ const Entry = ({
 				<TextInput
 					value={text}
 					onChangeText={handleChangeText}
-					style={[styles.userInput, inputStyle]}
+					style={[styles.userInput, inputStyle, inputErred && { borderColor: colors.red }]}
 					secureTextEntry={(inputProps && inputProps.secureTextEntry) || label.toLowerCase().includes("password")}
 					// placeholder={(inputProps && inputProps.placeholder) || `Enter your ${label.replace(/^./, (match) => match.toLowerCase())}`}
 					placeholder={(inputProps && inputProps.placeholder) || `Enter your ${label.toLowerCase()}`}
@@ -78,10 +80,10 @@ const Entry = ({
 						// handlePresentModalPress();
 						setShowCalender(true);
 					}}
-					style={[styles.userInput, styles.dateOfBirthContainer]}
+					style={[styles.userInput, styles.dateOfBirthContainer, inputErred && { borderColor: colors.red }]}
 				>
 					<TextInput
-						style={styles.dateOfBirthInput}
+						style={[styles.dateOfBirthInput]}
 						placeholder="DD/MM/YYYY"
 						// value={date && date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
 						value={selectedDate}
