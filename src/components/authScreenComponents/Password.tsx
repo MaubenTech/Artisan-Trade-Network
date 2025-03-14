@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Pressable, Button, View } from "react-native";
+import { StyleSheet, Image, Pressable, Button, View, TouchableOpacity } from "react-native";
 import { Link, Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
@@ -7,113 +7,100 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TextInput } from "@components/Text";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 import colors from "@helpers/colors";
+import Entry from "@components/Entry";
+import { compactStyles } from "@helpers/styles";
 
 interface PasswordProps {
 	onSubmit: (password: string) => void;
 }
 
 const Password = ({ onSubmit }: PasswordProps) => {
-	const [isSelected, setSelection] = useState(false);
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const [isSelected, setIsSelected] = useState(false);
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [validationError, setValidationError] = useState<string>();
 
-	const [passwordsMatch, setPasswordsMatch] = useState(true);
+	const handleProceed = () => {
+		setValidationError("");
+		if (!password.trim()) {
+			setValidationError("Password is required");
+			return;
+		} else if (!confirmPassword.trim()) {
+			setValidationError("Confirm your password");
+			return;
+		} else if (!isSelected) {
+			setValidationError("You have to agree to the terms & conditions before you proceed");
+			return;
+		}
+		onSubmit(password);
+	};
+
+	const getIsErred = (input: "p" | "c") => {
+		if (!validationError) {
+			return false;
+		}
+		switch (input) {
+			case "p":
+				return !password.trim() || validationError.includes("Password");
+			case "c":
+				return !confirmPassword.trim() || validationError.includes("Confirm") || validationError.includes("doesn't match");
+		}
+	};
 
 	useEffect(() => {
-		if (password !== confirmPassword) setPasswordsMatch(false);
-		else setPasswordsMatch(true);
-	}, [password, confirmPassword]);
+		if (password !== confirmPassword) setValidationError("Password doesn't match");
+		else setValidationError("");
+		// if ((password !== confirmPassword) || password.length <= 0) setPasswordsMatch(false);
+		// else setPasswordsMatch(true);
+	}, [password, confirmPassword, isSelected]);
 
 	return (
-		<SafeAreaView style={styles.container}>
-			<View style={styles.logo}>
-				<Image source={require("@assets/images/logo.png")} />
+		<View style={styles.ctaComponentContainer}>
+			<View style={styles.ctaComponentHeader}>
+				<Text style={styles.ctaHeader}>Password</Text>
+				<Text style={styles.ctaSubHeader}>Please enter your desired password</Text>
 			</View>
-			<View style={styles.headerContainer}>
-				<Text style={styles.header}>Password</Text>
-				<Text style={styles.subHeader}>Please enter your desired Password</Text>
-			</View>
-			<View style={styles.detailsContainer}>
-				<View style={styles.subDetailsContainer}>
-					<Text style={styles.text}>Password</Text>
-					<TextInput
-						value={password}
-						onChangeText={setPassword}
-						style={[styles.textInput, { borderColor: passwordsMatch ? colors.inputBorderColor : colors.red }]}
-						placeholder="Enter Your Password"
-					/>
-				</View>
-				<View style={styles.subDetailsContainer}>
-					<Text style={styles.text}>Confirm Password</Text>
-					<TextInput
-						value={confirmPassword}
-						onChangeText={setConfirmPassword}
-						style={[styles.textInput, { borderColor: passwordsMatch ? colors.inputBorderColor : colors.red }]}
-						placeholder="Enter Your Password"
-					/>
-					{!passwordsMatch && (
-						<View style={styles.unmatchedContainer}>
-							<RedExclamationMark />
-							<Text style={styles.unmatchedText}>Password doesn't match</Text>
-						</View>
-					)}
-				</View>
-			</View>
-			<View style={[styles.checkboxContainer, { flex: 1 }]}>
-				<Checkbox
-					value={isSelected}
-					onValueChange={setSelection}
-					// style={styles.checkbox}
+			<View style={styles.userInputContainer}>
+				<Entry label="Password" onChangeText={setPassword} inputErred={!!validationError && getIsErred("p")} />
+				<Entry
+					label="Confirm Password"
+					onChangeText={setConfirmPassword}
+					inputProps={{ placeholder: "Confirm your password" }}
+					inputErred={!!validationError && getIsErred("c")}
 				/>
-				<Text>Yes, I agree to the Terms & Condition</Text>
+				{validationError && (
+					<View style={styles.unmatchedContainer}>
+						<RedExclamationMark />
+						<Text style={styles.unmatchedText}>{validationError}</Text>
+					</View>
+				)}
+				<View style={styles.checkboxContainer}>
+					<Checkbox value={isSelected} onValueChange={(value) => setIsSelected(value)} />
+					<TouchableOpacity onPress={() => setIsSelected(!isSelected)}>
+						<Text>Yes, I agree to the terms & conditions</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-			<ButtonGroup onPress={() => onSubmit(password)} positiveOption="Proceed" paddingHorizontal={20} />
-		</SafeAreaView>
+			<ButtonGroup positiveOption="Proceed" onPress={handleProceed} />
+		</View>
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		gap: 30,
+const generalStyles = StyleSheet.create({
+	ctaComponentContainer: {
+		gap: 20,
 	},
-	logo: {
-		paddingTop: 20,
-		flexDirection: "column",
-		alignItems: "center",
+	ctaHeader: {
+		fontSize: 22,
+		fontWeight: "600",
 	},
-	headerContainer: {
-		gap: 5,
-		marginLeft: "10%",
+	ctaSubHeader: {
+		fontSize: 11,
 	},
-	header: {
-		fontSize: 23,
-		fontWeight: "bold",
-	},
-	subHeader: {},
-	detailsContainer: {
-		paddingLeft: 20,
-		paddingRight: 20,
-		gap: 35,
-	},
-	subDetailsContainer: {
-		gap: 8,
-	},
-	text: {
-		color: "black",
-		fontSize: 17,
-	},
-	textInput: {
-		borderWidth: 1,
-		borderRadius: 10,
-		paddingTop: "3%",
-		paddingBottom: "5%",
-		paddingLeft: "5%",
-		paddingRight: "2%",
-		alignItems: "center",
-		// height: "27%",
-		position: "relative",
+	userInputContainer: {
+		alignItems: "flex-start",
+		gap: 20,
 	},
 	unmatchedContainer: {
 		flexDirection: "row",
@@ -128,9 +115,16 @@ const styles = StyleSheet.create({
 	},
 	checkboxContainer: {
 		flexDirection: "row",
-		marginTop: "8%",
-		marginLeft: "10%",
-		gap: 10,
+		gap: 8,
 	},
 });
+
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({
+	ctaComponentHeader: {
+		gap: 5,
+	},
+});
+
 export default Password;
