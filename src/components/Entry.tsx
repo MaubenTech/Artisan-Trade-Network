@@ -6,6 +6,7 @@ import colors from "@helpers/colors";
 import CalenderIcon from "@assets/icons/auth/calender-icon.svg";
 import DatePicker from "react-native-modern-datepicker";
 import RadioGroup, { ExtractRadioValues, RadioOption } from "./RadioGroup";
+import { reverseDate } from "@helpers/utils";
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,6 +14,9 @@ type EntryInputType = "text" | "radio" | "date";
 
 interface EntryProps<T extends RadioOption[]> {
 	label: string;
+	value?: string;
+	date?: string;
+	radio?: ExtractRadioValues<T[number]>;
 	inputType?: EntryInputType;
 	inputProps?: TextInputProps;
 	inputStyle?: StyleProp<TextStyle>;
@@ -26,6 +30,9 @@ interface EntryProps<T extends RadioOption[]> {
 
 const Entry = <T extends RadioOption[]>({
 	label,
+	value,
+	date,
+	radio,
 	inputType = "text",
 	inputProps,
 	inputStyle,
@@ -37,11 +44,10 @@ const Entry = <T extends RadioOption[]>({
 	customTextInputComponent,
 }: EntryProps<T>) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const [text, setText] = useState("");
-	const [dateOfBirth, setDateOfBirth] = useState("");
+	const [text, setText] = useState(value ?? "");
 	const [showCalender, setShowCalender] = useState(false);
-	const [selectedDate, setSelectedDate] = useState("");
-	const [radioOption, setRadioOption] = useState<ExtractRadioValues<T[number]>>();
+	const [selectedDate, setSelectedDate] = useState(date ?? "");
+	const [radioOption, setRadioOption] = useState<ExtractRadioValues<T[number]>>(radio);
 
 	const handleChangeText = (text: string) => {
 		setText(text);
@@ -49,8 +55,8 @@ const Entry = <T extends RadioOption[]>({
 	};
 
 	const handleChangeDate = (dateString: string) => {
-		const formattedDate = dateString.split("/").reverse().join("/");
-		console.log(`Raw date: ${dateString} | Formatted date: ${formattedDate}`);
+		const formattedDate = reverseDate(dateString);
+		// console.log(`Raw date: ${dateString} | Formatted date: ${formattedDate}`);
 		setSelectedDate(formattedDate);
 		onChangeDate && onChangeDate(formattedDate);
 	};
@@ -59,8 +65,6 @@ const Entry = <T extends RadioOption[]>({
 		setRadioOption(option);
 		onChangeRadio && onChangeRadio(option);
 	};
-
-	const dummyRadioData = ["Male", { label: "Human", value: "U" }] as const;
 
 	return (
 		<View style={[styles.userInputSubContainer]}>
@@ -97,7 +101,7 @@ const Entry = <T extends RadioOption[]>({
 					</TouchableOpacity>
 				</TouchableOpacity>
 			) : (
-				inputType === "radio" && <RadioGroup options={radioData} selectedOption={radioOption} onChangeOption={onChangeRadio} />
+				inputType === "radio" && <RadioGroup options={radioData} selectedOption={radioOption} onChangeOption={handleRadioOptionChange} />
 			)}
 			<Modal animationType="slide" transparent visible={showCalender}>
 				<View style={styles.centeredView}>
@@ -105,7 +109,7 @@ const Entry = <T extends RadioOption[]>({
 						{/* TODO: Customize the datepicker a bit more. Add the animation where scrolling left or right has the same effect as clicking the left or right buttons respectively */}
 						<DatePicker
 							mode="calendar"
-							selected={selectedDate}
+							selected={reverseDate(selectedDate)}
 							onDateChange={handleChangeDate}
 							options={{
 								backgroundColor: colors.white,
