@@ -76,11 +76,11 @@ export const isAndroid = () => Platform.OS === "android";
 export const isiOS = () => Platform.OS === "ios";
 
 /**
- * Reverses the date format of a date string, literally, from DD/MM/YYYY to YYYY/MM/DD or from MM/DD/YYYY to YYYY/DD/MM. For e.g, reverses 03/24/2001 to 2001/24/03 and 03/24/2001 to 2001/24/03, etc.
+ * Reverses a date string's format, literally, from DD/MM/YYYY to YYYY/MM/DD, from MM/DD/YYYY to YYYY/DD/MM, etc. For e.g, reverses 03/24/2001 to 2001/24/03 and 03/24/2001 to 2001/24/03, etc.
  * NOTE: No checks are done to verify if the dates in the datestring are valid.
  * @param date The date string to be reversed
  * @param splitter The optional split indicator (e.g, "/" or "-"). @default "/"
  * @param joiner The optional joining character (e.g. "/" or "-") @default "/"
  * @returns The reversed date string
  */
-export const reverseDateFormat = (date: string, splitter: string = "/", joiner: string = "/") => date.split(splitter).reverse().join(joiner);
+export const reverseDate = (date: string, splitter: string = "/", joiner: string = "/") => date.split(splitter).reverse().join(joiner);
