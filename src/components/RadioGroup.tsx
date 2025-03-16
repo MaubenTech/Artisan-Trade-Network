@@ -44,6 +44,7 @@ export default function RadioGroup<T extends readonly RadioOption[]>({
 	};
 
 	useEffect(() => {
+		// console.log(`Selected option: ${selectedOption}`);
 		if ((!selectedOption || (selectedOption && !hasOption(selectedOption))) && options.length > 0) {
 			const firstValue = options[0];
 			const firstItem: ExtractRadioValues<T[number]> = (typeof firstValue === "string" ? firstValue : firstValue.value) as ExtractRadioValues<T[number]>;
