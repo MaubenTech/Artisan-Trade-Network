@@ -5,6 +5,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { View, StyleSheet, Touchable, TouchableOpacity, ViewStyle, ImageStyle, TextStyle, StyleProp, Dimensions } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
+export type String<T> = T extends string ? T : never;
+
 export type RadioData = {
 	label: string;
 	value: string;
@@ -12,10 +14,12 @@ export type RadioData = {
 
 export type RadioOption = string | RadioData;
 
-interface RadioGroupProps {
-	options: RadioOption[];
-	selectedOption?: string;
-	onChangeOption?: (option: string) => void;
+export type ExtractRadioValues<T> = T extends { value: infer U } ? U : T;
+
+interface RadioGroupProps<T extends readonly RadioOption[]> {
+	options: T;
+	selectedOption?: ExtractRadioValues<T[number]>;
+	onChangeOption?: (option: ExtractRadioValues<T[number]>) => void;
 	style?: StyleProp<ViewStyle>;
 	optionStyle?: StyleProp<ViewStyle>;
 	checkWithValue?: boolean;
@@ -23,7 +27,14 @@ interface RadioGroupProps {
 
 const { width, height } = Dimensions.get("window");
 
-export default function RadioGroup({ options, selectedOption, onChangeOption, style, optionStyle, checkWithValue = false }: RadioGroupProps) {
+export default function RadioGroup<T extends readonly RadioOption[]>({
+	options,
+	selectedOption,
+	onChangeOption,
+	style,
+	optionStyle,
+	checkWithValue = false,
+}: RadioGroupProps<T>) {
 	const hasOption = (optionString: string) => {
 		return (
 			options.filter((option) => {
@@ -33,10 +44,12 @@ export default function RadioGroup({ options, selectedOption, onChangeOption, st
 	};
 
 	useEffect(() => {
-		let option: RadioData = null;
-		const rawOption = options[0];
-		if (typeof rawOption === "string") option = { label: rawOption, value: rawOption };
-		if (!selectedOption || (selectedOption && !hasOption(selectedOption))) onChangeOption && onChangeOption(option.value);
+		if ((!selectedOption || (selectedOption && !hasOption(selectedOption))) && options.length > 0) {
+			const firstValue = options[0];
+			const firstItem: ExtractRadioValues<T[number]> = (typeof firstValue === "string" ? firstValue : firstValue.value) as ExtractRadioValues<T[number]>;
+			onChangeOption && onChangeOption(firstItem);
+		}
+
 		//Basically, if selectedOption is provided and it's not part of the options, or if it's not provided at all, call the onChangeOption function and pass the first item in the options group as it's going to be "changing" the selected option to the first one.
 	}, [selectedOption]);
 
@@ -46,10 +59,11 @@ export default function RadioGroup({ options, selectedOption, onChangeOption, st
 	return (
 		<View style={[styles.container, style]}>
 			<View style={styles.radioOptionContainer}>
-				{options.map((rawOption: RadioOption, _) => {
-					let option: RadioData = null;
-					if (typeof rawOption === "string") option = { label: rawOption, value: rawOption };
-					else option = rawOption;
+				{options.map((rawOption: T[number], _) => {
+					let option: { label: string; value: ExtractRadioValues<T[number]> } = null;
+					if (typeof rawOption === "string")
+						option = { label: rawOption as ExtractRadioValues<T[number]>, value: rawOption as ExtractRadioValues<T[number]> };
+					else option = { label: rawOption.label, value: rawOption.value as ExtractRadioValues<T[number]> };
 
 					const activeOption = selectedOption && hasOption(selectedOption) ? selectedOption === option.value : _ === 0; // Option is active if selectedOption is provided, it exists in the options array, and is current option, otherwise if current option is the first one, then it's active as first option is considered active by default.
 					const color = activeOption ? colors.inputBorderColor : colors.greyShade;

@@ -1,29 +1,30 @@
 import { Dimensions, Modal, StyleProp, StyleSheet, TextInputProps, TextStyle, TouchableOpacity, View } from "react-native";
 import { Text, TextInput } from "@components/Text";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { compactStyles } from "@helpers/styles";
 import colors from "@helpers/colors";
 import CalenderIcon from "@assets/icons/auth/calender-icon.svg";
 import DatePicker from "react-native-modern-datepicker";
-import RadioGroup, { RadioOption } from "./RadioGroup";
+import RadioGroup, { ExtractRadioValues, RadioOption } from "./RadioGroup";
 
 const { width, height } = Dimensions.get("window");
 
 type EntryInputType = "text" | "radio" | "date";
-interface EntryProps {
+
+interface EntryProps<T extends RadioOption[]> {
 	label: string;
 	inputType?: EntryInputType;
 	inputProps?: TextInputProps;
 	inputStyle?: StyleProp<TextStyle>;
 	inputErred?: boolean;
-	radioData?: RadioOption[];
+	radioData?: T;
 	onChangeDate?: (date: string) => void;
 	onChangeText?: (text: string) => void;
-	onChangeRadio?: (selected: string) => void;
+	onChangeRadio?: (selected: ExtractRadioValues<T[number]>) => void;
 	customTextInputComponent?: React.ReactNode;
 }
 
-const Entry = ({
+const Entry = <T extends RadioOption[]>({
 	label,
 	inputType = "text",
 	inputProps,
@@ -34,13 +35,13 @@ const Entry = ({
 	onChangeDate,
 	onChangeRadio,
 	customTextInputComponent,
-}: EntryProps) => {
+}: EntryProps<T>) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [text, setText] = useState("");
 	const [dateOfBirth, setDateOfBirth] = useState("");
 	const [showCalender, setShowCalender] = useState(false);
 	const [selectedDate, setSelectedDate] = useState("");
-	const [radioOption, setRadioOption] = useState<string>();
+	const [radioOption, setRadioOption] = useState<ExtractRadioValues<T[number]>>();
 
 	const handleChangeText = (text: string) => {
 		setText(text);
@@ -54,10 +55,12 @@ const Entry = ({
 		onChangeDate && onChangeDate(formattedDate);
 	};
 
-	const handleRadioOptionChange = (option: string) => {
+	const handleRadioOptionChange = (option: ExtractRadioValues<T[number]>) => {
 		setRadioOption(option);
 		onChangeRadio && onChangeRadio(option);
 	};
+
+	const dummyRadioData = ["Male", { label: "Human", value: "U" }] as const;
 
 	return (
 		<View style={[styles.userInputSubContainer]}>
@@ -94,7 +97,7 @@ const Entry = ({
 					</TouchableOpacity>
 				</TouchableOpacity>
 			) : (
-				inputType === "radio" && <RadioGroup options={radioData} selectedOption={radioOption} onChangeOption={handleRadioOptionChange} />
+				inputType === "radio" && <RadioGroup options={radioData} selectedOption={radioOption} onChangeOption={onChangeRadio} />
 			)}
 			<Modal animationType="slide" transparent visible={showCalender}>
 				<View style={styles.centeredView}>

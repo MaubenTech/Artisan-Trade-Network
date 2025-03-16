@@ -18,8 +18,17 @@ import CustomKeyboardView from "@components/CustomKeyboardView";
 import Entry from "@components/Entry";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 
+export type Gender = "Male" | "Female";
+
+export interface AccountInformation {
+	firstName: string;
+	lastName: string;
+	dateOfBirth: string;
+	gender: Gender;
+}
+
 interface AccountInformationProps {
-	onSubmit: (firstName: string, lastName: string, dateOfBirth: string, gender: string) => void;
+	onSubmit: (firstName: string, lastName: string, dateOfBirth: string, gender: Gender) => void;
 }
 
 export default function AccountInformation({ onSubmit }: AccountInformationProps) {
@@ -27,7 +36,7 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [dateOfBirth, setDateOfBirth] = useState("");
-	const [gender, setGender] = useState<string>("Male");
+	const [gender, setGender] = useState<Gender>("Male");
 	const [validationError, setValidationError] = useState<string>();
 
 	const handleChangeFirstName = (text: string) => {
@@ -95,7 +104,7 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 				<Entry label="First Name" onChangeText={handleChangeFirstName} inputErred={getIsErred("p")} />
 				<Entry label="Last Name" onChangeText={handleChangeLastName} inputErred={getIsErred("c")} />
 				<Entry label="Date Of Birth" inputType="date" onChangeDate={handleChangeDateOfBirth} inputErred={getIsErred("p")} />
-				<Entry label="Gender" inputType="radio" radioData={["Male", "Female"]} onChangeRadio={setGender} />
+				<Entry label="Gender" inputType="radio" radioData={["Male", "Female"] as const} onChangeRadio={setGender} />
 			</View>
 			{validationError && (
 				<View style={styles.unmatchedContainer}>
