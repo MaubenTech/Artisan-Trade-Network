@@ -9,15 +9,22 @@ import colors from "@helpers/colors";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 import { isEmailValid } from "@helpers/utils";
 
-interface ContactDetailsProps {
-	onSubmit: (address: string, email: string, phoneNumber: string) => void;
+export interface ContactDetails {
+	address: string;
+	email: string;
+	phoneNumber: string;
 }
 
-export default function ContactDetails({ onSubmit }: ContactDetailsProps) {
+interface ContactDetailsProps {
+	onSubmit: (address: string, email: string, phoneNumber: string) => void;
+	previousContactDetails?: ContactDetails;
+}
+
+export default function ContactDetails({ onSubmit, previousContactDetails }: ContactDetailsProps) {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const [address, setAddress] = useState("");
-	const [email, setEmail] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
+	const [address, setAddress] = useState(previousContactDetails && !!previousContactDetails.address ? previousContactDetails.address : "");
+	const [email, setEmail] = useState(previousContactDetails && !!previousContactDetails.email ? previousContactDetails.email : "");
+	const [phoneNumber, setPhoneNumber] = useState(previousContactDetails && previousContactDetails.phoneNumber ? previousContactDetails.phoneNumber : "");
 	const [validationError, setValidationError] = useState<string>();
 
 	const handleChangeAddress = (text: string) => {
@@ -77,9 +84,10 @@ export default function ContactDetails({ onSubmit }: ContactDetailsProps) {
 				<Text style={styles.ctaSubHeader}>Please enter your contact details.</Text>
 			</View>
 			<View style={[styles.userInputContainer]}>
-				<Entry label="Address" onChangeText={handleChangeAddress} inputErred={getIsErred("p")} />
+				<Entry label="Address" value={address} onChangeText={handleChangeAddress} inputErred={getIsErred("p")} />
 				<Entry
 					label="Email"
+					value={email}
 					onChangeText={handleChangeEmail}
 					inputErred={getIsErred("c")}
 					inputProps={{
@@ -87,7 +95,7 @@ export default function ContactDetails({ onSubmit }: ContactDetailsProps) {
 						autoCapitalize: "none",
 					}}
 				/>
-				<Entry label="Phone Number" onChangeText={handleChangePhoneNumber} inputErred={getIsErred("p")} />
+				<Entry label="Phone Number" value={phoneNumber} onChangeText={handleChangePhoneNumber} inputErred={getIsErred("p")} />
 			</View>
 			{validationError && (
 				<View style={styles.unmatchedContainer}>
