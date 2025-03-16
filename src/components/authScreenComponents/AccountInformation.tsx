@@ -29,14 +29,19 @@ export interface AccountInformation {
 
 interface AccountInformationProps {
 	onSubmit: (firstName: string, lastName: string, dateOfBirth: string, gender: Gender) => void;
+	previousAccountInformation?: AccountInformation;
 }
 
-export default function AccountInformation({ onSubmit }: AccountInformationProps) {
+export default function AccountInformation({ onSubmit, previousAccountInformation }: AccountInformationProps) {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [dateOfBirth, setDateOfBirth] = useState("");
-	const [gender, setGender] = useState<Gender>("Male");
+	const [firstName, setFirstName] = useState(
+		previousAccountInformation && !!previousAccountInformation.firstName ? previousAccountInformation.firstName : ""
+	);
+	const [lastName, setLastName] = useState(previousAccountInformation && !!previousAccountInformation.lastName ? previousAccountInformation.lastName : "");
+	const [dateOfBirth, setDateOfBirth] = useState(
+		previousAccountInformation && previousAccountInformation.dateOfBirth ? previousAccountInformation.dateOfBirth : ""
+	);
+	const [gender, setGender] = useState<Gender>(previousAccountInformation && !!previousAccountInformation.gender ? previousAccountInformation.gender : null);
 	const [validationError, setValidationError] = useState<string>();
 
 	const handleChangeFirstName = (text: string) => {
@@ -73,26 +78,26 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 	};
 
 	const getIsErred = useCallback(
-		(input: "p" | "c" | "p") => {
+		(input: "p" | "c" | "d") => {
 			if (!validationError) {
 				return false;
 			}
-			const isRequired = validationError.includes("is required");
 			switch (input) {
 				case "p":
-					return validationError.includes("First");
+					return !firstName.trim() || validationError.includes("First");
 				case "c":
-					return (validationError.includes("First") && isRequired) || validationError.includes("Last");
-				case "p":
-					return (
-						(validationError.includes("First") && isRequired) ||
-						(validationError.includes("Last") && isRequired) ||
-						validationError.includes("Date")
-					);
+					return !lastName.trim() || validationError.includes("Last");
+				case "d":
+					return !dateOfBirth.trim() || validationError.includes("Date");
 			}
 		},
 		[validationError]
 	);
+
+	// useEffect(() => console.log(`Gender changed to: ${gender}`), [gender]);
+	// useEffect(() => {
+	// 	if (previousAccountInformation) console.log(JSON.stringify(previousAccountInformation));
+	// }, [previousAccountInformation]);
 
 	return (
 		<View style={styles.ctaComponentContainer}>
@@ -101,10 +106,10 @@ export default function AccountInformation({ onSubmit }: AccountInformationProps
 				<Text style={styles.ctaSubHeader}>Welcome! please enter your personal details.</Text>
 			</View>
 			<View style={styles.userInputContainer}>
-				<Entry label="First Name" onChangeText={handleChangeFirstName} inputErred={getIsErred("p")} />
-				<Entry label="Last Name" onChangeText={handleChangeLastName} inputErred={getIsErred("c")} />
-				<Entry label="Date Of Birth" inputType="date" onChangeDate={handleChangeDateOfBirth} inputErred={getIsErred("p")} />
-				<Entry label="Gender" inputType="radio" radioData={["Male", "Female"] as const} onChangeRadio={setGender} />
+				<Entry label="First Name" value={firstName} onChangeText={handleChangeFirstName} inputErred={getIsErred("p")} />
+				<Entry label="Last Name" value={lastName} onChangeText={handleChangeLastName} inputErred={getIsErred("c")} />
+				<Entry label="Date Of Birth" date={dateOfBirth} inputType="date" onChangeDate={handleChangeDateOfBirth} inputErred={getIsErred("d")} />
+				<Entry label="Gender" radio={gender} inputType="radio" radioData={["Male", "Female"] as const} onChangeRadio={setGender} />
 			</View>
 			{validationError && (
 				<View style={styles.unmatchedContainer}>
