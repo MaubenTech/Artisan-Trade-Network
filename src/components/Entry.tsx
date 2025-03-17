@@ -6,7 +6,7 @@ import colors from "@helpers/colors";
 import CalenderIcon from "@assets/icons/auth/calender-icon.svg";
 import DatePicker from "react-native-modern-datepicker";
 import RadioGroup, { ExtractRadioValues, RadioOption } from "./RadioGroup";
-import { reverseDate } from "@helpers/utils";
+import { subtractDate, reverseDate } from "@helpers/utils";
 
 const { width, height } = Dimensions.get("window");
 
@@ -111,6 +111,9 @@ const Entry = <T extends RadioOption[]>({
 							mode="calendar"
 							selected={reverseDate(selectedDate)}
 							onDateChange={handleChangeDate}
+							current={subtractDate(10, "years")}
+							minimumDate={subtractDate(200, "years")}
+							maximumDate={subtractDate(10, "years")}
 							options={{
 								backgroundColor: colors.white,
 								// textHeaderColor: colors.mainColor,
