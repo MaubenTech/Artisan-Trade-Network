@@ -16,20 +16,32 @@ import { loginUser, resetAuthError, resetAuthStatus, selectAuthError, selectAuth
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
-import { isEmailValid } from "@helpers/utils";
+import { isAndroid, isEmailValid } from "@helpers/utils";
+import Entry from "@components/Entry";
+import LogoHeaderContainer from "@components/LogoHeaderContainer";
 
 const { width, height } = Dimensions.get("window");
 
 const index = () => {
 	const { top, bottom } = useSafeAreaInsets();
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const ios = Platform.OS === "ios";
-	const android = Platform.OS === "android";
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
 	const [validationError, setValidationError] = useState<string>("");
+
+	const handleChangeEmail = (text: string) => {
+		setEmail(text);
+		if (validationError) setValidationError("");
+		if (loginError && loginError.message) dispatch(resetAuthError());
+	};
+
+	const handleChangePassword = (text: string) => {
+		setPassword(text);
+		if (validationError) setValidationError("");
+		if (loginError && loginError.message) dispatch(resetAuthError());
+	};
 
 	const handleLogin = async () => {
 		setValidationError("");
@@ -76,94 +88,61 @@ const index = () => {
 	};
 
 	return (
-		<CustomKeyboardView>
-			<SafeAreaView
-				style={[
-					styles.container,
-					{
-						paddingTop: android ? top : 0,
-						paddingBottom: android ? bottom : 0,
-					},
-				]}
-			>
-				<View style={[styles.componentContainer, { marginBottom: 50 }]}>
-					<HeaderImage />
+		<LogoHeaderContainer>
+			<View style={[styles.ctaComponentContainer]}>
+				<View style={[styles.ctaComponentHeader]}>
+					<Text style={styles.ctaHeader}>Login to your account</Text>
+					<Text style={styles.ctaSubHeader}>Welcome back! Please enter your details</Text>
 				</View>
-				<View style={[styles.ctaComponentContainer]}>
-					<View style={[styles.ctaComponentHeader]}>
-						<Text style={styles.ctaHeader}>Login to your account</Text>
-						<Text style={styles.ctaSubtext}>Welcome back! Please enter your details</Text>
-					</View>
-					{loginStatus === "loading" && <LoadingIndicator visible />}
-					<View style={[styles.userInputContainer]}>
-						{getErrorMessage() ? <Text style={styles.errorMessage}>{getErrorMessage()}</Text> : null}
-						<View style={[styles.userInputSubContainer]}>
-							<Text style={[styles.userInputLabel]}>Email</Text>
-							<TextInput
-								style={[styles.userInput]}
-								value={email}
-								onChangeText={(text) => {
-									setEmail(text);
-									if (validationError) setValidationError("");
-									if (loginError && loginError.message) dispatch(resetAuthError());
-								}}
-								keyboardType="email-address"
-								autoCapitalize="none"
-								placeholder="Enter your email"
-							/>
-						</View>
-						<View style={[styles.userInputSubContainer]}>
-							<Text style={[styles.userInputLabel]}>Password</Text>
-							<TextInput
-								style={[styles.userInput]}
-								value={password}
-								secureTextEntry
-								onChangeText={(text) => {
-									setPassword(text);
-									if (validationError) setValidationError("");
-									if (loginError && loginError.message) dispatch(resetAuthError());
-								}}
-								placeholder="Enter your password"
-							/>
-						</View>
-					</View>
-					<View style={[styles.optionsContainer]}>
-						<TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
-							<View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
-							<Text>Remember Me</Text>
-						</TouchableOpacity>
-						<Link href={"/(forgotPassword)/ForgotPassword"} asChild>
-							<TouchableOpacity>
-								<Text style={[styles.infoText]}>Forgot Password</Text>
-							</TouchableOpacity>
-						</Link>
-					</View>
-					<ButtonGroup positiveOption="Login" onPress={handleLogin} />
+				{loginStatus === "loading" && <LoadingIndicator visible />}
+				<View style={[styles.userInputContainer]}>
+					{getErrorMessage() ? <Text style={styles.errorMessage}>{getErrorMessage()}</Text> : null}
+					<Entry
+						label="Email"
+						onChangeText={handleChangeEmail}
+						inputProps={{
+							keyboardType: "email-address",
+							autoCapitalize: "none",
+						}}
+					/>
+					<Entry label="Password" onChangeText={handleChangePassword} />
 				</View>
-				<View style={[styles.componentContainer, styles.otherLoginContainer]}>
-					<Text style={[styles.infoText]}>Or Login with</Text>
-					<View style={[styles.componentContainer, styles.socialLoginContainer]}>
-						<TouchableOpacity style={styles.socialButton}>
-							<FacebookIcon />
-						</TouchableOpacity>
-						<TouchableOpacity style={styles.socialButton}>
-							<GoogleIcon />
-						</TouchableOpacity>
-						<TouchableOpacity style={styles.socialButton}>
-							<AppleIcon />
-						</TouchableOpacity>
-					</View>
-				</View>
-				<View style={[styles.componentContainer, styles.signUpContainer]}>
-					<Text style={[styles.noAccount]}>Don't have an account?</Text>
-					<Link href={"/SignUp"} asChild style={[styles.signUp]}>
+				<View style={[styles.optionsContainer]}>
+					<TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
+						<View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
+						<Text>Remember Me</Text>
+					</TouchableOpacity>
+					<Link href={"/(forgotPassword)/ForgotPassword"} asChild>
 						<TouchableOpacity>
-							<Text style={styles.signUpText}>Sign Up</Text>
+							<Text style={[styles.infoText]}>Forgot Password</Text>
 						</TouchableOpacity>
 					</Link>
 				</View>
-			</SafeAreaView>
-		</CustomKeyboardView>
+				<ButtonGroup positiveOption="Login" onPress={handleLogin} />
+			</View>
+			<View style={[styles.componentContainer, styles.otherLoginContainer]}>
+				<Text style={[styles.infoText]}>Or Login with</Text>
+				<View style={[styles.componentContainer, styles.socialLoginContainer]}>
+					<TouchableOpacity style={styles.socialButton}>
+						<FacebookIcon />
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.socialButton}>
+						<GoogleIcon />
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.socialButton}>
+						<AppleIcon />
+					</TouchableOpacity>
+				</View>
+			</View>
+			<View style={[styles.componentContainer, styles.signUpContainer]}>
+				<Text style={[styles.noAccount]}>Don't have an account?</Text>
+				<Link href={"/SignUp"} asChild style={[styles.signUp]}>
+					<TouchableOpacity>
+						<Text style={styles.signUpText}>Sign Up</Text>
+					</TouchableOpacity>
+				</Link>
+			</View>
+		</LogoHeaderContainer>
 	);
 };
 
@@ -173,14 +152,25 @@ const generalStyles = StyleSheet.create({
 	container: {
 		padding: 30,
 	},
-
+	componentContainer: {
+		paddingHorizontal: 20,
+		alignItems: "center",
+	},
+	ctaComponentContainer: {
+		alignItems: "flex-start",
+	},
 	ctaHeader: {
 		fontWeight: "600",
 		fontSize: 22,
 	},
 
-	ctaSubtext: {
+	ctaSubHeader: {
 		fontSize: 11,
+	},
+
+	userInputContainer: {
+		alignItems: "flex-start",
+		gap: 20,
 	},
 
 	userInputLabel: {},
@@ -232,27 +222,9 @@ const generalStyles = StyleSheet.create({
 });
 
 const androidStyles = StyleSheet.create({
-	componentContainer: {
-		alignItems: "center",
-		paddingHorizontal: 20,
-	},
 	ctaComponentContainer: {
-		alignItems: "flex-start",
-		gap: 15,
+		gap: 20,
 	},
-	userInputContainer: {
-		alignItems: "flex-start",
-		gap: 30,
-	},
-
-	userInput: {
-		width: width * 0.85,
-		borderColor: colors.inputBorderColor,
-		borderWidth: 1,
-		borderRadius: 10,
-		padding: 5,
-	},
-
 	otherLoginContainer: {
 		gap: 10,
 	},
@@ -281,13 +253,7 @@ const androidStyles = StyleSheet.create({
 });
 
 const iosStyles = StyleSheet.create({
-	componentContainer: {
-		paddingHorizontal: 20,
-		alignItems: "center",
-	},
-
 	ctaComponentContainer: {
-		alignItems: "flex-start",
 		gap: 30,
 		paddingHorizontal: 20,
 	},
@@ -296,21 +262,8 @@ const iosStyles = StyleSheet.create({
 		gap: 5,
 	},
 
-	userInputContainer: {
-		alignItems: "flex-start",
-		gap: 30,
-	},
-
 	userInputSubContainer: {
 		gap: 5,
-	},
-
-	userInput: {
-		width: width * 0.9,
-		borderColor: colors.inputBorderColor,
-		borderWidth: 1,
-		borderRadius: 10,
-		padding: 10,
 	},
 
 	otherLoginContainer: {
