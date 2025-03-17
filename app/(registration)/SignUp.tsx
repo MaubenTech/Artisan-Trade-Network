@@ -66,7 +66,6 @@ const SignUp = () => {
 	});
 
 	const renderComponent = () => {
-		//TODO: Find a way to persist information between screen components within the signup flow screen.
 		switch (index) {
 			case 0:
 				return <AccountInformation onSubmit={submitAccountInformation} previousAccountInformation={accountInformation} />;
