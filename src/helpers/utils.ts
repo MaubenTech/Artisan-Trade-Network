@@ -84,3 +84,34 @@ export const isiOS = () => Platform.OS === "ios";
  * @returns The reversed date string
  */
 export const reverseDate = (date: string, splitter: string = "/", joiner: string = "/") => date.split(splitter).reverse().join(joiner);
+
+export type TimeUnit = "y" | "year" | "years" | "m" | "month" | "months" | "d" | "day" | "days";
+
+/**
+ * A function to get date in YYYY/MM/DD format after subtracting a time period out of it
+ * @param timeAgo How much time will be subtracted based on the time unit
+ * @param timeUnit Time unit used to measure the time ago value, e.g. days, months, years
+ * @param joiner The optional joining character (e.g. "/" or "-")
+ * @returns The maximumDate string in YYYY/MM/DD format
+ */
+export const subtractDate = (timeAgo: number, timeUnit: TimeUnit = "y", joiner: string = "/") => {
+	const date = new Date();
+	switch (timeUnit) {
+		case "y":
+		case "year":
+		case "years":
+			date.setFullYear(date.getFullYear() - timeAgo);
+			break;
+		case "m":
+		case "month":
+		case "months":
+			date.setMonth(date.getMonth() - timeAgo);
+			break;
+		case "d":
+		case "day":
+		case "days":
+			date.setDate(date.getDate() - timeAgo);
+	}
+	// console.log(date);
+	return date.getFullYear() + joiner + (date.getMonth() + 1) + joiner + date.getDate(); // Adding 1 to month because Date's index begins at 0, and DatePicker's begins at 1
+};
