@@ -43,9 +43,9 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 	const otpVerificationStatus = useAppSelector(selectAuthStatus);
 	const otpVerificationError = useAppSelector(selectAuthError);
 
-	const handleVerifyOtp = async (otp) => {
+	const handleVerifyOtp = async (otp: string) => {
 		try {
-			const result = await dispatch(verifyOtp("forgotpassword")({ email, otp }));
+			const result = await dispatch(verifyOtp(type === "forgotpassword" ? "forgotpassword" : "signup")({ email, otp }));
 			console.log(result);
 			if (result.meta.requestStatus === "fulfilled") {
 				dispatch(resetAuthStatus());
