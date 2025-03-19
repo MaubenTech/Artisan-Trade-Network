@@ -14,7 +14,7 @@ export const isEmailValid = (email: string) => {
  * @param apiUrl The api endpoint the post request will be sent to
  * @param successIdentifier The property in the response that indicates that the request was successful
  * @param successCallback A callback that would be run when the signal is successful. The result of the request and input parameters will be passed to this function and whatever the function returns will be used as the successful value of the async thunk.
- * @param errorCallback An optional callback that is run when the request is unsuccessful. The error(s) is passed to the function and it is run before the async thunk is declared as rejected.
+ * @param errorCallback An optional callback that is run when the request is unsuccessful. If provided, the error(s) is/are passed to the function and whatever it returns is used as the rejectValue of the thunk.
  * @returns A generated async thunk for specified post request.
  */
 export const generatePostAsyncThunk = <EndpointResultType, ThunkReturnType extends Record<string, any>, ThunkArgType extends Record<string, any>>(
@@ -22,7 +22,7 @@ export const generatePostAsyncThunk = <EndpointResultType, ThunkReturnType exten
 	apiUrl: string,
 	successIdentifier: string,
 	successCallback: (result: EndpointResultType, params?: ThunkArgType) => ThunkReturnType,
-	errorCallback?: (error) => void
+	errorCallback?: (error: string | ValidationError[]) => unknown
 ) => {
 	const formattedActionName = actionName.split("/")[1];
 	type CompleteEndpointResultType = EndpointResultType | { error: string } | { errors: ValidationError[] };
@@ -35,15 +35,23 @@ export const generatePostAsyncThunk = <EndpointResultType, ThunkReturnType exten
 			}
 
 			if (typeof result === "object") {
+				// console.log(`Result: ${JSON.stringify(result)}`);
 				if ("error" in result) {
-					if (errorCallback) errorCallback(result.error);
+					if (errorCallback) return rejectWithValue(errorCallback(result.error));
 					return rejectWithValue(result.error);
 				}
 
 				if ("errors" in result) {
-					if (errorCallback) errorCallback(result.errors);
+					if (errorCallback) return rejectWithValue(errorCallback(result.errors));
+
+					//TODO: Make this invalidEmail generic to the path of the error, not just email
+					const invalidEmail = result.errors.filter((error) => error.path === "email" && error.msg.toLowerCase().includes("invalid")).length > 0;
+					if (invalidEmail) return rejectWithValue("Email is not valid");
+
 					const errorFields = result.errors.map((specificError) => specificError.path).join(", ");
-					return rejectWithValue(`Errors on ${errorFields} fields`);
+					const moreThanOneError = result.errors.length > 1;
+					const s = moreThanOneError ? "s" : "";
+					return rejectWithValue(`Error${s} on ${errorFields} field${s}`);
 				}
 
 				if (successIdentifier in result) {

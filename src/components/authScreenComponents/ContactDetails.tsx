@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import ButtonGroup from "@components/ButtonGroup";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,6 +8,10 @@ import Entry from "@components/Entry";
 import colors from "@helpers/colors";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 import { isEmailValid } from "@helpers/utils";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
+import useAppSelector from "@hooks/useAppSelector";
+import { checkEmail, resetAuthStatus, selectAuthError, selectAuthStatus } from "@store/authSlice";
+import useAppDispatch from "@hooks/useAppDispatch";
 
 export interface ContactDetails {
 	address: string;
@@ -27,6 +31,8 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 	const [phoneNumber, setPhoneNumber] = useState(previousContactDetails && previousContactDetails.phoneNumber ? previousContactDetails.phoneNumber : "");
 	const [validationError, setValidationError] = useState<string>();
 
+	const dispatch = useAppDispatch();
+
 	const handleChangeAddress = (text: string) => {
 		setAddress(text);
 		setValidationError("");
@@ -42,7 +48,10 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 		setValidationError("");
 	};
 
-	const handleProceed = () => {
+	const checkEmailStatus = useAppSelector(selectAuthStatus);
+	const checkEmailError = useAppSelector(selectAuthError);
+
+	const handleProceed = async () => {
 		setValidationError("");
 
 		if (!address.trim()) {
@@ -60,7 +69,20 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 		}
 
 		// console.log("We passed!");
-		onSubmit(address, email, phoneNumber);
+		try {
+			const result = await dispatch(checkEmail({ email })).unwrap();
+			// console.log("Payload: " + JSON.stringify(result.payload));
+			const { exists } = result;
+			if (!exists) {
+				dispatch(resetAuthStatus());
+				onSubmit(address, email, phoneNumber);
+			} else {
+				setValidationError("Email already exists");
+			}
+		} catch (error) {
+			if (!error) setValidationError("An error occured, please try again later.");
+			else setValidationError(error);
+		}
 	};
 
 	const getIsErred = (input: "a" | "e" | "p") => {
@@ -77,25 +99,34 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 		}
 	};
 
+	useEffect(() => {
+		if (!validationError && checkEmailStatus === "failed" && checkEmailError && checkEmailError.message) {
+			setValidationError(checkEmailError.message);
+		}
+	}, [validationError, checkEmailStatus, checkEmailError]);
+
 	return (
-		<View style={styles.ctaComponentContainer}>
-			<View style={styles.ctaComponentHeader}>
-				<Text style={styles.ctaHeader}>Contact Details</Text>
-				<Text style={styles.ctaSubHeader}>Please enter your contact details.</Text>
-			</View>
-			<View style={[styles.userInputContainer]}>
-				<Entry label="Address" value={address} onChangeText={handleChangeAddress} inputErred={getIsErred("a")} />
-				<Entry label="Email" value={email} onChangeText={handleChangeEmail} inputErred={getIsErred("e")} />
-				<Entry label="Phone Number" value={phoneNumber} onChangeText={handleChangePhoneNumber} inputErred={getIsErred("p")} />
-			</View>
-			{validationError && (
-				<View style={styles.unmatchedContainer}>
-					<RedExclamationMark />
-					<Text style={styles.unmatchedText}>{validationError}</Text>
+		<>
+			{checkEmailStatus === "loading" && <LoadingIndicator visible />}
+			<View style={styles.ctaComponentContainer}>
+				<View style={styles.ctaComponentHeader}>
+					<Text style={styles.ctaHeader}>Contact Details</Text>
+					<Text style={styles.ctaSubHeader}>Please enter your contact details.</Text>
 				</View>
-			)}
-			<ButtonGroup onPress={handleProceed} positiveOption="Proceed" />
-		</View>
+				<View style={[styles.userInputContainer]}>
+					<Entry label="Address" value={address} onChangeText={handleChangeAddress} inputErred={getIsErred("a")} />
+					<Entry label="Email" value={email} onChangeText={handleChangeEmail} inputErred={getIsErred("e")} />
+					<Entry label="Phone Number" value={phoneNumber} onChangeText={handleChangePhoneNumber} inputErred={getIsErred("p")} />
+				</View>
+				{validationError && (
+					<View style={styles.unmatchedContainer}>
+						<RedExclamationMark />
+						<Text style={styles.unmatchedText}>{validationError}</Text>
+					</View>
+				)}
+				<ButtonGroup onPress={handleProceed} positiveOption="Proceed" />
+			</View>
+		</>
 	);
 }
 
