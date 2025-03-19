@@ -77,6 +77,8 @@ const Entry = <T extends RadioOption[]>({
 					onChangeText={handleChangeText}
 					style={[styles.userInput, inputStyle, inputErred && { borderColor: colors.red }]}
 					secureTextEntry={(inputProps && inputProps.secureTextEntry) || label.toLowerCase().includes("password")}
+					keyboardType={(inputProps && inputProps.keyboardType) || (label.toLowerCase().includes("email") ? "email-address" : "default")}
+					autoCapitalize={(inputProps && inputProps.autoCapitalize) || (label.toLowerCase().includes("email") ? "none" : "sentences")}
 					// placeholder={(inputProps && inputProps.placeholder) || `Enter your ${label.replace(/^./, (match) => match.toLowerCase())}`}
 					placeholder={(inputProps && inputProps.placeholder) || `Enter your ${label.toLowerCase()}`}
 					{...inputProps}

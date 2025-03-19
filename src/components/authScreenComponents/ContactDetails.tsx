@@ -85,16 +85,7 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 			</View>
 			<View style={[styles.userInputContainer]}>
 				<Entry label="Address" value={address} onChangeText={handleChangeAddress} inputErred={getIsErred("a")} />
-				<Entry
-					label="Email"
-					value={email}
-					onChangeText={handleChangeEmail}
-					inputErred={getIsErred("e")}
-					inputProps={{
-						keyboardType: "email-address",
-						autoCapitalize: "none",
-					}}
-				/>
+				<Entry label="Email" value={email} onChangeText={handleChangeEmail} inputErred={getIsErred("e")} />
 				<Entry label="Phone Number" value={phoneNumber} onChangeText={handleChangePhoneNumber} inputErred={getIsErred("p")} />
 			</View>
 			{validationError && (
