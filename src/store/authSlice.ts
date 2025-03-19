@@ -24,6 +24,11 @@ interface VerifyOtp {
 	otp: string;
 }
 
+interface CheckEmail {
+	exists: boolean;
+	message: string;
+}
+
 interface Register {
 	email: string;
 	password: string;
@@ -64,6 +69,7 @@ export interface AuthState {
 	user: AuthUser;
 	token: string;
 	isAuthenticated: boolean;
+	otpEmail: string;
 	signupEmail: string;
 	forgotPasswordEmail: string;
 	resetValidationCode: string;
@@ -75,6 +81,7 @@ const initialState: AuthState = {
 	user: null,
 	token: null,
 	isAuthenticated: false,
+	otpEmail: null,
 	signupEmail: null,
 	forgotPasswordEmail: null,
 	resetValidationCode: null,
@@ -172,9 +179,10 @@ export const loginUser = generatePostAsyncThunk<ApiUser, { user: AuthUser; token
 // );
 
 type ForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
+type ForgotPasswordParams = { email: string };
 type SuccessfulForgotPasswordResult = { message: string };
 
-export const forgotPassword = generatePostAsyncThunk<SuccessfulForgotPasswordResult, { email: string }, { email: string }>(
+export const forgotPassword = generatePostAsyncThunk<SuccessfulForgotPasswordResult, ForgotPasswordParams, ForgotPasswordParams>(
 	"auth/forgotPassword",
 	"/auth/forgot-password",
 	"message",
@@ -241,10 +249,30 @@ export const resetPassword = generatePostAsyncThunk<ResetPasswordResult, ResetPa
 	}
 );
 
+type CheckEmailParams = { email: string };
+type CheckEmailResult = { exists: boolean; message: string };
+
+export const checkEmail = generatePostAsyncThunk<CheckEmailResult, CheckEmailResult, CheckEmailParams>(
+	"auth/checkEmail",
+	"/auth/check-email",
+	"message",
+	(result, params) => {
+		return result;
+	}
+);
+
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
+		resetAuth(state) {
+			state.error = null;
+			state.status = "idle";
+			state.forgotPasswordEmail = null;
+			state.signupEmail = null;
+			state.otpEmail = null;
+			state.resetValidationCode = null;
+		},
 		resetAuthError(state) {
 			state.error = null;
 		},
@@ -396,6 +424,18 @@ const authSlice = createSlice({
 			.addCase(resetPassword.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = { message: action.payload as string };
+			})
+			.addCase(checkEmail.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(checkEmail.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.error = null;
+			})
+			.addCase(checkEmail.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = { message: action.payload as string };
 			});
 	},
 	selectors: {
@@ -408,7 +448,7 @@ const authSlice = createSlice({
 	},
 });
 
-export const { resetAuthError, resetAuthStatus, resetForgotPasswordFlow, userLoggedOut } = authSlice.actions;
+export const { resetAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, userLoggedOut } = authSlice.actions;
 
 export const { selectCurrentUser, selectAuthStatus, selectAuthError, selectSignupEmail, selectForgotPasswordEmail, selectResetValidationCode } =
 	authSlice.selectors;
