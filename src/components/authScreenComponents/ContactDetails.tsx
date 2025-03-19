@@ -63,14 +63,14 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 		onSubmit(address, email, phoneNumber);
 	};
 
-	const getIsErred = (input: "p" | "c" | "p") => {
+	const getIsErred = (input: "a" | "e" | "p") => {
 		if (!validationError) {
 			return false;
 		}
 		switch (input) {
-			case "p":
+			case "a":
 				return !address.trim() || validationError.toLowerCase().includes("address");
-			case "c":
+			case "e":
 				return !email.trim() || validationError.toLowerCase().includes("email");
 			case "p":
 				return !phoneNumber.trim() || validationError.toLowerCase().includes("phone");
@@ -84,12 +84,12 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 				<Text style={styles.ctaSubHeader}>Please enter your contact details.</Text>
 			</View>
 			<View style={[styles.userInputContainer]}>
-				<Entry label="Address" value={address} onChangeText={handleChangeAddress} inputErred={getIsErred("p")} />
+				<Entry label="Address" value={address} onChangeText={handleChangeAddress} inputErred={getIsErred("a")} />
 				<Entry
 					label="Email"
 					value={email}
 					onChangeText={handleChangeEmail}
-					inputErred={getIsErred("c")}
+					inputErred={getIsErred("e")}
 					inputProps={{
 						keyboardType: "email-address",
 						autoCapitalize: "none",

@@ -78,14 +78,14 @@ export default function AccountInformation({ onSubmit, previousAccountInformatio
 	};
 
 	const getIsErred = useCallback(
-		(input: "p" | "c" | "d") => {
+		(input: "f" | "l" | "d") => {
 			if (!validationError) {
 				return false;
 			}
 			switch (input) {
-				case "p":
+				case "f":
 					return !firstName.trim() || validationError.toLowerCase().includes("first");
-				case "c":
+				case "l":
 					return !lastName.trim() || validationError.toLowerCase().includes("last");
 				case "d":
 					return !dateOfBirth.trim() || validationError.toLowerCase().includes("date");
@@ -106,8 +106,8 @@ export default function AccountInformation({ onSubmit, previousAccountInformatio
 				<Text style={styles.ctaSubHeader}>Welcome! please enter your personal details.</Text>
 			</View>
 			<View style={styles.userInputContainer}>
-				<Entry label="First Name" value={firstName} onChangeText={handleChangeFirstName} inputErred={getIsErred("p")} />
-				<Entry label="Last Name" value={lastName} onChangeText={handleChangeLastName} inputErred={getIsErred("c")} />
+				<Entry label="First Name" value={firstName} onChangeText={handleChangeFirstName} inputErred={getIsErred("f")} />
+				<Entry label="Last Name" value={lastName} onChangeText={handleChangeLastName} inputErred={getIsErred("l")} />
 				<Entry label="Date Of Birth" date={dateOfBirth} inputType="date" onChangeDate={handleChangeDateOfBirth} inputErred={getIsErred("d")} />
 				<Entry label="Gender" radio={gender} inputType="radio" radioData={["Male", "Female"] as const} onChangeRadio={setGender} />
 			</View>
