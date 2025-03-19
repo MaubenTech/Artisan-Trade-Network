@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import colors from "@helpers/colors";
@@ -12,13 +12,14 @@ import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { loginUser, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus } from "@store/authSlice";
+import { loginUser, resetAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus } from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 import { isAndroid, isEmailValid } from "@helpers/utils";
 import Entry from "@components/Entry";
 import LogoHeaderContainer from "@components/LogoHeaderContainer";
+import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 
 const { width, height } = Dimensions.get("window");
 
@@ -43,20 +44,18 @@ const index = () => {
 		if (loginError && loginError.message) dispatch(resetAuthError());
 	};
 
+	// TODO: If the error returned by the backend is "Please verify your email first.", the user should be automatically navigated to OtpVerification to verify the email.
 	const handleLogin = async () => {
 		setValidationError("");
 
-		if (!email.trim() && !password.trim()) {
-			setValidationError("Email and Password are required");
-			return;
-		} else if (!email.trim()) {
+		if (!email.trim()) {
 			setValidationError("Email is required");
+			return;
+		} else if (!isEmailValid(email.trim())) {
+			setValidationError("Email is not valid");
 			return;
 		} else if (!password.trim()) {
 			setValidationError("Password is required");
-			return;
-		} else if (!isEmailValid(email.trim())) {
-			setValidationError("Please enter a valid email address");
 			return;
 		}
 
@@ -77,15 +76,33 @@ const index = () => {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 
-	const getErrorMessage = () => {
-		if (validationError) {
-			return validationError;
-		}
-		if (loginStatus === "failed" && loginError && loginError.message) {
-			return loginError.message;
-		}
-		return "";
+	const handleForgotPasswordClick = () => {
+		dispatch(resetAuth());
+		router.navigate("/ForgotPassword");
 	};
+
+	const handleSignupClick = () => {
+		dispatch(resetAuth());
+		router.navigate("/SignUp");
+	};
+
+	const getIsErred = (input: "e" | "p") => {
+		if (!validationError) {
+			return false;
+		}
+		switch (input) {
+			case "e":
+				return !email.trim() || validationError.toLowerCase().includes("email");
+			case "p":
+				return !password.trim() || validationError.toLowerCase().includes("password");
+		}
+	};
+
+	useEffect(() => {
+		if (!validationError && loginStatus === "failed" && loginError && loginError.message) {
+			setValidationError(loginError.message);
+		}
+	}, [validationError, loginStatus, loginError]);
 
 	return (
 		<LogoHeaderContainer>
@@ -95,28 +112,25 @@ const index = () => {
 					<Text style={styles.ctaSubHeader}>Welcome back! Please enter your details</Text>
 				</View>
 				{loginStatus === "loading" && <LoadingIndicator visible />}
+				{/* TODO: When results come back from the backend after a login attempt, there should be either clearing or focusing of inputs, or both, or in few scenarios, neither. These need to be implemented. */}
 				<View style={[styles.userInputContainer]}>
-					{getErrorMessage() ? <Text style={styles.errorMessage}>{getErrorMessage()}</Text> : null}
-					<Entry
-						label="Email"
-						onChangeText={handleChangeEmail}
-						inputProps={{
-							keyboardType: "email-address",
-							autoCapitalize: "none",
-						}}
-					/>
-					<Entry label="Password" onChangeText={handleChangePassword} />
+					<Entry label="Email" onChangeText={handleChangeEmail} inputErred={getIsErred("e")} />
+					<Entry label="Password" onChangeText={handleChangePassword} inputErred={getIsErred("p")} />
 				</View>
+				{validationError && (
+					<View style={styles.unmatchedContainer}>
+						<RedExclamationMark />
+						<Text style={styles.unmatchedText}>{validationError}</Text>
+					</View>
+				)}
 				<View style={[styles.optionsContainer]}>
 					<TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
 						<View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
 						<Text>Remember Me</Text>
 					</TouchableOpacity>
-					<Link href={"/(forgotPassword)/ForgotPassword"} asChild>
-						<TouchableOpacity>
-							<Text style={[styles.infoText]}>Forgot Password</Text>
-						</TouchableOpacity>
-					</Link>
+					<TouchableOpacity onPress={handleForgotPasswordClick}>
+						<Text style={[styles.infoText]}>Forgot Password</Text>
+					</TouchableOpacity>
 				</View>
 				<ButtonGroup positiveOption="Login" onPress={handleLogin} />
 			</View>
@@ -136,11 +150,9 @@ const index = () => {
 			</View>
 			<View style={[styles.componentContainer, styles.signUpContainer]}>
 				<Text style={[styles.noAccount]}>Don't have an account?</Text>
-				<Link href={"/SignUp"} asChild style={[styles.signUp]}>
-					<TouchableOpacity>
-						<Text style={styles.signUpText}>Sign Up</Text>
-					</TouchableOpacity>
-				</Link>
+				<TouchableOpacity onPress={handleSignupClick} style={[styles.signUp]}>
+					<Text style={styles.signUpText}>Sign Up</Text>
+				</TouchableOpacity>
 			</View>
 		</LogoHeaderContainer>
 	);
@@ -163,18 +175,14 @@ const generalStyles = StyleSheet.create({
 		fontWeight: "600",
 		fontSize: 22,
 	},
-
 	ctaSubHeader: {
 		fontSize: 11,
 	},
-
 	userInputContainer: {
 		alignItems: "flex-start",
 		gap: 20,
 	},
-
 	userInputLabel: {},
-
 	optionsContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -199,7 +207,6 @@ const generalStyles = StyleSheet.create({
 		marginRight: 10,
 		borderRadius: 4,
 	},
-
 	socialButton: {
 		width: 50,
 		height: 50,
@@ -209,14 +216,23 @@ const generalStyles = StyleSheet.create({
 		borderColor: "#ccc",
 		borderRadius: 25,
 	},
-
 	signUpText: {
 		fontSize: 12,
 		textDecorationLine: "underline",
 		color: colors.mainColor,
 	},
-
 	errorMessage: {
+		color: colors.red,
+	},
+	unmatchedContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginTop: -5,
+		gap: 8,
+	},
+	unmatchedText: {
+		fontSize: 12,
+		paddingTop: 2,
 		color: colors.red,
 	},
 });
