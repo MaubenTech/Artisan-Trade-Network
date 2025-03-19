@@ -69,11 +69,11 @@ export default function ContactDetails({ onSubmit, previousContactDetails }: Con
 		}
 		switch (input) {
 			case "p":
-				return !address.trim() || validationError.includes("Address");
+				return !address.trim() || validationError.toLowerCase().includes("address");
 			case "c":
-				return !email.trim() || validationError.includes("Email");
+				return !email.trim() || validationError.toLowerCase().includes("email");
 			case "p":
-				return !phoneNumber.trim() || validationError.includes("Phone");
+				return !phoneNumber.trim() || validationError.toLowerCase().includes("phone");
 		}
 	};
 

@@ -84,11 +84,11 @@ export default function AccountInformation({ onSubmit, previousAccountInformatio
 			}
 			switch (input) {
 				case "p":
-					return !firstName.trim() || validationError.includes("First");
+					return !firstName.trim() || validationError.toLowerCase().includes("first");
 				case "c":
-					return !lastName.trim() || validationError.includes("Last");
+					return !lastName.trim() || validationError.toLowerCase().includes("last");
 				case "d":
-					return !dateOfBirth.trim() || validationError.includes("Date");
+					return !dateOfBirth.trim() || validationError.toLowerCase().includes("date");
 			}
 		},
 		[validationError]

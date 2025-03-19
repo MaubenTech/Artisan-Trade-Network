@@ -42,9 +42,9 @@ const Password = ({ onSubmit }: PasswordProps) => {
 		}
 		switch (input) {
 			case "p":
-				return !password.trim() || validationError.includes("Password");
+				return !password.trim() || validationError.toLowerCase().includes("password");
 			case "c":
-				return !confirmPassword.trim() || validationError.includes("Confirm") || validationError.includes("doesn't match");
+				return !confirmPassword.trim() || validationError.toLowerCase().includes("confirm") || validationError.toLowerCase().includes("doesn't match");
 		}
 	};
 
