@@ -77,22 +77,19 @@ export default function AccountInformation({ onSubmit, previousAccountInformatio
 		onSubmit(firstName, lastName, dateOfBirth, gender);
 	};
 
-	const getIsErred = useCallback(
-		(input: "f" | "l" | "d") => {
-			if (!validationError) {
-				return false;
-			}
-			switch (input) {
-				case "f":
-					return !firstName.trim() || validationError.toLowerCase().includes("first");
-				case "l":
-					return !lastName.trim() || validationError.toLowerCase().includes("last");
-				case "d":
-					return !dateOfBirth.trim() || validationError.toLowerCase().includes("date");
-			}
-		},
-		[validationError]
-	);
+	const getIsErred = (input: "f" | "l" | "d") => {
+		if (!validationError) {
+			return false;
+		}
+		switch (input) {
+			case "f":
+				return !firstName.trim() || validationError.toLowerCase().includes("first");
+			case "l":
+				return !lastName.trim() || validationError.toLowerCase().includes("last");
+			case "d":
+				return !dateOfBirth.trim() || validationError.toLowerCase().includes("date");
+		}
+	};
 
 	// useEffect(() => console.log(`Gender changed to: ${gender}`), [gender]);
 	// useEffect(() => {
