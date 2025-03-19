@@ -153,8 +153,8 @@ const generalStyles = StyleSheet.create({
 	},
 
 	forgotPasswordFormContainer: {
-		flex: 1,
-		marginBottom: "6%",
+		// flex: 1,
+		// marginBottom: "2%",
 	},
 
 	forgotPasswordInput: {
@@ -172,35 +172,12 @@ const generalStyles = StyleSheet.create({
 	},
 
 	buttonsContainer: {
-		gap: 10,
-	},
-
-	button: {
-		alignItems: "center",
-		borderRadius: 15,
-		justifyContent: "center",
-		padding: 15,
-	},
-
-	primaryButton: {
-		backgroundColor: colors.mainColor,
-	},
-
-	secondaryButton: {
-		borderWidth: 1,
-	},
-
-	buttonText: {
-		textAlign: "center",
-		fontSize: 16,
-	},
-
-	primaryButtonText: {
-		color: "#fff",
+		// gap: 10,
+		// backgroundColor: "#f0f",
 	},
 
 	signUpOption: {
-		marginTop: "5%",
+		// marginTop: "5%",
 		flexDirection: "row",
 		justifyContent: "center",
 	},
