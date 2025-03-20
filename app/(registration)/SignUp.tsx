@@ -9,25 +9,34 @@ import Password from "@components/authScreenComponents/Password";
 import OtpVerification from "@components/authScreenComponents/OtpVerification";
 import { useRouter } from "expo-router";
 import CustomKeyboardView from "@components/CustomKeyboardView";
-import { isAndroid } from "@helpers/utils";
+import { isAndroid, reverseDate } from "@helpers/utils";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import LogoHeaderContainer from "@components/LogoHeaderContainer";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
+import useAppSelector from "@hooks/useAppSelector";
+import { registerUser, resetAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, setSignupEmail } from "@store/authSlice";
+import useAppDispatch from "@hooks/useAppDispatch";
 
 const SignUp = () => {
 	const { top, bottom } = useSafeAreaInsets();
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const router = useRouter();
 	const [accountInformation, setAccountInformation] = useState<AccountInformationState>(null);
 	const [contactDetails, setContactDetails] = useState<ContactDetailsState>(null);
 	const [password, setPassword] = useState("");
-	const router = useRouter();
-
 	const [index, setIndex] = useState(0);
+	const [validationError, setValidationError] = useState("");
+
+	const dispatch = useAppDispatch();
+
+	const signupStatus = useAppSelector(selectAuthStatus);
+	const signupError = useAppSelector(selectAuthError);
 
 	const submitAccountInformation = (firstName: string, lastName: string, dateOfBirth: string, gender: Gender) => {
 		setAccountInformation({
 			firstName,
 			lastName,
-			dateOfBirth,
+			dateOfBirth: reverseDate(dateOfBirth, "/", "-"),
 			gender,
 		});
 		setIndex(1);
@@ -39,22 +48,52 @@ const SignUp = () => {
 			email,
 			phoneNumber,
 		});
+		dispatch(setSignupEmail(email));
 		setIndex(2);
 	};
 
-	const submitPassword = (password: string) => {
+	const submitPassword = async (password: string) => {
 		//TODO: One more thing to do and it'll be time to handle the async part of the signup flow. Check TODO below:
 		setPassword(password);
-		setIndex(3);
+		await signupUser();
+	};
+
+	const signupUser = async () => {
+		const { firstName: firstname, lastName: lastname, dateOfBirth: dateofbirth } = accountInformation;
+		const { phoneNumber: phonenumber } = contactDetails;
+		console.log("Date of birth is " + dateofbirth);
+
+		const newUser = { firstname, lastname, dateofbirth, phonenumber, ...accountInformation, ...contactDetails, password };
+		try {
+			const result = await dispatch(registerUser(newUser));
+			if (result.meta.requestStatus === "fulfilled") {
+				dispatch(resetAuthError());
+				dispatch(resetAuthStatus());
+				setIndex(3);
+			}
+		} catch (error) {
+			setValidationError(error || "An error occurred, please try again later.");
+		}
 	};
 
 	const otpVerified = () => {
 		// setIndex(4);
 		//TODO: After verifying otp, the onboarding screen shouldn't be stacked untop regular screens. It should replace the whole registration process, so back will go to the login screen directly.
+		// dispatch(setAccountIs)
+		router.dismissAll();
+		router.replace("/");
+	};
+
+	const getErrorMessage = () => {
+		if (validationError) return validationError;
+		if (signupStatus === "failed" && signupError && signupError.message) return signupError.message;
+		return "";
 	};
 
 	BackHandler.addEventListener("hardwareBackPress", () => {
 		if (index !== 0) {
+			dispatch(resetAuthError());
+			dispatch(resetAuthStatus());
 			setIndex(index - 1);
 		} else {
 			// setAccountInformation(null);
@@ -72,7 +111,7 @@ const SignUp = () => {
 			case 1:
 				return <ContactDetails onSubmit={submitContactDetails} previousContactDetails={contactDetails} />;
 			case 2:
-				return <Password onSubmit={submitPassword} />;
+				return <Password onSubmit={submitPassword} externalValidationError={getErrorMessage()} />;
 			case 3:
 				return <OtpVerification removeHeader type="signup" onOtpVerified={otpVerified} />;
 			default:
@@ -80,7 +119,12 @@ const SignUp = () => {
 		}
 	};
 
-	return <LogoHeaderContainer>{renderComponent()}</LogoHeaderContainer>;
+	return (
+		<LogoHeaderContainer>
+			{signupStatus === "loading" && <LoadingIndicator visible />}
+			{renderComponent()}
+		</LogoHeaderContainer>
+	);
 };
 
 export default SignUp;
