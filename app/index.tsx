@@ -35,6 +35,8 @@ const index = () => {
 	const [validationError, setValidationError] = useState<string>("");
 	const [hasNotVerified, setHasNotVerified] = useState(false);
 
+	const isNewAccount = useAppSelector(selectIsNewAccount);
+
 	const handleChangeEmail = (text: string) => {
 		setEmail(text);
 		if (validationError) setValidationError("");
@@ -65,6 +67,8 @@ const index = () => {
 			const result = await dispatch(loginUser({ email, password }));
 			if (result.meta.requestStatus === "fulfilled") {
 				dispatch(resetAuthStatus());
+				if (isNewAccount) router.navigate("/OnboardingScreen");
+				else router.navigate("Home");
 			}
 		} catch (error) {
 			setValidationError("An error occured, please try again later.");
