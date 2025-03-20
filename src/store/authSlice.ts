@@ -69,6 +69,7 @@ export interface AuthState {
 	user: AuthUser;
 	token: string;
 	isAuthenticated: boolean;
+	isNewAccount: boolean;
 	otpEmail: string;
 	signupEmail: string;
 	forgotPasswordEmail: string;
@@ -81,6 +82,7 @@ const initialState: AuthState = {
 	user: null,
 	token: null,
 	isAuthenticated: false,
+	isNewAccount: false,
 	otpEmail: null,
 	signupEmail: null,
 	forgotPasswordEmail: null,
@@ -106,7 +108,11 @@ type ApiUser = {
 
 type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
 
-export const loginUser = generatePostAsyncThunk<ApiUser, { user: AuthUser; token: string }, Login>("auth/login", "/auth/signin", "token", (result) => {
+type LoginParams = { email: string; password: string };
+type LoginResult = ApiUser;
+type LoginThunkResult = { user: AuthUser; token: string };
+
+export const loginUser = generatePostAsyncThunk<LoginResult, LoginThunkResult, LoginParams>("auth/login", "/auth/signin", "token", (result) => {
 	const decodedUser = jwtDecode<JwtDecodedUser>(result.token);
 	const user: AuthUser = { ...decodedUser };
 	return {
@@ -178,11 +184,12 @@ export const loginUser = generatePostAsyncThunk<ApiUser, { user: AuthUser; token
 // 	}
 // );
 
-type ForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
-type ForgotPasswordParams = { email: string };
-type SuccessfulForgotPasswordResult = { message: string };
+type CompleteForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
 
-export const forgotPassword = generatePostAsyncThunk<SuccessfulForgotPasswordResult, ForgotPasswordParams, ForgotPasswordParams>(
+type ForgotPasswordParams = { email: string };
+type ForgotPasswordResult = { message: string };
+
+export const forgotPassword = generatePostAsyncThunk<ForgotPasswordResult, ForgotPasswordParams, ForgotPasswordParams>(
 	"auth/forgotPassword",
 	"/auth/forgot-password",
 	"message",
@@ -285,6 +292,9 @@ const authSlice = createSlice({
 			state.error = null;
 			state.status = "idle";
 		},
+		setSignupEmail(state, action) {
+			state.signupEmail = action.payload;
+		},
 		// addUnknownUser(state) {
 		// 	const DEFAULT: User = {
 		// 		_id: "-1",
@@ -381,6 +391,9 @@ const authSlice = createSlice({
 			})
 			.addCase(loginUser.rejected, (state, action) => {
 				state.status = "failed";
+				state.user = null;
+				state.token = null;
+				state.isAuthenticated = false;
 				state.error = { message: action.payload as string };
 			})
 			.addCase(forgotPassword.pending, (state) => {
@@ -445,12 +458,20 @@ const authSlice = createSlice({
 		selectSignupEmail: (state: AuthState) => state.signupEmail,
 		selectForgotPasswordEmail: (state: AuthState) => state.forgotPasswordEmail,
 		selectResetValidationCode: (state: AuthState) => state.resetValidationCode,
+		selectIsNewAccount: (state: AuthState) => state.isNewAccount,
 	},
 });
 
-export const { resetAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, userLoggedOut } = authSlice.actions;
+export const { resetAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, setSignupEmail, userLoggedOut } = authSlice.actions;
 
-export const { selectCurrentUser, selectAuthStatus, selectAuthError, selectSignupEmail, selectForgotPasswordEmail, selectResetValidationCode } =
-	authSlice.selectors;
+export const {
+	selectCurrentUser,
+	selectAuthStatus,
+	selectAuthError,
+	selectSignupEmail,
+	selectForgotPasswordEmail,
+	selectResetValidationCode,
+	selectIsNewAccount,
+} = authSlice.selectors;
 
 export default authSlice.reducer;
