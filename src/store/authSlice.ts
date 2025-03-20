@@ -287,6 +287,15 @@ export const checkEmail = generatePostAsyncThunk<CheckEmailResult, CheckEmailRes
 	}
 );
 
+type ResendOtpParams = { email: string };
+type ResendOtpResult = { message: string };
+export const resendOtp = generatePostAsyncThunk<ResendOtpResult, ResendOtpResult, ResendOtpParams>(
+	"auth/resendOtp",
+	"/auth/resend-otp",
+	"message",
+	(result, params) => result
+);
+
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
@@ -478,6 +487,18 @@ const authSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(checkEmail.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = { message: action.payload as string };
+			})
+			.addCase(resendOtp.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(resendOtp.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.error = null;
+			})
+			.addCase(resendOtp.rejected, (state, action) => {
 				state.status = "failed";
 				state.error = { message: action.payload as string };
 			});
