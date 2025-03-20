@@ -30,6 +30,9 @@ interface OtpVerificationProps {
 	removeHeader?: boolean;
 }
 
+const OtpContainer = ({ children, removeHeader }: { children: React.ReactNode; removeHeader?: boolean }): React.ReactNode =>
+	!removeHeader ? <LogoHeaderContainer>{children}</LogoHeaderContainer> : children;
+
 const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationProps) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [otp, setOtp] = useState("");
@@ -75,11 +78,8 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 		return "";
 	};
 
-	const Container = ({ children }: { children: React.ReactNode }): React.ReactNode =>
-		!removeHeader ? <LogoHeaderContainer>{children}</LogoHeaderContainer> : children;
-
 	return (
-		<Container>
+		<OtpContainer removeHeader={removeHeader}>
 			{/* TODO: Finish up the converting process. */}
 			<View style={styles.headerContainer}>
 				<Text style={styles.header}>OTP Verification</Text>
@@ -134,7 +134,7 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 				</TouchableOpacity>
 			</View>
 			<ButtonGroup positiveOptionDisabled={disabled} onPress={() => handleVerifyOtp(otp)} positiveOption="Verify & Proceed" />
-		</Container>
+		</OtpContainer>
 	);
 };
 const generalStyles = StyleSheet.create({
