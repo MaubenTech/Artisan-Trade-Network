@@ -184,6 +184,25 @@ export const loginUser = generatePostAsyncThunk<LoginResult, LoginThunkResult, L
 // 	}
 // );
 
+type RegisterParams = {
+	email: string;
+	password: string;
+	firstname: string;
+	lastname: string;
+	dateofbirth: string;
+	gender: string;
+	address: string;
+	phonenumber: string;
+};
+type RegisterResult = { message: string };
+
+export const registerUser = generatePostAsyncThunk<RegisterResult, RegisterResult, RegisterParams>(
+	"auth/register",
+	"/auth/signup",
+	"message",
+	(result, params) => result
+);
+
 type CompleteForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
 
 type ForgotPasswordParams = { email: string };
@@ -394,6 +413,18 @@ const authSlice = createSlice({
 				state.user = null;
 				state.token = null;
 				state.isAuthenticated = false;
+				state.error = { message: action.payload as string };
+			})
+			.addCase(registerUser.pending, (state) => {
+				state.status = "loading";
+				state.error = null;
+			})
+			.addCase(registerUser.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.error = null;
+			})
+			.addCase(registerUser.rejected, (state, action) => {
+				state.status = "failed";
 				state.error = { message: action.payload as string };
 			})
 			.addCase(forgotPassword.pending, (state) => {
