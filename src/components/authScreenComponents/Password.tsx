@@ -12,14 +12,15 @@ import { compactStyles } from "@helpers/styles";
 
 interface PasswordProps {
 	onSubmit: (password: string) => void;
+	externalValidationError?: string;
 }
 
-const Password = ({ onSubmit }: PasswordProps) => {
+const Password = ({ onSubmit, externalValidationError }: PasswordProps) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
 	const [isSelected, setIsSelected] = useState(false);
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [validationError, setValidationError] = useState<string>();
+	const [validationError, setValidationError] = useState<string>("");
 
 	const handleProceed = () => {
 		setValidationError("");
@@ -28,6 +29,9 @@ const Password = ({ onSubmit }: PasswordProps) => {
 			return;
 		} else if (!confirmPassword.trim()) {
 			setValidationError("Confirm your password");
+			return;
+		} else if (password !== confirmPassword) {
+			setValidationError("Password doesn't match");
 			return;
 		} else if (!isSelected) {
 			setValidationError("You have to agree to the terms & conditions before you proceed");
@@ -54,6 +58,10 @@ const Password = ({ onSubmit }: PasswordProps) => {
 		// if ((password !== confirmPassword) || password.length <= 0) setPasswordsMatch(false);
 		// else setPasswordsMatch(true);
 	}, [password, confirmPassword, isSelected]);
+
+	useEffect(() => {
+		setValidationError(externalValidationError);
+	}, [externalValidationError]);
 
 	return (
 		<View style={styles.ctaComponentContainer}>
