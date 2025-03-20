@@ -10,9 +10,9 @@ import { Text, TextInput } from "@components/Text";
 import FacebookIcon from "@assets/images/facebook.svg";
 import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform, BackHandler } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { loginUser, resetAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus } from "@store/authSlice";
+import { loginUser, resetAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, selectIsNewAccount, setSignupEmail } from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
@@ -20,6 +20,8 @@ import { isAndroid, isEmailValid } from "@helpers/utils";
 import Entry from "@components/Entry";
 import LogoHeaderContainer from "@components/LogoHeaderContainer";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
+import OtpVerification from "@components/authScreenComponents/OtpVerification";
+import useAppSelector from "@hooks/useAppSelector";
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,6 +33,7 @@ const index = () => {
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
 	const [validationError, setValidationError] = useState<string>("");
+	const [hasNotVerified, setHasNotVerified] = useState(false);
 
 	const handleChangeEmail = (text: string) => {
 		setEmail(text);
@@ -44,7 +47,6 @@ const index = () => {
 		if (loginError && loginError.message) dispatch(resetAuthError());
 	};
 
-	// TODO: If the error returned by the backend is "Please verify your email first.", the user should be automatically navigated to OtpVerification to verify the email.
 	const handleLogin = async () => {
 		setValidationError("");
 
@@ -63,7 +65,6 @@ const index = () => {
 			const result = await dispatch(loginUser({ email, password }));
 			if (result.meta.requestStatus === "fulfilled") {
 				dispatch(resetAuthStatus());
-				router.navigate("Home");
 			}
 		} catch (error) {
 			setValidationError("An error occured, please try again later.");
@@ -98,11 +99,41 @@ const index = () => {
 		}
 	};
 
+	const handleOtpVerifiedFromLogin = () => {
+		//TODO: I think another login attempt should be made in the background after the otp is verified
+		//NOPE, it should not. The user has to log in again
+		setHasNotVerified(false);
+	};
+
+	// TODO: If the error returned by the backend is "Please verify your email first.", the user should be automatically navigated to OtpVerification to verify the email.
 	useEffect(() => {
 		if (!validationError && loginStatus === "failed" && loginError && loginError.message) {
 			setValidationError(loginError.message);
+			if (loginError.message === "Please verify your email first.") {
+				dispatch(resetAuthError());
+				setTimeout(() => {
+					setHasNotVerified(true);
+				}, 1500);
+			}
 		}
 	}, [validationError, loginStatus, loginError]);
+
+	BackHandler.addEventListener("hardwareBackPress", () => {
+		dispatch(resetAuthStatus());
+		dispatch(resetAuthError());
+		setValidationError("");
+		setEmail("");
+		setPassword("");
+		// console.log(`Email: ${email}, Password: ${password}`);
+		setHasNotVerified(false);
+		return true;
+	});
+
+	if (hasNotVerified) {
+		//NOTE: We're using the signup otp verification type because the account verification in the first place is meant to be part of the signup flow.
+		dispatch(setSignupEmail(email));
+		return <OtpVerification onOtpVerified={handleOtpVerifiedFromLogin} type="signup" />;
+	}
 
 	return (
 		<LogoHeaderContainer>
