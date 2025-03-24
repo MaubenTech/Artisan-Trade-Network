@@ -257,7 +257,7 @@ export const verifyOtp = (type: VerifyOtpType) =>
 	generatePostAsyncThunk<VerifyOtpResult, VerifyOtpResult, VerifyOtpParams>(
 		"auth/verifyOtp",
 		`/auth/verify-otp${type === "signup" ? "" : "-reset"}`,
-		"resetValidationCode",
+		type === "forgotpassword" ? "resetValidationCode" : "message",
 		(result, params) => {
 			return result;
 		}
