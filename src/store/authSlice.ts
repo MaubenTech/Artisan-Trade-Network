@@ -300,13 +300,17 @@ const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
-		resetAuth(state) {
+		resetAllAuth(state) {
 			state.error = null;
 			state.status = "idle";
 			state.forgotPasswordEmail = null;
 			state.signupEmail = null;
 			state.otpEmail = null;
 			state.resetValidationCode = null;
+		},
+		resetAuth(state) {
+			state.error = null;
+			state.status = "idle";
 		},
 		resetAuthError(state) {
 			state.error = null;
@@ -514,7 +518,7 @@ const authSlice = createSlice({
 	},
 });
 
-export const { resetAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, setSignupEmail, userLoggedOut } = authSlice.actions;
+export const { resetAllAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, setSignupEmail, userLoggedOut } = authSlice.actions;
 
 export const {
 	selectCurrentUser,
