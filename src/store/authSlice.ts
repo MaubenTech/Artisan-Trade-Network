@@ -35,7 +35,7 @@ interface Register {
   phoneNumber: string;
 }
 
-export type Role = 'user' | 'artisan' | 'admin';
+export type Role = "user" | "artisan" | "admin";
 
 interface User {
   _id: string;
@@ -54,36 +54,42 @@ interface User {
   // type: "NORMAL" | "ARTISAN";
 }
 
-type JwtDecodedUser = Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'roles' > & { iat: number; exp: number };
+type JwtDecodedUser = Pick<
+  User,
+  "_id" | "email" | "firstname" | "lastname" | "roles"
+> & { iat: number; exp: number };
 
-type AuthUser = Pick<User, '_id' | 'email' | 'firstname' | 'lastname' | 'roles'>;
+type AuthUser = Pick<
+  User,
+  "_id" | "email" | "firstname" | "lastname" | "roles"
+>;
 
 export interface AuthState {
-	error: { message: string };
-	status: "idle" | "loading" | "succeeded" | "failed";
-	user: AuthUser;
-	token: string;
-	isAuthenticated: boolean;
-	forgotPasswordEmail: string;
-	resetValidationCode: string;
+  error: { message: string };
+  status: "idle" | "loading" | "succeeded" | "failed";
+  user: AuthUser;
+  token: string;
+  isAuthenticated: boolean;
+  forgotPasswordEmail: string;
+  resetValidationCode: string;
 }
 
 const initialState: AuthState = {
-	error: null,
-	status: "idle",
-	user: null,
-	token: null,
-	isAuthenticated: false,
-	forgotPasswordEmail: null,
-	resetValidationCode: null,
+  error: null,
+  status: "idle",
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  forgotPasswordEmail: null,
+  resetValidationCode: null,
 };
 
 export type ValidationError = {
-	location?: string;
-	msg?: string;
-	path?: string;
-	type?: string;
-	value?: string;
+  location?: string;
+  msg?: string;
+  path?: string;
+  type?: string;
+  value?: string;
 };
 
 type ApiUser = {
@@ -95,15 +101,22 @@ type ApiUser = {
   };
 };
 
-type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
+type UserLoginResult =
+  | ApiUser
+  | { error: string }
+  | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
 
-export const loginUser = generatePostAsyncThunk<ApiUser, { user: AuthUser; token: string }, Login>("auth/login", "/auth/signin", "token", (result) => {
-	const decodedUser = jwtDecode<JwtDecodedUser>(result.token);
-	const user: AuthUser = { ...decodedUser };
-	return {
-		user,
-		token: result.token,
-	};
+export const loginUser = generatePostAsyncThunk<
+  ApiUser,
+  { user: AuthUser; token: string },
+  Login
+>("auth/login", "/auth/signin", "token", result => {
+  const decodedUser = jwtDecode<JwtDecodedUser>(result.token);
+  const user: AuthUser = { ...decodedUser };
+  return {
+    user,
+    token: result.token,
+  };
 });
 
 // export const loginUser2 = createAppAsyncThunk<{ user: AuthUser; token: string }, Login>(
@@ -169,16 +182,23 @@ export const loginUser = generatePostAsyncThunk<ApiUser, { user: AuthUser; token
 // 	}
 // );
 
-type ForgotPasswordResult = { message: string } | { error: string } | { errors: ValidationError[] };
+type ForgotPasswordResult =
+  | { message: string }
+  | { error: string }
+  | { errors: ValidationError[] };
 type SuccessfulForgotPasswordResult = { message: string };
 
-export const forgotPassword = generatePostAsyncThunk<SuccessfulForgotPasswordResult, { email: string }, { email: string }>(
-	"auth/forgotPassword",
-	"/auth/forgot-password",
-	"message",
-	(result, params) => {
-		return params;
-	}
+export const forgotPassword = generatePostAsyncThunk<
+  SuccessfulForgotPasswordResult,
+  { email: string },
+  { email: string }
+>(
+  "auth/forgotPassword",
+  "/auth/forgot-password",
+  "message",
+  (result, params) => {
+    return params;
+  }
 );
 
 // export const forgotPassword2 = createAppAsyncThunk<{ email: string }, { email: string }>(
@@ -218,195 +238,209 @@ type VerifyOtpParams = { email: string; otp: string };
 type VerifyOtpResult = { resetValidationCode?: string; message: string };
 
 export const verifyOtp = (type: VerifyOtpType) =>
-	generatePostAsyncThunk<VerifyOtpResult, VerifyOtpResult, VerifyOtpParams>(
-		"auth/verifyOtp",
-		`/auth/verify-otp${type === "signup" ? "" : "-reset"}`,
-		"resetValidationCode",
-		(result, params) => {
-			return result;
-		}
-	);
+  generatePostAsyncThunk<VerifyOtpResult, VerifyOtpResult, VerifyOtpParams>(
+    "auth/verifyOtp",
+    `/auth/verify-otp${type === "signup" ? "" : "-reset"}`,
+    "resetValidationCode",
+    (result, params) => {
+      return result;
+    }
+  );
 
-type ResetPasswordParams = { email: string; resetValidationCode: string; newPassword: string };
+type ResetPasswordParams = {
+  email: string;
+  resetValidationCode: string;
+  newPassword: string;
+};
 type ResetPasswordResult = { message: string };
 
-export const resetPassword = generatePostAsyncThunk<ResetPasswordResult, ResetPasswordResult, ResetPasswordParams>(
-	"auth/resetPassword",
-	"/auth/reset-password",
-	"message",
-	(result, params) => {
-		return result;
-	}
-);
-
-const authSlice = createSlice({
-	name: "auth",
-	initialState,
-	reducers: {
-		resetAuthError(state) {
-			state.error = null;
-		},
-		resetAuthStatus(state) {
-			state.status = "idle";
-		},
-		resetForgotPasswordFlow(state) {
-			state.forgotPasswordEmail = null;
-			state.resetValidationCode = null;
-			state.error = null;
-			state.status = "idle";
-		},
-		// addUnknownUser(state) {
-		// 	const DEFAULT: User = {
-		// 		_id: "-1",
-		// 		firstname: "Unknown",
-		// 		email: "unknown",
-		// 		roles: ["user"],
-		// 		lastname: "",
-		// 		dateofbirth: "",
-		// 		gender: "",
-		// 		address: "",
-		// 		phonenumber: "",
-		// 		password: "",
-		// 		isVerified: false,
-		// 		otp: "",
-		// 		otpExpires: "",
-		// 	};
-		// 	state.user = DEFAULT;
-		// },
-		// addInvalidCredentialsPlaceholder(state) {
-		// 	const INVALID_CREDENTIALS: User = {
-		// 		_id: "-1",
-		// 		firstname: "Invalid",
-		// 		email: "invalidcredentials@gmail.com",
-		// 		roles: ["user", "artisan"],
-		// 		lastname: "",
-		// 		dateofbirth: "",
-		// 		gender: "",
-		// 		address: "",
-		// 		phonenumber: "",
-		// 		password: "",
-		// 		isVerified: false,
-		// 		otp: "",
-		// 		otpExpires: "",
-		// 	};
-		// 	state.user = INVALID_CREDENTIALS;
-		// },
-		// addRandomUser(state, action: PayloadAction<User>) {
-		// 	const NONSO_ALI: User = {
-		// 		_id: action.payload._id,
-		// 		firstname: action.payload.firstname,
-		// 		lastname: action.payload.lastname,
-		// 		gender: action.payload.gender,
-		// 		dateofbirth: action.payload.dateofbirth,
-		// 		otp: action.payload.otp,
-		// 		otpExpires: action.payload.otpExpires,
-		// 		phonenumber: action.payload.phonenumber,
-		// 		address: action.payload.address,
-		// 		isVerified: action.payload.isVerified,
-		// 		password: action.payload.password,
-		// 		email: action.payload.email,
-		// 		roles: ["user"],
-		// 	};
-		// 	state.user = NONSO_ALI;
-		// },
-		// addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
-		// 	const { _id, token} = action.payload;
-		// 	console.log("ID: " + _id);
-		//     state.user = action.payload;
-		// 	state.token = token;
-		// 	state.isAuthenticated = true;
-		// 	state.status = "succeeded";
-		// 	console.log("Token is : ", token);
-		// },
-		userLoggedOut(state) {
-			//TODO: Logout functionality, add logic to clear information from other slices and states
-			state.token = null;
-			state.user = null;
-			state.isAuthenticated = false;
-		},
-		userRegistered(state, action: PayloadAction<Register>) {},
-		userForgotPassword(state, action: PayloadAction<ForgotPassword>) {
-			//TODO: Logic for forgot password
-		},
-		userResetPassword(state, action: PayloadAction<ResetPassword>) {
-			const { email, newPassword } = action.payload;
-			//TODO: Logic to change password
-		},
-		userVerifiedOtp(state, action: PayloadAction<VerifyOtp>) {
-			//TODO: Logic to verify otp
-		},
-	},
-	extraReducers: (builder) => {
-		builder
-			.addCase(loginUser.pending, (state) => {
-				state.status = "loading";
-				state.error = null;
-			})
-			.addCase(loginUser.fulfilled, (state, action) => {
-				state.status = "succeeded";
-				state.user = action.payload.user;
-				state.token = action.payload.token;
-				state.isAuthenticated = true;
-				state.error = null;
-			})
-			.addCase(loginUser.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = { message: action.payload as string };
-			})
-			.addCase(forgotPassword.pending, (state) => {
-				state.status = "loading";
-				state.error = null;
-			})
-			.addCase(forgotPassword.fulfilled, (state, action) => {
-				state.status = "succeeded";
-				state.forgotPasswordEmail = action.payload.email;
-				state.error = null;
-			})
-			.addCase(forgotPassword.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = { message: action.payload as string };
-			})
-			.addCase(verifyOtp("signup").pending, (state) => {
-				//NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
-				state.status = "loading";
-				state.error = null;
-			})
-			.addCase(verifyOtp("signup").fulfilled, (state, action) => {
-				//NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
-				state.status = "succeeded";
-				const validationCode = action.payload.resetValidationCode;
-				if (validationCode) state.resetValidationCode = validationCode;
-				state.error = null;
-			})
-			.addCase(verifyOtp("signup").rejected, (state, action) => {
-				//NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
-				state.status = "failed";
-				state.error = { message: action.payload as string };
-			})
-			.addCase(resetPassword.pending, (state) => {
-				state.status = "loading";
-				state.error = null;
-			})
-			.addCase(resetPassword.fulfilled, (state, action) => {
-				state.status = "succeeded";
-				state.error = null;
-			})
-			.addCase(resetPassword.rejected, (state, action) => {
-				state.status = "failed";
-				state.error = { message: action.payload as string };
-			});
-	},
-	selectors: {
-		selectCurrentUser: (state: AuthState) => state.user,
-		selectAuthStatus: (state: AuthState) => state.status,
-		selectAuthError: (state: AuthState) => state.error,
-		selectForgotPasswordEmail: (state: AuthState) => state.forgotPasswordEmail,
-		selectResetValidationCode: (state: AuthState) => state.resetValidationCode,
-	},
+export const resetPassword = generatePostAsyncThunk<
+  ResetPasswordResult,
+  ResetPasswordResult,
+  ResetPasswordParams
+>("auth/resetPassword", "/auth/reset-password", "message", (result, params) => {
+  return result;
 });
 
-export const { resetAuthError, resetAuthStatus, resetForgotPasswordFlow, userLoggedOut } = authSlice.actions;
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    resetAuthError(state) {
+      state.error = null;
+    },
+    resetAuthStatus(state) {
+      state.status = "idle";
+    },
+    resetForgotPasswordFlow(state) {
+      state.forgotPasswordEmail = null;
+      state.resetValidationCode = null;
+      state.error = null;
+      state.status = "idle";
+    },
+    // addUnknownUser(state) {
+    // 	const DEFAULT: User = {
+    // 		_id: "-1",
+    // 		firstname: "Unknown",
+    // 		email: "unknown",
+    // 		roles: ["user"],
+    // 		lastname: "",
+    // 		dateofbirth: "",
+    // 		gender: "",
+    // 		address: "",
+    // 		phonenumber: "",
+    // 		password: "",
+    // 		isVerified: false,
+    // 		otp: "",
+    // 		otpExpires: "",
+    // 	};
+    // 	state.user = DEFAULT;
+    // },
+    // addInvalidCredentialsPlaceholder(state) {
+    // 	const INVALID_CREDENTIALS: User = {
+    // 		_id: "-1",
+    // 		firstname: "Invalid",
+    // 		email: "invalidcredentials@gmail.com",
+    // 		roles: ["user", "artisan"],
+    // 		lastname: "",
+    // 		dateofbirth: "",
+    // 		gender: "",
+    // 		address: "",
+    // 		phonenumber: "",
+    // 		password: "",
+    // 		isVerified: false,
+    // 		otp: "",
+    // 		otpExpires: "",
+    // 	};
+    // 	state.user = INVALID_CREDENTIALS;
+    // },
+    // addRandomUser(state, action: PayloadAction<User>) {
+    // 	const NONSO_ALI: User = {
+    // 		_id: action.payload._id,
+    // 		firstname: action.payload.firstname,
+    // 		lastname: action.payload.lastname,
+    // 		gender: action.payload.gender,
+    // 		dateofbirth: action.payload.dateofbirth,
+    // 		otp: action.payload.otp,
+    // 		otpExpires: action.payload.otpExpires,
+    // 		phonenumber: action.payload.phonenumber,
+    // 		address: action.payload.address,
+    // 		isVerified: action.payload.isVerified,
+    // 		password: action.payload.password,
+    // 		email: action.payload.email,
+    // 		roles: ["user"],
+    // 	};
+    // 	state.user = NONSO_ALI;
+    // },
+    // addUser(state, action: PayloadAction<AuthUser & { token: string }>) {
+    // 	const { _id, token} = action.payload;
+    // 	console.log("ID: " + _id);
+    //     state.user = action.payload;
+    // 	state.token = token;
+    // 	state.isAuthenticated = true;
+    // 	state.status = "succeeded";
+    // 	console.log("Token is : ", token);
+    // },
+    userLoggedOut(state) {
+      //TODO: Logout functionality, add logic to clear information from other slices and states
+      state.token = null;
+      state.user = null;
+      state.isAuthenticated = false;
+    },
+    userRegistered(state, action: PayloadAction<Register>) {},
+    userForgotPassword(state, action: PayloadAction<ForgotPassword>) {
+      //TODO: Logic for forgot password
+    },
+    userResetPassword(state, action: PayloadAction<ResetPassword>) {
+      const { email, newPassword } = action.payload;
+      //TODO: Logic to change password
+    },
+    userVerifiedOtp(state, action: PayloadAction<VerifyOtp>) {
+      //TODO: Logic to verify otp
+    },
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(loginUser.pending, state => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = { message: action.payload as string };
+      })
+      .addCase(forgotPassword.pending, state => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.forgotPasswordEmail = action.payload.email;
+        state.error = null;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = { message: action.payload as string };
+      })
+      .addCase(verifyOtp("signup").pending, state => {
+        //NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(verifyOtp("signup").fulfilled, (state, action) => {
+        //NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
+        state.status = "succeeded";
+        const validationCode = action.payload.resetValidationCode;
+        if (validationCode) state.resetValidationCode = validationCode;
+        state.error = null;
+      })
+      .addCase(verifyOtp("signup").rejected, (state, action) => {
+        //NOTE: The verifyOtp("signup") will work for both signup and forgotpassword because they have the same action type/signature. The only difference is how they're generated.
+        state.status = "failed";
+        state.error = { message: action.payload as string };
+      })
+      .addCase(resetPassword.pending, state => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.error = null;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = { message: action.payload as string };
+      });
+  },
+  selectors: {
+    selectCurrentUser: (state: AuthState) => state.user,
+    selectAuthStatus: (state: AuthState) => state.status,
+    selectAuthError: (state: AuthState) => state.error,
+    selectForgotPasswordEmail: (state: AuthState) => state.forgotPasswordEmail,
+    selectResetValidationCode: (state: AuthState) => state.resetValidationCode,
+  },
+});
 
-export const { selectCurrentUser, selectAuthStatus, selectAuthError, selectForgotPasswordEmail, selectResetValidationCode } = authSlice.selectors;
+export const {
+  resetAuthError,
+  resetAuthStatus,
+  resetForgotPasswordFlow,
+  userLoggedOut,
+} = authSlice.actions;
+
+export const {
+  selectCurrentUser,
+  selectAuthStatus,
+  selectAuthError,
+  selectForgotPasswordEmail,
+  selectResetValidationCode,
+} = authSlice.selectors;
 
 export default authSlice.reducer;

@@ -1,15 +1,15 @@
-import React from 'react';
-import { useState } from 'react';
-import { Link, useRouter } from 'expo-router';
-import colors from '@helpers/colors';
-import { compactStyles } from '@helpers/styles';
-import ButtonGroup from '@components/ButtonGroup';
-import GoogleIcon from '@assets/images/google.svg';
-import AppleIcon from '@assets/images/apple-logo.svg';
-import { Text, TextInput } from '@components/Text';
-import FacebookIcon from '@assets/images/facebook.svg';
-import HeaderImage from '@assets/images/loginPageHeader.svg';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from "react";
+import { useState } from "react";
+import { Link, useRouter } from "expo-router";
+import colors from "@helpers/colors";
+import { compactStyles } from "@helpers/styles";
+import ButtonGroup from "@components/ButtonGroup";
+import GoogleIcon from "@assets/images/google.svg";
+import AppleIcon from "@assets/images/apple-logo.svg";
+import { Text, TextInput } from "@components/Text";
+import FacebookIcon from "@assets/images/facebook.svg";
+import HeaderImage from "@assets/images/loginPageHeader.svg";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   StyleSheet,
   View,
@@ -17,58 +17,58 @@ import {
   Dimensions,
   SafeAreaView,
   Platform,
-} from 'react-native';
-import useAppDispatch from '@hooks/useAppDispatch';
+} from "react-native";
+import useAppDispatch from "@hooks/useAppDispatch";
 import {
   loginUser,
   resetAuthError,
   resetAuthStatus,
   selectAuthError,
   selectAuthStatus,
-} from '@store/authSlice';
-import CustomKeyboardView from '@components/CustomKeyboardView';
-import { useSelector } from 'react-redux';
-import LoadingIndicator from '@components/signupComponents/LoadingIndicator';
-import { isEmailValid } from '@helpers/utils';
+} from "@store/authSlice";
+import CustomKeyboardView from "@components/CustomKeyboardView";
+import { useSelector } from "react-redux";
+import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
+import { isEmailValid } from "@helpers/utils";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const index = () => {
   const { top, bottom } = useSafeAreaInsets();
   const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-  const ios = Platform.OS === 'ios';
-  const android = Platform.OS === 'android';
+  const ios = Platform.OS === "ios";
+  const android = Platform.OS === "android";
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [validationError, setValidationError] = useState<string>('');
+  const [validationError, setValidationError] = useState<string>("");
 
   const handleLogin = async () => {
-    setValidationError('');
+    setValidationError("");
 
     if (!email.trim() && !password.trim()) {
-      setValidationError('Email and Password are required');
+      setValidationError("Email and Password are required");
       return;
     } else if (!email.trim()) {
-      setValidationError('Email is required');
+      setValidationError("Email is required");
       return;
     } else if (!password.trim()) {
-      setValidationError('Password is required');
+      setValidationError("Password is required");
       return;
     } else if (!isEmailValid(email.trim())) {
-      setValidationError('Please enter a valid email address');
+      setValidationError("Please enter a valid email address");
       return;
     }
 
     try {
       const result = await dispatch(loginUser({ email, password }));
-      if (result.meta.requestStatus === 'fulfilled') {
+      if (result.meta.requestStatus === "fulfilled") {
         dispatch(resetAuthStatus());
-        router.navigate('Home');
+        router.navigate("Home");
       }
     } catch (error) {
-      setValidationError('An error occurred, please try again later.');
+      setValidationError("An error occurred, please try again later.");
     }
   };
 
@@ -82,10 +82,10 @@ const index = () => {
     if (validationError) {
       return validationError;
     }
-    if (loginStatus === 'failed' && loginError && loginError.message) {
+    if (loginStatus === "failed" && loginError && loginError.message) {
       return loginError.message;
     }
-    return '';
+    return "";
   };
 
   return (
@@ -109,7 +109,7 @@ const index = () => {
               Welcome back! Please enter your details
             </Text>
           </View>
-          {loginStatus === 'loading' && <LoadingIndicator visible />}
+          {loginStatus === "loading" && <LoadingIndicator visible />}
           <View style={[styles.userInputContainer]}>
             {getErrorMessage() ? (
               <Text style={styles.errorMessage}>{getErrorMessage()}</Text>
@@ -121,13 +121,13 @@ const index = () => {
                 value={email}
                 onChangeText={text => {
                   setEmail(text);
-                  if (validationError) setValidationError('');
+                  if (validationError) setValidationError("");
                   if (loginError && loginError.message)
                     dispatch(resetAuthError());
                 }}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholder="Enter your email"
+                keyboardType='email-address'
+                autoCapitalize='none'
+                placeholder='Enter your email'
               />
             </View>
             <View style={[styles.userInputSubContainer]}>
@@ -138,11 +138,11 @@ const index = () => {
                 secureTextEntry
                 onChangeText={text => {
                   setPassword(text);
-                  if (validationError) setValidationError('');
+                  if (validationError) setValidationError("");
                   if (loginError && loginError.message)
                     dispatch(resetAuthError());
                 }}
-                placeholder="Enter your password"
+                placeholder='Enter your password'
               />
             </View>
           </View>
@@ -158,13 +158,13 @@ const index = () => {
               ></View>
               <Text>Remember Me</Text>
             </TouchableOpacity>
-            <Link href={'/(forgotPassword)/ForgotPassword'} asChild>
+            <Link href={"/(forgotPassword)/ForgotPassword"} asChild>
               <TouchableOpacity>
                 <Text style={[styles.infoText]}>Forgot Password</Text>
               </TouchableOpacity>
             </Link>
           </View>
-          <ButtonGroup positiveOption="Login" onPress={handleLogin} />
+          <ButtonGroup positiveOption='Login' onPress={handleLogin} />
         </View>
         <View style={[styles.componentContainer, styles.otherLoginContainer]}>
           <Text style={[styles.infoText]}>Or Login with</Text>
@@ -184,7 +184,7 @@ const index = () => {
         </View>
         <View style={[styles.componentContainer, styles.signUpContainer]}>
           <Text style={[styles.noAccount]}>Don't have an account?</Text>
-          <Link href={'/SignUp'} asChild style={[styles.signUp]}>
+          <Link href={"/SignUp"} asChild style={[styles.signUp]}>
             <TouchableOpacity>
               <Text style={styles.signUpText}>Sign Up</Text>
             </TouchableOpacity>
@@ -203,7 +203,7 @@ const generalStyles = StyleSheet.create({
   },
 
   ctaHeader: {
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 22,
   },
 
@@ -214,26 +214,26 @@ const generalStyles = StyleSheet.create({
   userInputLabel: {},
 
   optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   checkboxUnchecked: {
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     marginRight: 10,
     borderRadius: 4,
   },
   checkboxChecked: {
     width: 20,
     height: 20,
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     marginRight: 10,
     borderRadius: 4,
   },
@@ -241,16 +241,16 @@ const generalStyles = StyleSheet.create({
   socialButton: {
     width: 50,
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 25,
   },
 
   signUpText: {
     fontSize: 12,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
     color: colors.mainColor,
   },
 
@@ -261,20 +261,20 @@ const generalStyles = StyleSheet.create({
 
 const androidStyles = StyleSheet.create({
   componentContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   ctaComponentContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     gap: 15,
   },
   userInputContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     gap: 30,
   },
 
   userInput: {
-    maxWidth: '100%',
+    maxWidth: "100%",
     width: width * 0.85,
     borderColor: colors.inputBorderColor,
     borderWidth: 1,
@@ -289,15 +289,15 @@ const androidStyles = StyleSheet.create({
     fontSize: 12,
   },
   socialLoginContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
     marginBottom: 20,
   },
   signUpContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 5,
   },
 
@@ -312,11 +312,11 @@ const androidStyles = StyleSheet.create({
 const iosStyles = StyleSheet.create({
   componentContainer: {
     paddingHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   ctaComponentContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     gap: 30,
     paddingHorizontal: 20,
   },
@@ -326,7 +326,7 @@ const iosStyles = StyleSheet.create({
   },
 
   userInputContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     gap: 30,
   },
 
@@ -335,7 +335,7 @@ const iosStyles = StyleSheet.create({
   },
 
   userInput: {
-    maxWidth: '100%',
+    maxWidth: "100%",
     width: width * 0.9,
     borderColor: colors.inputBorderColor,
     borderWidth: 1,
@@ -353,9 +353,9 @@ const iosStyles = StyleSheet.create({
   },
 
   socialLoginContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '80%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "80%",
   },
 
   socialButton: {
@@ -365,9 +365,9 @@ const iosStyles = StyleSheet.create({
   },
 
   signUpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     gap: 5,
   },
 });

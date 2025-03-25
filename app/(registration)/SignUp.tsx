@@ -1,23 +1,23 @@
-import { BackHandler, StyleSheet, View } from 'react-native';
-import { Text, TextInput } from '@components/Text';
-import React, { useState } from 'react';
-import { compactStyles } from '@helpers/styles';
-import AccountInformation from '@components/authScreenComponents/AccountInformation';
-import ContactDetails from '@components/authScreenComponents/ContactDetails';
-import Password from '@components/authScreenComponents/Password';
-import OtpVerification from '@components/authScreenComponents/OtpVerification';
-import { useRouter } from 'expo-router';
+import { BackHandler, StyleSheet, View } from "react-native";
+import { Text, TextInput } from "@components/Text";
+import React, { useState } from "react";
+import { compactStyles } from "@helpers/styles";
+import AccountInformation from "@components/authScreenComponents/AccountInformation";
+import ContactDetails from "@components/authScreenComponents/ContactDetails";
+import Password from "@components/authScreenComponents/Password";
+import OtpVerification from "@components/authScreenComponents/OtpVerification";
+import { useRouter } from "expo-router";
 
 const SignUp = () => {
   const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [gender, setGender] = useState<'Male' | 'Female'>('Male');
-  const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [gender, setGender] = useState<"Male" | "Female">("Male");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const [index, setIndex] = useState(0);
@@ -26,7 +26,7 @@ const SignUp = () => {
     firstName: string,
     lastName: string,
     dateOfBirth: string,
-    gender: 'Male' | 'Female'
+    gender: "Male" | "Female"
   ) => {
     setIndex(1);
   };
@@ -48,7 +48,7 @@ const SignUp = () => {
     //TODO: After submitting the password, the onboarding screen shouldn't be stacked untop regular screens. It should replace the whole registration process, so back will go to the login screen directly.
   };
 
-  BackHandler.addEventListener('hardwareBackPress', () => {
+  BackHandler.addEventListener("hardwareBackPress", () => {
     if (index !== 0) {
       setIndex(index - 1);
     } else {
