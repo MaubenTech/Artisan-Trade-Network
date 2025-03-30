@@ -40,7 +40,7 @@ export default LogoHeaderContainer;
 
 const generalStyles = StyleSheet.create({
 	container: {
-		padding: 30,
+		// padding: 30,
 		flex: 1,
 	},
 	componentContainer: {
@@ -52,4 +52,8 @@ const generalStyles = StyleSheet.create({
 
 const androidStyles = StyleSheet.create({});
 
-const iosStyles = StyleSheet.create({});
+const iosStyles = StyleSheet.create({
+	container: {
+		padding: 0,
+	},
+});

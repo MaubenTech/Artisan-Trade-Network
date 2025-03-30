@@ -1,6 +1,6 @@
 import colors from "@helpers/colors";
 import PageHeader from "@components/PageHeader";
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity, ImageBackground } from "react-native";
 import React, { FunctionComponent, ReactElement, ReactSVGElement, useEffect } from "react";
 
 import TabBar from "@components/TabBar";
@@ -16,6 +16,7 @@ import useAppSelector from "@hooks/useAppSelector";
 import useAppDispatch from "@hooks/useAppDispatch";
 import { router } from "expo-router";
 import { setJobService } from "@store/jobsSlice";
+import { API_BASE_URL } from "@store";
 
 type LocalServices = {
 	name: string;
@@ -63,6 +64,7 @@ export default function Services() {
 	const services = useAppSelector(selectServices);
 	const status = useAppSelector(selectServicesStatus);
 	const error = useAppSelector(selectServicesError);
+	const [serviceImages, setServiceImages] = React.useState<Record<string, string>>({});
 
 	useEffect(() => {
 		if (status === "idle") {
@@ -71,9 +73,25 @@ export default function Services() {
 		}
 	}, [dispatch]);
 
+	useEffect(() => {
+		if (status === "succeeded" && services.length > 0) {
+			const serviceImageUrls: Record<string, string> = {};
+
+			services.forEach((service) => {
+				if (service.image) serviceImageUrls[service._id] = `${API_BASE_URL}/file/${service.image}`;
+			});
+
+			setServiceImages(serviceImageUrls);
+		}
+	}, [services, status]);
+
 	const handleServiceChoice = (serviceId: string) => {
 		dispatch(setJobService(serviceId));
 		router.navigate({ pathname: "/NewJob", params: { serviceId } });
+	};
+
+	const getServiceImageUrl = (service: Service) => {
+		return serviceImages[service._id] || null;
 	};
 
 	return (
@@ -94,13 +112,25 @@ export default function Services() {
 
 				{status === "succeeded" && (
 					<View style={styles.serviceContentContainer}>
-						{services.map((service, index) => (
-							<TouchableOpacity onPress={() => handleServiceChoice(service._id)} style={styles.serviceItem} key={service._id}>
-								{/* {service.image} */}
-								<Text style={styles.serviceItemTitle}>{service.name}</Text>
-								<Text style={styles.serviceItemSubTitle}>{service.description}</Text>
-							</TouchableOpacity>
-						))}
+						{services.map((service, index) => {
+							const imageUrl = getServiceImageUrl(service);
+							return (
+								<View key={service._id} style={styles.serviceItemWrapper}>
+									<ImageBackground
+										source={imageUrl ? { uri: imageUrl } : null}
+										style={styles.serviceItemBackground}
+										imageStyle={{ borderRadius: 20 }}
+										resizeMode="cover"
+									>
+										<TouchableOpacity onPress={() => handleServiceChoice(service._id)} style={styles.serviceItem} key={service._id}>
+											{/* {service.image} */}
+											<Text style={styles.serviceItemTitle}>{service.name}</Text>
+											{/* <Text style={styles.serviceItemSubTitle}>{service.description}</Text> */}
+										</TouchableOpacity>
+									</ImageBackground>
+								</View>
+							);
+						})}
 						{/* {localServices.map((item, index) => {
 							return (
 								<View style={styles.serviceItem} key={index}>
@@ -141,21 +171,40 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 
-	serviceItem: {
-		width: "45%",
-		marginBottom: 30,
-		backgroundColor: colors.grey2,
-		borderRadius: 20,
-		borderColor: colors.whiteShade,
-		borderWidth: 2,
-		alignItems: "center",
-		padding: 6,
+	serviceItemWrapper: {
+		width: "58%",
+		marginBottom: 20,
 		height: height * 0.18,
-		marginRight: 3,
+		borderWidth: 2,
+		borderColor: colors.whiteShade,
+		borderRadius: 20,
+	},
+
+	serviceItemBackground: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 20,
+	},
+
+	serviceItem: {
+		// width: "45%",
+		flex: 1,
+		// marginBottom: 30,
+		// backgroundColor: colors.grey2,
+		backgroundColor: "rgba(245, 245, 245, 0.5)",
+		borderRadius: 20,
+		// borderColor: colors.whiteShade,
+		// borderWidth: 2,
+		alignItems: "center",
+		justifyContent: "center",
+		padding: 6,
+		// height: height * 0.18,
+		// marginRight: 3,
 	},
 
 	serviceItemTitle: {
-		fontWeight: "600",
+		fontWeight: "700",
+		fontSize: 18,
 	},
 
 	serviceItemSubTitle: {

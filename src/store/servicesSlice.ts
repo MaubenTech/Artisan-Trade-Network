@@ -1,4 +1,5 @@
 import { getData } from "@helpers/APIFunction";
+import { APIError, generateGetAsyncThunk } from "@helpers/utils";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Service {
@@ -16,22 +17,44 @@ interface ServiceState {
 	error: string | null;
 }
 
-export const fetchServices = createAsyncThunk<Service[], void>("services/fetchServices", async (_, { rejectWithValue }) => {
-	try {
-		console.log("Starting services..!");
-		const services = await getData<Service[]>("/services");
+// export const fetchServices = createAsyncThunk<Service[], void>("services/fetchServices", async (_, { rejectWithValue }) => {
+// 	try {
+// 		console.log("Starting services..!");
+// 		const services = await getData<Service[]>("/services");
 
-		if (!services || !Array.isArray(services)) {
-			console.log("No valid response from fetching services");
-			return rejectWithValue("Error fetching services: Invalid response format");
-		}
+// 		if (!services || !Array.isArray(services)) {
+// 			console.log("No valid response from fetching services");
+// 			return rejectWithValue("Error fetching services: Invalid response format");
+// 		}
 
-		return services;
-	} catch (error) {
-		console.error("Error fetching services: ", error);
-		return rejectWithValue(error.message || "Failed to get services");
+// 		return services;
+// 	} catch (error) {
+// 		console.error("Error fetching services: ", error);
+// 		return rejectWithValue(error.message || "Failed to get services");
+// 	}
+// });
+
+export const fetchServices = generateGetAsyncThunk<Service[], Service[], void>(
+	"services/fetchServices",
+	"/services",
+	(result) => {
+		console.info("Services Fetched Successfully");
+		return result;
+	},
+	{
+		validateResponse: (services) => {
+			if (!services || !Array.isArray(services)) {
+				console.log("Services is not an array");
+				return { valid: false, message: "Invalid response format" };
+			}
+			return { valid: true };
+		},
+		errorCallback: (error: APIError) => {
+			console.error("Error fetching services: ", error);
+			return error.message || "Failed to get services";
+		},
 	}
-});
+);
 
 const initialState: ServiceState = {
 	services: [
