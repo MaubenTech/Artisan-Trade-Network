@@ -307,11 +307,16 @@ const iosStyles = StyleSheet.create({
 	ctaComponentContainer: {
 		gap: 30,
 		paddingHorizontal: 20,
+		width: "100%",
 	},
 
   ctaComponentHeader: {
     gap: 5,
   },
+
+	userInputContainer: {
+		width: "100%",
+	},
 
 	userInputSubContainer: {
 		gap: 5,

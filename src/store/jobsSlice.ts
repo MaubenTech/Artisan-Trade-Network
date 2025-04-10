@@ -454,7 +454,7 @@ export const selectJobsPageJobs = createAppSelector([selectJobsState, selectCurr
 		: {
 				...jobs,
 				jobList: jobs.jobList.filter((job) => job.userId === currentUser._id || (job.userId !== currentUser._id && job.status !== "Posted")), //Basically getting their jobs and jobs posted from other users, THAT aren't active yet.
-		  };
+			};
 });
 
 export const selectBidsPageJobs = createAppSelector([selectJobsState, selectCurrentUser], (jobs, user) => {
