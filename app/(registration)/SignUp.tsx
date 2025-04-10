@@ -101,8 +101,8 @@ const SignUp = () => {
 			router.back();
 		}
 
-		return true;
-	});
+    return true;
+  });
 
 	const renderComponent = () => {
 		switch (index) {

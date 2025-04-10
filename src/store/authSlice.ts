@@ -6,22 +6,22 @@ import { fetchUsers } from "./usersSlice";
 import { generatePostAsyncThunk } from "@helpers/utils";
 
 interface Login {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 }
 
 interface ResetPassword {
-	email: string;
-	newPassword: string;
+  email: string;
+  newPassword: string;
 }
 
 interface ForgotPassword {
-	email: string;
+  email: string;
 }
 
 interface VerifyOtp {
-	email: string;
-	otp: string;
+  email: string;
+  otp: string;
 }
 
 interface CheckEmail {
@@ -30,38 +30,44 @@ interface CheckEmail {
 }
 
 interface Register {
-	email: string;
-	password: string;
-	firstName: string;
-	lastName: string;
-	dateOfBirth: string;
-	gender: string;
-	address: string;
-	phoneNumber: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: string;
+  address: string;
+  phoneNumber: string;
 }
 
 export type Role = "user" | "artisan" | "admin";
 
 interface User {
-	_id: string;
-	email: string;
-	firstname: string;
-	lastname: string;
-	dateofbirth: string;
-	gender: string;
-	address: string;
-	phonenumber: string;
-	password: string;
-	isVerified: boolean;
-	otp: string;
-	otpExpires: string;
-	roles: Role[];
-	// type: "NORMAL" | "ARTISAN";
+  _id: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+  dateofbirth: string;
+  gender: string;
+  address: string;
+  phonenumber: string;
+  password: string;
+  isVerified: boolean;
+  otp: string;
+  otpExpires: string;
+  roles: Role[];
+  // type: "NORMAL" | "ARTISAN";
 }
 
-type JwtDecodedUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "roles"> & { iat: number; exp: number };
+type JwtDecodedUser = Pick<
+  User,
+  "_id" | "email" | "firstname" | "lastname" | "roles"
+> & { iat: number; exp: number };
 
-type AuthUser = Pick<User, "_id" | "email" | "firstname" | "lastname" | "roles">;
+type AuthUser = Pick<
+  User,
+  "_id" | "email" | "firstname" | "lastname" | "roles"
+>;
 
 export interface AuthState {
 	error: { message: string };
@@ -90,23 +96,26 @@ const initialState: AuthState = {
 };
 
 export type ValidationError = {
-	location?: string;
-	msg?: string;
-	path?: string;
-	type?: string;
-	value?: string;
+  location?: string;
+  msg?: string;
+  path?: string;
+  type?: string;
+  value?: string;
 };
 
 type ApiUser = {
-	token: string;
-	user: {
-		_id: string;
-		email: string;
-		roles: string[];
-	};
+  token: string;
+  user: {
+    _id: string;
+    email: string;
+    roles: string[];
+  };
 };
 
-type UserLoginResult = ApiUser | { error: string } | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
+type UserLoginResult =
+  | ApiUser
+  | { error: string }
+  | { errors: ValidationError[] }; //ApiUser = SuccessfulUserLoginResult
 
 type LoginParams = { email: string; password: string };
 type LoginResult = ApiUser;
@@ -254,16 +263,20 @@ type VerifyOtpParams = { email: string; otp: string };
 type VerifyOtpResult = { resetValidationCode?: string; message: string };
 
 export const verifyOtp = (type: VerifyOtpType) =>
-	generatePostAsyncThunk<VerifyOtpResult, VerifyOtpResult, VerifyOtpParams>(
-		"auth/verifyOtp",
-		`/auth/verify-otp${type === "signup" ? "" : "-reset"}`,
-		"resetValidationCode",
-		(result, params) => {
-			return result;
-		}
-	);
+  generatePostAsyncThunk<VerifyOtpResult, VerifyOtpResult, VerifyOtpParams>(
+    "auth/verifyOtp",
+    `/auth/verify-otp${type === "signup" ? "" : "-reset"}`,
+    "resetValidationCode",
+    (result, params) => {
+      return result;
+    }
+  );
 
-type ResetPasswordParams = { email: string; resetValidationCode: string; newPassword: string };
+type ResetPasswordParams = {
+  email: string;
+  resetValidationCode: string;
+  newPassword: string;
+};
 type ResetPasswordResult = { message: string };
 
 export const resetPassword = generatePostAsyncThunk<ResetPasswordResult, ResetPasswordResult, ResetPasswordParams>(

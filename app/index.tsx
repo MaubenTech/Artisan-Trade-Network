@@ -49,8 +49,8 @@ const index = () => {
 		if (loginError && loginError.message) dispatch(resetAuthError());
 	};
 
-	const handleLogin = async () => {
-		setValidationError("");
+  const handleLogin = async () => {
+    setValidationError("");
 
 		if (!email.trim()) {
 			setValidationError("Email is required");
@@ -75,11 +75,11 @@ const index = () => {
 		}
 	};
 
-	const loginStatus = useSelector(selectAuthStatus);
-	const loginError = useSelector(selectAuthError);
+  const loginStatus = useSelector(selectAuthStatus);
+  const loginError = useSelector(selectAuthError);
 
-	const router = useRouter();
-	const dispatch = useAppDispatch();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
 	const handleForgotPasswordClick = () => {
 		dispatch(resetAuth());
@@ -295,12 +295,12 @@ const androidStyles = StyleSheet.create({
 		gap: 5,
 	},
 
-	noAccount: {
-		fontSize: 12,
-		color: colors.greyShade,
-	},
+  noAccount: {
+    fontSize: 12,
+    color: colors.greyShade,
+  },
 
-	signUp: {},
+  signUp: {},
 });
 
 const iosStyles = StyleSheet.create({
@@ -310,9 +310,9 @@ const iosStyles = StyleSheet.create({
 		width: "100%",
 	},
 
-	ctaComponentHeader: {
-		gap: 5,
-	},
+  ctaComponentHeader: {
+    gap: 5,
+  },
 
 	userInputContainer: {
 		width: "100%",
@@ -327,26 +327,26 @@ const iosStyles = StyleSheet.create({
 		marginBottom: 30,
 	},
 
-	infoText: {
-		fontSize: 14,
-	},
+  infoText: {
+    fontSize: 14,
+  },
 
-	socialLoginContainer: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		width: "80%",
-	},
+  socialLoginContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "80%",
+  },
 
-	socialButton: {
-		height: 35,
-		borderRadius: 50,
-		padding: 10,
-	},
+  socialButton: {
+    height: 35,
+    borderRadius: 50,
+    padding: 10,
+  },
 
-	signUpContainer: {
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: 5,
-	},
+  signUpContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+  },
 });

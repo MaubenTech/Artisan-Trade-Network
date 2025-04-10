@@ -1,4 +1,9 @@
-import { View, SafeAreaView, TextInput as RNTextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  TextInput as RNTextInput,
+  TouchableOpacity,
+} from "react-native";
 import { StyleSheet, Image } from "react-native";
 import React, { Children, useEffect, useRef, useState } from "react";
 import ButtonGroup from "@components/ButtonGroup";
@@ -41,10 +46,10 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 
 	const email = useAppSelector(type === "signup" ? selectSignupEmail : selectForgotPasswordEmail);
 
-	const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-	const otpVerificationStatus = useAppSelector(selectAuthStatus);
-	const otpVerificationError = useAppSelector(selectAuthError);
+  const otpVerificationStatus = useAppSelector(selectAuthStatus);
+  const otpVerificationError = useAppSelector(selectAuthError);
 
 	const handleVerifyOtp = async (otp: string) => {
 		try {
@@ -59,24 +64,28 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 		}
 	};
 
-	const handleResendCode = async () => {
-		try {
-			const result = await dispatch(forgotPassword({ email }));
-			if (result.meta.requestStatus === "fulfilled") {
-				dispatch(resetAuthStatus());
-			}
-		} catch (error) {
-			setValidationError("An error occurred, please try again later.");
-		}
-	};
+  const handleResendCode = async () => {
+    try {
+      const result = await dispatch(forgotPassword({ email }));
+      if (result.meta.requestStatus === "fulfilled") {
+        dispatch(resetAuthStatus());
+      }
+    } catch (error) {
+      setValidationError("An error occurred, please try again later.");
+    }
+  };
 
-	const getErrorMessage = () => {
-		if (validationError) return validationError;
-		if (otpVerificationStatus === "failed" && otpVerificationError && otpVerificationError.message) {
-			return otpVerificationError.message;
-		}
-		return "";
-	};
+  const getErrorMessage = () => {
+    if (validationError) return validationError;
+    if (
+      otpVerificationStatus === "failed" &&
+      otpVerificationError &&
+      otpVerificationError.message
+    ) {
+      return otpVerificationError.message;
+    }
+    return "";
+  };
 
 	return (
 		<OtpContainer removeHeader={removeHeader}>
@@ -211,25 +220,25 @@ const generalStyles = StyleSheet.create({
 		// fontSize: 16,
 	},
 
-	errorMessage: {
-		color: colors.red,
-	},
+  errorMessage: {
+    color: colors.red,
+  },
 
-	// loginButtonContainer: {
-	//     borderWidth: 1,
-	//     borderRadius: 10,
-	//     paddingTop: "3%",
-	//     paddingBottom: "5%",
-	//     paddingLeft: "7%",
-	//     paddingRight: "7%",
-	//     marginLeft: "7%",
-	//     marginRight: "7%",
-	//     marginTop: "35%",
-	//     alignItems: "center",
-	//     borderColor: "#52A2f2",
-	//     backgroundColor: "#52A2f2",
-	//     position: "relative",
-	// },
+  // loginButtonContainer: {
+  //     borderWidth: 1,
+  //     borderRadius: 10,
+  //     paddingTop: "3%",
+  //     paddingBottom: "5%",
+  //     paddingLeft: "7%",
+  //     paddingRight: "7%",
+  //     marginLeft: "7%",
+  //     marginRight: "7%",
+  //     marginTop: "35%",
+  //     alignItems: "center",
+  //     borderColor: "#52A2f2",
+  //     backgroundColor: "#52A2f2",
+  //     position: "relative",
+  // },
 });
 const androidStyles = StyleSheet.create({});
 const iosStyles = StyleSheet.create({});
