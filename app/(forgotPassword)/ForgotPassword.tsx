@@ -62,7 +62,7 @@ const ForgotPassword = (): JSX.Element => {
 		case 0:
 			return <ForgotPasswordInitial onEmailVerified={emailVerified} onBack={handleCompleteProcess} />;
 		case 1:
-			return <OtpVerification onOtpVerified={otpVerified} />;
+			return <OtpVerification type="forgotpassword" onOtpVerified={otpVerified} />;
 		case 2:
 			return <ResetPassword onPasswordReset={passwordReset} onBack={handleCompleteProcess} />;
 		case 3:

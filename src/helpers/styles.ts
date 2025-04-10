@@ -1,5 +1,4 @@
-import { ImageStyle } from "expo-image";
-import { Dimensions, Platform, TextStyle, ViewStyle } from "react-native";
+import { Dimensions, ImageStyle, Platform, TextStyle, ViewStyle } from "react-native";
 import { scale as horizontalScale, moderateScale, moderateVerticalScale, verticalScale } from "react-native-size-matters";
 
 type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
@@ -13,7 +12,11 @@ export type StyleKey = keyof ViewStyle | keyof TextStyle | keyof ImageStyle;
  * @param iosStyles The ios-specific styles to be applied for every component.
  * @returns The overall stylesheet
  */
-export const compactStyles = <T extends NamedStyles<T>, U extends NamedStyles<U>, V extends NamedStyles<V>>(generalStyles: T, androidStyles?: U, iosStyles?: V): T & U & V => {
+export const compactStyles = <T extends NamedStyles<T>, U extends NamedStyles<U>, V extends NamedStyles<V>>(
+	generalStyles: T,
+	androidStyles?: U,
+	iosStyles?: V
+): T & U & V => {
 	const platformStyles = Platform.OS === "android" ? androidStyles : Platform.OS === "ios" ? iosStyles : {};
 	return scaleMetrics(deepMerge({ ...generalStyles }, platformStyles) as T & U & V);
 	// return addFontScale(deepMerge2({ ...generalStyles }, platformStyles) as T & U & V); //also works
@@ -209,7 +212,12 @@ const resolveMultipleAxisStyles = <T>(target: T): T => {
 	for (const key of Object.keys(target)) {
 		const value = tempTarget[key as keyof T];
 		const valueKeys = Object.keys(value);
-		if (typeof value === "object" && value !== null && !Array.isArray(value) && (valueKeys.includes("margin") || valueKeys.includes("padding") || valueKeys.includes("gap"))) {
+		if (
+			typeof value === "object" &&
+			value !== null &&
+			!Array.isArray(value) &&
+			(valueKeys.includes("margin") || valueKeys.includes("padding") || valueKeys.includes("gap"))
+		) {
 			const margin = value["margin"] as keyof typeof value;
 			const padding = value["padding"] as keyof typeof value;
 			const gap = value["gap"] as keyof typeof value;

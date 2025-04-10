@@ -1,257 +1,178 @@
 import { StyleSheet, View, Image, TouchableOpacity, Button, Modal } from "react-native";
 import { Text, TextInput } from "@components/Text";
 import { Link } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonGroup from "@components/ButtonGroup";
-import RadioGroup, { OptionParams } from "@components/RadioGroup";
+import RadioGroup, { RadioOption } from "@components/RadioGroup";
 import { useCallback, useEffect, useRef, useState } from "react";
 import colors from "@helpers/colors";
 import CalenderIcon from "@assets/icons/auth/calender-icon.svg";
 import RNDateTimePicker, { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import HeaderImage from "@assets/images/loginPageHeader.svg";
 import DatePicker from "react-native-modern-datepicker";
+import { isAndroid } from "@helpers/utils";
+import { compactStyles } from "@helpers/styles";
+import CustomKeyboardView from "@components/CustomKeyboardView";
+import Entry from "@components/Entry";
+import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 
-interface AccountInformationProps {
-	onSubmit: (firstName: string, lastName: string, dateOfBirth: string, gender: "Male" | "Female") => void;
+export type Gender = "Male" | "Female";
+
+export interface AccountInformation {
+	firstName: string;
+	lastName: string;
+	dateOfBirth: string;
+	gender: Gender;
 }
 
-export default function AccountInformation({ onSubmit }: AccountInformationProps) {
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [dateOfBirth, setDateOfBirth] = useState("");
-	const [gender, setGender] = useState<"Male" | "Female">("Male");
+interface AccountInformationProps {
+	onSubmit: (firstName: string, lastName: string, dateOfBirth: string, gender: Gender) => void;
+	previousAccountInformation?: AccountInformation;
+}
 
-	const [showCalender, setShowCalender] = useState(false);
-	// const [date, setDate] = useState<Date>();
+export default function AccountInformation({ onSubmit, previousAccountInformation }: AccountInformationProps) {
+	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
+	const [firstName, setFirstName] = useState(
+		previousAccountInformation && !!previousAccountInformation.firstName ? previousAccountInformation.firstName : ""
+	);
+	const [lastName, setLastName] = useState(previousAccountInformation && !!previousAccountInformation.lastName ? previousAccountInformation.lastName : "");
+	const [dateOfBirth, setDateOfBirth] = useState(
+		previousAccountInformation && previousAccountInformation.dateOfBirth ? previousAccountInformation.dateOfBirth : ""
+	);
+	const [gender, setGender] = useState<Gender>(previousAccountInformation && !!previousAccountInformation.gender ? previousAccountInformation.gender : null);
+	const [validationError, setValidationError] = useState<string>();
 
-	const [selectedDate, setSelectedDate] = useState("");
+	const handleChangeFirstName = (text: string) => {
+		setFirstName(text);
+		setValidationError("");
+	};
 
-	// const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+	const handleChangeLastName = (text: string) => {
+		setLastName(text);
+		setValidationError("");
+	};
 
-	// // callbacks
-	// const handlePresentModalPress = useCallback(() => {
-	// 	bottomSheetModalRef.current?.present();
-	// }, []);
-	// const handleSheetChanges = useCallback((index: number) => {
-	// 	console.log("handleSheetChanges", index);
-	// }, []);
+	const handleChangeDateOfBirth = (text: string) => {
+		setDateOfBirth(text);
+		setValidationError("");
+	};
 
-	useEffect(() => {
-		// if (showCalender) {
-		// DateTimePickerAndroid.open({
-		// 	value: new Date(),
-		// 	onChange: (ev, date) => {
-		// 		console.log(`Date: ${date}`);
-		// 		setShowCalender(false);
-		// 	},
-		// 	mode: "date",
-		// 	is24Hour: true,
-		// 	maximumDate: new Date(),
-		// });
-		// }
-	});
+	const handleProceed = () => {
+		setValidationError("");
+
+		if (!firstName.trim()) {
+			setValidationError("First name is required");
+			return;
+		} else if (!lastName.trim()) {
+			setValidationError("Last name is required");
+			return;
+		} else if (!dateOfBirth.trim()) {
+			setValidationError("Date of birth is required");
+			return;
+		}
+
+		// console.log("We passed!");
+		onSubmit(firstName, lastName, dateOfBirth, gender);
+	};
+
+	const getIsErred = (input: "f" | "l" | "d") => {
+		if (!validationError) {
+			return false;
+		}
+		switch (input) {
+			case "f":
+				return !firstName.trim() || validationError.toLowerCase().includes("first");
+			case "l":
+				return !lastName.trim() || validationError.toLowerCase().includes("last");
+			case "d":
+				return !dateOfBirth.trim() || validationError.toLowerCase().includes("date");
+		}
+	};
+
+	// useEffect(() => console.log(`Gender changed to: ${gender}`), [gender]);
+	// useEffect(() => {
+	// 	if (previousAccountInformation) console.log(JSON.stringify(previousAccountInformation));
+	// }, [previousAccountInformation]);
 
 	return (
-		<GestureHandlerRootView style={styles.container}>
-			{/* <BottomSheetModalProvider> */}
-			<SafeAreaView>
-				<View style={styles.logo}>
-					<Image source={require("@assets/images/logo.png")} />
+		<View style={styles.ctaComponentContainer}>
+			<View style={[styles.ctaComponentHeader]}>
+				<Text style={styles.ctaHeader}>Create An Account</Text>
+				<Text style={styles.ctaSubHeader}>Welcome! please enter your personal details.</Text>
+			</View>
+			<View style={styles.userInputContainer}>
+				<Entry label="First Name" value={firstName} onChangeText={handleChangeFirstName} inputErred={getIsErred("f")} />
+				<Entry label="Last Name" value={lastName} onChangeText={handleChangeLastName} inputErred={getIsErred("l")} />
+				<Entry label="Date Of Birth" date={dateOfBirth} inputType="date" onChangeDate={handleChangeDateOfBirth} inputErred={getIsErred("d")} />
+				<Entry label="Gender" radio={gender} inputType="radio" radioData={["Male", "Female"] as const} onChangeRadio={setGender} />
+			</View>
+			{validationError && (
+				<View style={styles.unmatchedContainer}>
+					<RedExclamationMark />
+					<Text style={styles.unmatchedText}>{validationError}</Text>
 				</View>
-				<View style={styles.componentContainer}>
-					<Text style={styles.header}> Create An Account</Text>
-					<Text style={styles.subHeader}>Welcome! Please enter your personal details.</Text>
+			)}
+			<View style={styles.optionsContainer}>
+				<ButtonGroup onPress={handleProceed} positiveOption="Proceed" />
+				<View style={styles.existingUserContainer}>
+					<Text>Existing User?</Text>
+					<Link href={"/"} replace asChild>
+						<TouchableOpacity>
+							<Text style={{ textDecorationLine: "underline" }}>Login</Text>
+						</TouchableOpacity>
+					</Link>
 				</View>
-				<View style={styles.componentContainer}>
-					<View style={styles.subDetailsContainer}>
-						<Text style={styles.text}>First Name</Text>
-						<TextInput value={firstName} onChangeText={setFirstName} style={styles.detailsInput} placeholder="Enter Your First Name" />
-					</View>
-					<View style={styles.subDetailsContainer}>
-						<Text style={styles.text}>Last Name</Text>
-						<TextInput value={lastName} onChangeText={setLastName} style={styles.detailsInput} placeholder="Enter Your Last Name" />
-					</View>
-					<View style={styles.subDetailsContainer}>
-						<Text style={styles.text}>Date Of Birth</Text>
-						<View style={[styles.detailsInput, styles.dateOfBirthContainer]}>
-							<TextInput
-								style={styles.dateOfBirthInput}
-								placeholder="DD/MM/YYYY"
-								// value={date && date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()}
-								value={selectedDate}
-								readOnly={true}
-							/>
-							<TouchableOpacity
-								onPress={() => {
-									// handlePresentModalPress();
-									setShowCalender(true);
-								}}
-								style={styles.calenderButton}
-							>
-								<CalenderIcon />
-							</TouchableOpacity>
-						</View>
-					</View>
-					{/* {showCalender && (
-							<RNDateTimePicker
-								testID="dateTimePicker"
-								value={date ?? new Date()}
-								mode="date"
-								is24Hour={true}
-								onChange={(event, date) => {
-									setDate(date);
-									setShowCalender(false);
-								}}
-							/>
-						)} */}
-				</View>
-				<View style={[styles.componentContainer]}>
-					<Text style={styles.text}>Gender</Text>
-					<RadioGroup
-						options={[
-							{ label: "Male", value: "Male" },
-							{ label: "Female", value: "Female" },
-						]}
-						selectedOption={gender}
-						onChanged={setGender}
-						optionStyle={{ padding: 15 }}
-					/>
-				</View>
-				<View style={styles.optionsContainer}>
-					<ButtonGroup onPress={() => onSubmit(firstName, lastName, dateOfBirth, gender)} positiveOption="Proceed" paddingHorizontal={20} />
-					<View style={styles.existingUserContainer}>
-						<Text>Existing User?</Text>
-						<Link href={"/"} asChild>
-							<TouchableOpacity>
-								<Text style={{ textDecorationLine: "underline" }}>Login</Text>
-							</TouchableOpacity>
-						</Link>
-					</View>
-				</View>
-				{/* <BottomSheetModal ref={bottomSheetModalRef} onChange={handleSheetChanges}>
-						<BottomSheetView style={styles.contentContainer}>
-							<RNDateTimePicker mode="date" value={new Date()} />
-							<Text>Awesome 🎉</Text>
-						</BottomSheetView>
-					</BottomSheetModal> */}
-				<Modal animationType="slide" transparent visible={showCalender}>
-					<View style={styles.centeredView}>
-						<View style={styles.modalView}>
-							{/* TODO: Customize the datepicker a bit more. Add the animation where scrolling left or right has the same effect as clicking the left or right buttons respectively */}
-							<DatePicker
-								mode="calendar"
-								selected={selectedDate}
-								onDateChange={setSelectedDate}
-								options={{
-									backgroundColor: colors.white,
-									// textHeaderColor: colors.mainColor,
-									textDefaultColor: colors.brownShade,
-									selectedTextColor: colors.white,
-									mainColor: colors.mainColor,
-									textHeaderColor: "#000",
-									headerFont: "Poppins_600SemiBold",
-									textHeaderFontSize: 14,
-									defaultFont: "Poppins_400Regular",
-									textFontSize: 13,
-
-									// textHeaderColor: "#FFA25B",
-									// textDefaultColor: "#F6E7C1",
-									// selectedTextColor: "#fff",
-									// mainColor: "#F4722B",
-									// textSecondaryColor: "#D6C7A1",
-									// borderColor: "rgba(122, 146, 165, 0.1)",
-								}}
-							/>
-
-							<TouchableOpacity onPress={() => setShowCalender(false)}>
-								<Text style={{ color: colors.mainColor }}>Close</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</Modal>
-			</SafeAreaView>
-			{/* </BottomSheetModalProvider> */}
-		</GestureHandlerRootView>
+			</View>
+		</View>
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
+const generalStyles = StyleSheet.create({
+	ctaComponentContainer: {
 		gap: 20,
 	},
-	logo: {
-		flexDirection: "column",
-		alignItems: "center",
-	},
 	componentContainer: {
-		gap: 5,
 		paddingHorizontal: 20,
-	},
-	header: {
-		fontSize: 23,
-		fontWeight: "bold",
-	},
-	subHeader: {},
-	subDetailsContainer: {
-		gap: 8,
-	},
-	text: {
-		color: "black",
-		fontSize: 17,
-	},
-	detailsInput: {
-		borderWidth: 2,
-		borderRadius: 10,
-		padding: 15,
-		borderColor: colors.inputBorderColor,
-	},
-	dateOfBirthContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
 		alignItems: "center",
-		padding: 0,
 	},
-	dateOfBirthInput: {
-		flex: 1,
-		paddingLeft: 15,
+	ctaHeader: {
+		fontSize: 22,
+		fontWeight: "600",
 	},
-	calenderButton: {
-		padding: 15,
+	ctaSubHeader: {
+		fontSize: 11,
+	},
+	userInputContainer: {
+		alignItems: "flex-start",
+		gap: 20,
 	},
 	optionsContainer: {
 		// flex: 1,
 	},
-
 	existingUserContainer: {
 		flexDirection: "row",
 		justifyContent: "center",
 		gap: 10,
 	},
-
-	centeredView: {
-		flex: 1,
+	unmatchedContainer: {
+		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "center",
+		marginTop: -5,
+		gap: 8,
 	},
-	modalView: {
-		margin: 20,
-		// backgroundColor: "#000516",
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-		borderRadius: 20,
-		padding: 35,
-		width: "90%",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
+	unmatchedText: {
+		fontSize: 12,
+		paddingTop: 2,
+		color: colors.red,
+	},
+});
+
+const androidStyles = StyleSheet.create({});
+
+const iosStyles = StyleSheet.create({
+	ctaComponentHeader: {
+		gap: 5,
 	},
 });

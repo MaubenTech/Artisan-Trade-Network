@@ -1,5 +1,5 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, Dimensions, ScrollView, Platform } from "react-native";
-import { Text } from "@components/Text";
+import { StyleSheet, View, TouchableOpacity, Dimensions, ScrollView, Platform } from "react-native";
+import { Text, TextInput } from "@components/Text";
 import { Link, useRouter } from "expo-router";
 
 import HeaderImage from "@assets/images/resetPasswordHeader.svg";

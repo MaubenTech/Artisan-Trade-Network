@@ -1,10 +1,10 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Platform } from "react-native";
+import { StyleSheet, View, TouchableOpacity, ScrollView, Platform } from "react-native";
 import { Link, useNavigation, useRouter } from "expo-router";
 
 import HeaderImage from "@assets/images/forgotPasswordHeader.svg";
 import React, { useState } from "react";
 import colors from "@helpers/colors";
-import { Text } from "@components/Text";
+import { Text, TextInput } from "@components/Text";
 import { compactStyles } from "@helpers/styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useKeyboardHeight from "@helpers/useKeyboardHeight";
@@ -88,6 +88,8 @@ const ForgotPassword = ({ onEmailVerified, onBack }: ForgotPasswordProps): JSX.E
 						style={styles.forgotPasswordInput}
 						placeholder="example@gmail.com"
 						placeholderTextColor={"#8F8F8F"}
+						keyboardType="email-address"
+						autoCapitalize="none"
 					/>
 				</View>
 				<View style={[styles.buttonsContainer, Platform.OS === "ios" && { paddingBottom: keyboardHeight }]}>
@@ -100,7 +102,7 @@ const ForgotPassword = ({ onEmailVerified, onBack }: ForgotPasswordProps): JSX.E
 					/>
 					<View style={styles.signUpOption}>
 						<Text style={{ marginRight: "2%" }}>Don't have an account?</Text>
-						<Link href="/SignUp" style={{ textDecorationLine: "underline" }}>
+						<Link href="/SignUp" replace style={{ textDecorationLine: "underline" }}>
 							<Text>Sign up</Text>
 						</Link>
 					</View>
@@ -151,8 +153,8 @@ const generalStyles = StyleSheet.create({
 	},
 
 	forgotPasswordFormContainer: {
-		flex: 1,
-		marginBottom: "6%",
+		// flex: 1,
+		// marginBottom: "2%",
 	},
 
 	forgotPasswordInput: {
@@ -170,35 +172,12 @@ const generalStyles = StyleSheet.create({
 	},
 
 	buttonsContainer: {
-		gap: 10,
-	},
-
-	button: {
-		alignItems: "center",
-		borderRadius: 15,
-		justifyContent: "center",
-		padding: 15,
-	},
-
-	primaryButton: {
-		backgroundColor: colors.mainColor,
-	},
-
-	secondaryButton: {
-		borderWidth: 1,
-	},
-
-	buttonText: {
-		textAlign: "center",
-		fontSize: 16,
-	},
-
-	primaryButtonText: {
-		color: "#fff",
+		// gap: 10,
+		// backgroundColor: "#f0f",
 	},
 
 	signUpOption: {
-		marginTop: "5%",
+		// marginTop: "5%",
 		flexDirection: "row",
 		justifyContent: "center",
 	},
