@@ -14,7 +14,7 @@ import HeaderImage from "@assets/images/loginPageHeader.svg";
 import LogoHeaderContainer from "@components/LogoHeaderContainer";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
 import useAppSelector from "@hooks/useAppSelector";
-import { registerUser, resetAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, setSignupEmail } from "@store/authSlice";
+import { registerUser, resetAllAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, setSignupEmail } from "@store/authSlice";
 import useAppDispatch from "@hooks/useAppDispatch";
 
 const SignUp = () => {
@@ -52,10 +52,12 @@ const SignUp = () => {
 		setIndex(2);
 	};
 
-	const submitPassword = async (password: string) => {
+	const submitPassword = (localScopePassword: string) => {
+		console.log(`Passed password: ${localScopePassword}`);
 		//TODO: One more thing to do and it'll be time to handle the async part of the signup flow. Check TODO below:
-		setPassword(password);
-		await signupUser();
+		setPassword(localScopePassword);
+		console.log(`Password after: ${password}`);
+		signupUser();
 	};
 
 	const signupUser = async () => {
@@ -64,6 +66,7 @@ const SignUp = () => {
 		console.log("Date of birth is " + dateofbirth);
 
 		const newUser = { firstname, lastname, dateofbirth, phonenumber, ...accountInformation, ...contactDetails, password };
+		console.log("New user: " + JSON.stringify(newUser));
 		try {
 			const result = await dispatch(registerUser(newUser));
 			if (result.meta.requestStatus === "fulfilled") {
@@ -72,6 +75,7 @@ const SignUp = () => {
 				setIndex(3);
 			}
 		} catch (error) {
+			console.log(error);
 			setValidationError(error || "An error occurred, please try again later.");
 		}
 	};

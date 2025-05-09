@@ -22,7 +22,7 @@ const Password = ({ onSubmit, externalValidationError }: PasswordProps) => {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [validationError, setValidationError] = useState<string>("");
 
-	const handleProceed = () => {
+	const handleProceed = async () => {
 		setValidationError("");
 		if (!password.trim()) {
 			setValidationError("Password is required");
@@ -37,7 +37,7 @@ const Password = ({ onSubmit, externalValidationError }: PasswordProps) => {
 			setValidationError("You have to agree to the terms & conditions before you proceed");
 			return;
 		}
-		onSubmit(password);
+		await onSubmit(password);
 	};
 
 	const getIsErred = (input: "p" | "c") => {

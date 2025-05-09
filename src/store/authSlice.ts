@@ -518,7 +518,7 @@ const authSlice = createSlice({
 	},
 });
 
-export const { resetAllAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, setSignupEmail, userLoggedOut } = authSlice.actions;
+export const { resetAllAuth, resetAuth, resetAuthError, resetAuthStatus, resetForgotPasswordFlow, setSignupEmail, userLoggedOut } = authSlice.actions;
 
 export const {
 	selectCurrentUser,

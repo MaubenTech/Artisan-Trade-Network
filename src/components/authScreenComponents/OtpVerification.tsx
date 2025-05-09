@@ -55,7 +55,8 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 				onOtpVerified();
 			}
 		} catch (error) {
-			setValidationError("An error occurred, please try again later.");
+			console.log(error);
+			setValidationError("Otp verification unsuccessful, please try again later.");
 		}
 	};
 
@@ -66,7 +67,8 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 				dispatch(resetAuthStatus());
 			}
 		} catch (error) {
-			setValidationError("An error occurred, please try again later.");
+			console.log(error);
+			setValidationError("Resend code unsuccessful, please try again later.");
 		}
 	};
 

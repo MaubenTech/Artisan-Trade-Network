@@ -66,6 +66,13 @@ const Entry = <T extends RadioOption[]>({
 		onChangeRadio && onChangeRadio(option);
 	};
 
+	const handleBlur = () => {
+		if (!label.toLowerCase().includes("password")) {
+			setText(text.trim());
+			onChangeText && onChangeText(text.trim());
+		}
+	};
+
 	return (
 		<View style={[styles.userInputSubContainer]}>
 			<Text style={[styles.userInputLabel]}>{label}</Text>
@@ -74,6 +81,7 @@ const Entry = <T extends RadioOption[]>({
 			) : inputType && inputType === "text" ? (
 				<TextInput
 					value={text}
+					onBlur={handleBlur}
 					onChangeText={handleChangeText}
 					style={[styles.userInput, inputStyle, inputErred && { borderColor: colors.red }]}
 					secureTextEntry={(inputProps && inputProps.secureTextEntry) || label.toLowerCase().includes("password")}

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import OtpVerification from "@components/signupComponents/OtpVerification";
+import OtpVerification from "@components/authScreenComponents/OtpVerification";
 
 interface RegistrationState {
 	firstName: string;

@@ -15,17 +15,16 @@ import { addNewJob, Job, PartialPickerAsset, resetCurrentJob, setJobBudget, setJ
 import { JobStatus } from "app/(tabs)/Jobs";
 import useAppDispatch from "@hooks/useAppDispatch";
 import useAppSelector from "@hooks/useAppSelector";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 
 const NewJob = () => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
-	const [jobService, setJobService] = useState<string>("");
 	const [jobStatus, setJobStatus] = useState<JobStatus>();
+	// const { serviceId: jobServiceId } = useLocalSearchParams<{ serviceId: string }>();
 
 	const dispatch = useAppDispatch();
-
 	const router = useRouter();
 
 	const budgetOptions = [
@@ -57,7 +56,7 @@ const NewJob = () => {
 
 	const uploadMedia = async () => {
 		let options: ImagePicker.ImagePickerOptions = {
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			mediaTypes: "images",
 			// allowsEditing: true,
 			allowsMultipleSelection: true,
 			selectionLimit: 3,
@@ -110,7 +109,12 @@ const NewJob = () => {
 				<ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
 					<View style={styles.jobFormContainer}>
 						<Text>Job Title</Text>
-						<TextInput style={styles.jobFormInput} value={job.title} onChangeText={(text: string) => dispatch(setJobTitle(text))} placeholder="Enter Job Title" />
+						<TextInput
+							style={styles.jobFormInput}
+							value={job.title}
+							onChangeText={(text: string) => dispatch(setJobTitle(text))}
+							placeholder="Enter Job Title"
+						/>
 					</View>
 					<View style={styles.jobFormContainer}>
 						<Text>Job Type</Text>
@@ -120,7 +124,7 @@ const NewJob = () => {
 								{ label: "Maintenance", value: "Maintenance" },
 							]}
 							selectedOption={type}
-							onChanged={(text: string) => dispatch(setJobType(text))}
+							onChangeOption={(text: string) => dispatch(setJobType(text))}
 						/>
 					</View>
 					<View style={styles.jobFormContainer}>

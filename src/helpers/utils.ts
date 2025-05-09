@@ -2,6 +2,7 @@ import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
 import { postData } from "./APIFunction";
 import { ValidationError } from "@store/authSlice";
 import { Platform } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 export const isEmailValid = (email: string) => {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,7 +36,7 @@ export const generatePostAsyncThunk = <EndpointResultType, ThunkReturnType exten
 			}
 
 			if (typeof result === "object") {
-				// console.log(`Result: ${JSON.stringify(result)}`);
+				console.log(`Result: ${JSON.stringify(result)}`);
 				if ("error" in result) {
 					if (errorCallback) return rejectWithValue(errorCallback(result.error));
 					return rejectWithValue(result.error);
@@ -123,3 +124,40 @@ export const subtractDate = (timeAgo: number, timeUnit: TimeUnit = "y", joiner: 
 	// console.log(date);
 	return date.getFullYear() + joiner + (date.getMonth() + 1) + joiner + date.getDate(); // Adding 1 to month because Date's index begins at 0, and DatePicker's begins at 1
 };
+
+export async function saveSecureEntry(key: string, value: string): Promise<boolean> {
+	try {
+		await SecureStore.setItemAsync(key, value);
+		alert(`Saved {${key}:${value}} successfully.`);
+		return true;
+	} catch (error) {
+		alert(`An error occurred.`);
+		return false;
+	}
+}
+
+export async function getSecureEntryValueFor(key: string) {
+	try {
+		let result = await SecureStore.getItemAsync(key);
+		if (result) {
+			alert("🔐 Here's your value 🔐 \n" + result);
+		} else {
+			alert("No values stored under that key.");
+		}
+		return result;
+	} catch (error) {
+		alert(`An error occurred.`);
+		return null;
+	}
+}
+
+export async function deleteSecureEntryValueFor(key: string): Promise<boolean> {
+	try {
+		await SecureStore.deleteItemAsync(key);
+		alert(`Deleted entry for [${key}] successfully.`);
+		return true;
+	} catch (error) {
+		alert(`An error occurred.`);
+		return false;
+	}
+}

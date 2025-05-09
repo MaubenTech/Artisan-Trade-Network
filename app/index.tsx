@@ -12,16 +12,28 @@ import HeaderImage from "@assets/images/loginPageHeader.svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet, View, TouchableOpacity, Dimensions, SafeAreaView, Platform, BackHandler } from "react-native";
 import useAppDispatch from "@hooks/useAppDispatch";
-import { loginUser, resetAuth, resetAuthError, resetAuthStatus, selectAuthError, selectAuthStatus, selectIsNewAccount, setSignupEmail } from "@store/authSlice";
+import {
+	loginUser,
+	resendOtp,
+	resetAllAuth,
+	resetAuth,
+	resetAuthError,
+	resetAuthStatus,
+	selectAuthError,
+	selectAuthStatus,
+	selectIsNewAccount,
+	setSignupEmail,
+} from "@store/authSlice";
 import CustomKeyboardView from "@components/CustomKeyboardView";
 import { useSelector } from "react-redux";
 import LoadingIndicator from "@components/signupComponents/LoadingIndicator";
-import { isAndroid, isEmailValid } from "@helpers/utils";
+import { getSecureEntryValueFor, isAndroid, isEmailValid, saveSecureEntry } from "@helpers/utils";
 import Entry from "@components/Entry";
 import LogoHeaderContainer from "@components/LogoHeaderContainer";
 import RedExclamationMark from "@assets/icons/auth/red-exclamation-mark.svg";
 import OtpVerification from "@components/authScreenComponents/OtpVerification";
 import useAppSelector from "@hooks/useAppSelector";
+import { Globals } from "@constants/Globals";
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,6 +46,8 @@ const index = () => {
 	const [rememberMe, setRememberMe] = useState(false);
 	const [validationError, setValidationError] = useState<string>("");
 	const [hasNotVerified, setHasNotVerified] = useState(false);
+	const [showOtpVerificationPage, setShowOtpVerificationPage] = useState(false);
+	const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
 
 	const isNewAccount = useAppSelector(selectIsNewAccount);
 
@@ -56,22 +70,35 @@ const index = () => {
 			setValidationError("Email is required");
 			return;
 		} else if (!isEmailValid(email.trim())) {
+			// console.log("Email: " + email + "|");
 			setValidationError("Email is not valid");
 			return;
-		} else if (!password.trim()) {
+		} else if (!password) {
 			setValidationError("Password is required");
 			return;
 		}
 
 		try {
+			// console.log("Email before dispatch: " + email + "|");
 			const result = await dispatch(loginUser({ email, password }));
+			//TODO: Is new account for now should be done per device basis. So, it'll be stored on localStorage, along with the user information that needs to be stored on local.
 			if (result.meta.requestStatus === "fulfilled") {
 				dispatch(resetAuthStatus());
-				if (isNewAccount) router.navigate("/OnboardingScreen");
-				else router.navigate("Home");
+				const isFirstLogin = await getSecureEntryValueFor(Globals.IS_FIRST_LOGIN_KEY);
+				if (!isFirstLogin) {
+					const saved = await saveSecureEntry(Globals.IS_FIRST_LOGIN_KEY, "yes");
+					if (!saved) {
+						alert("Something went wrong");
+						return;
+					}
+					router.navigate("/OnboardingScreen");
+				} else {
+					if (isFirstLogin === "yes") router.navigate("/OnboardingScreen");
+					else router.navigate("Home");
+				}
 			}
 		} catch (error) {
-			setValidationError("An error occured, please try again later.");
+			setValidationError("Login unsuccessful, please try again later.");
 		}
 	};
 
@@ -82,12 +109,12 @@ const index = () => {
 	const dispatch = useAppDispatch();
 
 	const handleForgotPasswordClick = () => {
-		dispatch(resetAuth());
+		dispatch(resetAllAuth());
 		router.navigate("/ForgotPassword");
 	};
 
 	const handleSignupClick = () => {
-		dispatch(resetAuth());
+		dispatch(resetAllAuth());
 		router.navigate("/SignUp");
 	};
 
@@ -106,6 +133,7 @@ const index = () => {
 	const handleOtpVerifiedFromLogin = () => {
 		//TODO: I think another login attempt should be made in the background after the otp is verified
 		//NOPE, it should not. The user has to log in again
+		setShowOtpVerificationPage(false);
 		setHasNotVerified(false);
 	};
 
@@ -113,8 +141,13 @@ const index = () => {
 	useEffect(() => {
 		if (!validationError && loginStatus === "failed" && loginError && loginError.message) {
 			setValidationError(loginError.message);
+			// console.log("Email from useEffect: " + email + "|");
+
 			if (loginError.message === "Please verify your email first.") {
 				dispatch(resetAuthError());
+				//NOTE: The reason I'm using the loading indicator, is to prevent any possible changes to anything before the otp page is loaded.
+				//TODO: Use an invisible overlay instead of the loading indicator here. It should be removed once the timeout is over (i.e. once the otpverification page has been rendered)
+				setShowLoadingIndicator(true);
 				setTimeout(() => {
 					setHasNotVerified(true);
 				}, 1500);
@@ -133,9 +166,26 @@ const index = () => {
 		return true;
 	});
 
-	if (hasNotVerified) {
-		//NOTE: We're using the signup otp verification type because the account verification in the first place is meant to be part of the signup flow.
-		dispatch(setSignupEmail(email));
+	useEffect(() => {
+		if (hasNotVerified) {
+			//NOTE: We're using the signup otp verification type because the account verification in the first place is meant to be part of the signup flow.
+			dispatch(setSignupEmail(email));
+			dispatch(resendOtp({ email }))
+				.then((result) => {
+					//TODO: Is new account for now should be done per device basis. So, it'll be stored on localStorage, along with the user information that needs to be stored on local.
+					if (result.meta.requestStatus === "fulfilled") {
+						dispatch(resetAuth());
+						setShowOtpVerificationPage(true);
+						setShowLoadingIndicator(false);
+					}
+				})
+				.catch((error) => {
+					setValidationError("Resend otp unsuccessful, please try again later.");
+				});
+		}
+	}, [hasNotVerified]);
+
+	if (showOtpVerificationPage) {
 		return <OtpVerification onOtpVerified={handleOtpVerifiedFromLogin} type="signup" />;
 	}
 
@@ -146,7 +196,7 @@ const index = () => {
 					<Text style={styles.ctaHeader}>Login to your account</Text>
 					<Text style={styles.ctaSubHeader}>Welcome back! Please enter your details</Text>
 				</View>
-				{loginStatus === "loading" && <LoadingIndicator visible />}
+				{(loginStatus === "loading" || showLoadingIndicator) && <LoadingIndicator visible />}
 				{/* TODO: When results come back from the backend after a login attempt, there should be either clearing or focusing of inputs, or both, or in few scenarios, neither. These need to be implemented. */}
 				<View style={[styles.userInputContainer]}>
 					<Entry label="Email" onChangeText={handleChangeEmail} inputErred={getIsErred("e")} />
@@ -159,6 +209,7 @@ const index = () => {
 					</View>
 				)}
 				<View style={[styles.optionsContainer]}>
+					{/* TODO: Implement functionality for rememberMe in both authSlice and here */}
 					<TouchableOpacity onPress={() => setRememberMe(!rememberMe)} style={styles.checkboxContainer}>
 						<View style={rememberMe ? styles.checkboxChecked : styles.checkboxUnchecked}></View>
 						<Text>Remember Me</Text>
@@ -196,9 +247,6 @@ const index = () => {
 export default index;
 
 const generalStyles = StyleSheet.create({
-	container: {
-		padding: 30,
-	},
 	componentContainer: {
 		paddingHorizontal: 20,
 		alignItems: "center",
