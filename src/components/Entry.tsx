@@ -218,10 +218,11 @@ const androidStyles = StyleSheet.create({
 const iosStyles = StyleSheet.create({
 	userInputSubContainer: {
 		gap: 5,
+		width: "100%",
 	},
 
 	userInput: {
-		width: width * 0.9,
+		width: "100%",
 		borderColor: colors.inputBorderColor,
 		borderWidth: 1,
 		borderRadius: 10,

@@ -12,6 +12,8 @@ import miscellaneousReducer from "./miscellaneousSlice";
 import approveAcceptedBidMiddleware from "./middlewares/approveAcceptedBidMiddleware";
 import chatReducer from "./chatSlice";
 
+export const API_BASE_URL = "https://api.artisantradesnetwork.com/api";
+
 const store = configureStore({
 	reducer: {
 		auth: authReducer,

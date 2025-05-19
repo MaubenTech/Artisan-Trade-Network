@@ -1,8 +1,12 @@
 import { createAppAsyncThunk } from "@hooks/createAppAsyncThunk";
-import { postData } from "./APIFunction";
+import { getData, postData } from "./APIFunction";
 import { ValidationError } from "@store/authSlice";
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
+
+export type APIError = {
+	message?: string;
+};
 
 export const isEmailValid = (email: string) => {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -125,39 +129,71 @@ export const subtractDate = (timeAgo: number, timeUnit: TimeUnit = "y", joiner: 
 	return date.getFullYear() + joiner + (date.getMonth() + 1) + joiner + date.getDate(); // Adding 1 to month because Date's index begins at 0, and DatePicker's begins at 1
 };
 
-export async function saveSecureEntry(key: string, value: string): Promise<boolean> {
-	try {
-		await SecureStore.setItemAsync(key, value);
-		alert(`Saved {${key}:${value}} successfully.`);
-		return true;
-	} catch (error) {
-		alert(`An error occurred.`);
-		return false;
+/**
+ * A function that abstracts away verbose code and generates an async thunk that sends a get request based on arguments passed. Handles the response based on arguments passed as well.
+ * @param actionName The name of the action (e.g. services/fetchServices)
+ * @param apiUrl The api endpoint the get request will be sent to
+ * @param successCallback A callback that would be run when the request is successful. The result of the request and input parameters will be passed to this function and whatever the function returns is used as the successful value of the async thunk.
+ * @param errorCallback An optional callback that is run when the request is unsuccessful. If provided, the error is passed to the function and whatever it returns is used as the rejectValue of the thunk.
+ * @returns A generated async thunk for specified get request.
+ */
+export const generateGetAsyncThunk = <EndpointResultType, ThunkReturnType, ThunkArgType = void>(
+	actionName: string,
+	apiUrl: string,
+	successCallback: (result: EndpointResultType, params?: ThunkArgType) => ThunkReturnType,
+	options?: {
+		errorCallback?: (error: APIError) => unknown;
+		validateResponse?: (result: any) => boolean | { valid: boolean; message?: string };
 	}
-}
+) => {
+	const formattedActionName = actionName.split("/")[1];
 
-export async function getSecureEntryValueFor(key: string) {
-	try {
-		let result = await SecureStore.getItemAsync(key);
-		if (result) {
-			alert("🔐 Here's your value 🔐 \n" + result);
-		} else {
-			alert("No values stored under that key.");
+	return createAppAsyncThunk<ThunkReturnType, ThunkArgType>(actionName, async (params, { getState, dispatch, rejectWithValue }) => {
+		try {
+			let fullUrl = apiUrl;
+			//only handle query parameters if present
+			if (params && typeof params === "object") {
+				const urlSeperator = apiUrl.includes("?") ? "&" : "?";
+				const queryParameters = Object.entries(params)
+					.filter(([_, value]) => value !== undefined && value !== null)
+					.map(([key, value]) => `${key} = ${encodeURIComponent(String(value))}`)
+					.join("&");
+
+				if (queryParameters) fullUrl += urlSeperator + queryParameters;
+			}
+
+			const result = await getData<EndpointResultType>(fullUrl);
+
+			if (!result) {
+				console.error(`${toSentenceCase(formattedActionName, true)}: E no come oh!`);
+				return rejectWithValue("No data was gotten");
+			}
+
+			if (options?.validateResponse) {
+				const validationResult = options.validateResponse(result);
+				console.log("Result of fetch: ", result);
+
+				if (typeof validationResult === "object") {
+					console.log("Fetched Data is an Object");
+					if (!validationResult.valid) {
+						console.error(`${toSentenceCase(formattedActionName, true)}: ${validationResult.message}` || "Invalid Response format");
+						return rejectWithValue(validationResult.message || "Invalid Response format");
+					}
+				} else if (!validationResult) {
+					console.log("Not valid");
+					console.error(`${toSentenceCase(formattedActionName, true)}: Invalid response format`);
+					return rejectWithValue("Invalid response format");
+				}
+			}
+
+			return successCallback(result);
+		} catch (error) {
+			if (options?.errorCallback) {
+				console.log("error caught");
+				return rejectWithValue(options.errorCallback(error as APIError));
+			}
+			console.error(`${toSentenceCase(formattedActionName, true)} Error:`, error);
+			return rejectWithValue(error.message || toSentenceCase(formattedActionName) + " failed");
 		}
-		return result;
-	} catch (error) {
-		alert(`An error occurred.`);
-		return null;
-	}
-}
-
-export async function deleteSecureEntryValueFor(key: string): Promise<boolean> {
-	try {
-		await SecureStore.deleteItemAsync(key);
-		alert(`Deleted entry for [${key}] successfully.`);
-		return true;
-	} catch (error) {
-		alert(`An error occurred.`);
-		return false;
-	}
-}
+	});
+};
