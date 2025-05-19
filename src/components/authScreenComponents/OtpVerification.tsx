@@ -1,4 +1,4 @@
-import { View, SafeAreaView, TextInput as RNTextInput, TouchableOpacity } from "react-native";
+import { View, SafeAreaView, TextInput as RNTextInput, TouchableOpacity, ViewStyle, StyleProp } from "react-native";
 import { StyleSheet, Image } from "react-native";
 import React, { Children, useEffect, useRef, useState } from "react";
 import ButtonGroup from "@components/ButtonGroup";
@@ -30,8 +30,18 @@ interface OtpVerificationProps {
 	removeHeader?: boolean;
 }
 
-const OtpContainer = ({ children, removeHeader }: { children: React.ReactNode; removeHeader?: boolean }): React.ReactNode =>
-	!removeHeader ? <LogoHeaderContainer>{children}</LogoHeaderContainer> : children;
+const OtpContainer = ({
+	children,
+	removeHeader,
+	style,
+}: {
+	children: React.ReactNode;
+	removeHeader?: boolean;
+	style?: StyleProp<ViewStyle>;
+}): React.ReactNode => {
+	const containerChildren = <View style={style}>{children}</View>;
+	return !removeHeader ? <LogoHeaderContainer>{containerChildren}</LogoHeaderContainer> : containerChildren;
+};
 
 const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationProps) => {
 	const styles = compactStyles(generalStyles, androidStyles, iosStyles);
@@ -81,7 +91,7 @@ const OtpVerification = ({ type, onOtpVerified, removeHeader }: OtpVerificationP
 	};
 
 	return (
-		<OtpContainer removeHeader={removeHeader}>
+		<OtpContainer removeHeader={removeHeader} style={generalStyles.container}>
 			{/* TODO: Finish up the converting process. */}
 			<View style={styles.headerContainer}>
 				<Text style={styles.header}>OTP Verification</Text>
@@ -143,7 +153,8 @@ const generalStyles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
-		gap: 30,
+		// gap: 30,
+		paddingHorizontal: 30,
 	},
 	headerContainer: {
 		// paddingLeft: 25,
@@ -165,7 +176,6 @@ const generalStyles = StyleSheet.create({
 	},
 	otpSectionContainer: {
 		marginTop: 30,
-		// paddingHorizontal: "6%",
 	},
 	otpContainer: {
 		// paddingHorizontal: "3%",
